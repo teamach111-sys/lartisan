@@ -2,12 +2,11 @@
 <html lang="en">
 
 <head>
-  <title>Marché Artisanal | Acceuil</title>
+  <title>Lartisan | Acceuil</title>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="favicon_io (3)/android-chrome-512x512.png">
-  <title>Document</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
     @font-face {
@@ -77,7 +76,7 @@
       @endguest
 
 
-      <button class="rounded-sm bg-black text-white p-1  hidden lg:block lg:w-50 border border-black h-12 my-auto cursor-pointer 
+      <button onclick="window.location.href='{{ route('register') }}'" class="rounded-sm bg-black text-white p-1  hidden lg:block lg:w-50 border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -97,6 +96,7 @@
             </svg>
           </button>
           <div class="flex justify-between p-4 gap-3">
+            @auth
             <button class="rounded-sm bg-[#F4F4F0] p-1 w-30 text-[15px]  border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
@@ -104,6 +104,7 @@
     ">
               Mes favoris
             </button>
+            @else
             <button class="rounded-sm bg-[#F4F4F0] p-1 w-30 text-[15px]  border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
@@ -111,8 +112,9 @@
     ">
               Inscription
             </button>
+            @endauth
 
-            <button class="rounded-sm bg-black text-white p-1  w-40 text-[15px] border border-black h-12 my-auto cursor-pointer 
+            <button onclick="window.location.href='{{ route('register') }}'" class="rounded-sm bg-black text-white p-1  w-40 text-[15px] border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -187,7 +189,9 @@
     </div>
     @auth
      <div>
-      <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . auth()->user()->pfp) }}">
+      <a href="{{ route('dashboard') }}">
+        <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . auth()->user()->pfp ?? 'default.svg') }}">
+      </a>
      </div>
      @endauth
    

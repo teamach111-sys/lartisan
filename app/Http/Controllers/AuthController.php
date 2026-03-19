@@ -47,4 +47,40 @@ public function store(Request $request)
         // Redirection vers l'accueil avec un message flash
         return redirect('/')->with('success', 'Bienvenue parmi nous !');
     }
+
+    public function logout(Request $request)
+    {
+        // Déconnecte l'utilisateur du garde (guard) actuel
+        Auth::logout();
+
+        // Invalide la session de l'utilisateur pour effacer les données
+        $request->session()->invalidate();
+
+        // Régénère le jeton CSRF pour éviter les attaques après déconnexion
+        $request->session()->regenerateToken();
+
+        // Redirige vers la page d'accueil ou de connexion
+        return redirect('/')->with('success', 'Vous avez été déconnecté.');
+    }
+
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+        
+        if (Auth::attempt($credentials, $request->remember)) {
+            request()->session()->regenerate();
+            return redirect()->intended('/');
+        }
+        
+        return back()->withErrors([
+            'email' => 'Les identifiants ne correspondent pas à nos enregistrements.',
+        ]);
+    }
+    public function showlogin()
+    {
+        return view('auth.login');
+    }
 }
