@@ -25,8 +25,18 @@
 <body class="w-full bg-[#F4F4F0]">
   <div class="bg-[#F4F4F0] max-w-[1800px] mx-3 lg:mx-14">
     <nav class="lg:flex gap-5 lg:h-29 h-auto items-center justify-between py-1  mt-1  ">
+      <div class="flex justify-between items-center ">
+        <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="">
+       @auth
+     <div class="lg:hidden">
+      <a href="{{ route('annonces') }}">
+        <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . auth()->user()->pfp ?? 'default.svg') }}">
+      </a>
+     </div>
+     @endauth
 
-      <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="">
+      </div>
+      
       <div class="relative lg:flex-grow h-12 my-auto flex justify-between gap-3">
         <input placeholder="Rechercher"
           class=" pl-9 border border-black  my-auto rounded-sm w-full h-full bg-white outline-[0rem] shadow-none focus:shadow-[0_0_0_1px_#fb663f]"
@@ -189,7 +199,7 @@
     </div>
     @auth
      <div>
-      <a href="{{ route('dashboard') }}">
+      <a href="{{ route('annonces') }}">
         <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . auth()->user()->pfp ?? 'default.svg') }}">
       </a>
      </div>
