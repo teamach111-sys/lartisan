@@ -9,7 +9,7 @@
     <style>
         @font-face {
             font-family: 'mabrypro';
-            src: url('./MabryPro-Regular.ttf') format('truetype');
+            src: url('{{ asset('fonts/MabryPro-Regular.ttf') }}') format('truetype');
             font-display: swap;
         }
 
@@ -26,7 +26,7 @@
             <div class="flex flex-col w-full">
                 <div class="flex  justify-between w-full px-3">
                     <div class="">
-                        <img class="h-25 mt-2" src="{{ asset('storage/logo.svg') }}" alt="">
+                        <img class="h-25 mt-2" src="{{ asset('imgs/logo.svg') }}" alt="">
 
                     </div>
                     <a class="mt-3" href="{{ route('login') }}">Connexion</a>
@@ -47,46 +47,47 @@
                             @endforeach
                         </div>
                     @endif
+                    
                      <div  class="flex flex-col">
                         <label class="text-[17px]" for="nom">Nom</label>
-                        <input name="name" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]" type="text" id="nom"
+                        <input name="name" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]" type="text" id="nom"
                             >
 
                     </div>
                     <div class="flex flex-col">
                         <label class="text-[17px]" for="email">Email</label>
-                        <input name="email" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]" type="email" id="email"
+                        <input name="email" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]" type="email" id="email"
                             >
 
                     </div>
                     <div  class="flex flex-col">
                         <label class="text-[17px]" for="password">Mot de passe</label>
-                        <input name="password" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]" type="password" id="password"
+                        <input name="password" class="focus:text-[17px] focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]" type="password" id="password"
                             >
 
                     </div>
                     <div  class="flex flex-col">
                         <label class="text-[17px]" for="password_confirmation">Confirmer le mot de passe</label>
-                        <input name="password_confirmation" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]" type="password" id="password_confirmation"
+                        <input name="password_confirmation" class="focus:text-[17px] focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]" type="password" id="password_confirmation"
                             >
 
                     </div>
                     <div  class="flex flex-col">
                         <label class="text-[17px]" for="tel">Numéro de téléphone</label>
-                        <input name="telephone" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]" type="tel" id="tel"
+                        <input name="telephone" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]" type="tel" id="tel"
                             >
 
                     </div>
                      <div  class="flex flex-col">
                         <label class="text-[17px]" for="ville">Ville</label>
-                        <select class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]" name="ville_utilisateur" id="ville">
+                        <select class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]" name="ville_utilisateur" id="ville">
                             <option class="" value="">Sélectionnez une ville</option>
                             <option value="Marrakech">Marrakech</option>
                         </select>
 
                     </div>
                      <div  class="flex flex-col">
-                        <label class="text-[15px] max-w-42 h-13 flex flex-col items-center justify-center hover:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-7" for="profil">Photo de profil</label>
+                        <label class="text-[17px] max-w-42 h-13 flex flex-col items-center justify-center hover:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-7" for="profil">Photo de profil</label>
                         <input name="pfp" id="profil" class="" type="file" 
                             >
 

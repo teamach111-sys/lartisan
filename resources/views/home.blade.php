@@ -11,7 +11,7 @@
   <style>
     @font-face {
       font-family: 'mabrypro';
-      src: url('./MabryPro-Regular.ttf') format('truetype');
+      src: url('{{ asset('fonts/MabryPro-Regular.ttf') }}') format('truetype');
       font-display: swap;
     }
 
@@ -26,7 +26,7 @@
   <div class="bg-[#F4F4F0] max-w-[1800px] mx-3 lg:mx-14">
     <nav class="lg:flex gap-5 lg:h-29 h-auto items-center justify-between py-1  mt-1  ">
 
-      <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('storage/logo.svg') }}" alt="">
+      <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="">
       <div class="relative lg:flex-grow h-12 my-auto flex justify-between gap-3">
         <input placeholder="Rechercher"
           class=" pl-9 border border-black  my-auto rounded-sm w-full h-full bg-white outline-[0rem] shadow-none focus:shadow-[0_0_0_1px_#fb663f]"
@@ -279,10 +279,10 @@
         <p class="text-[26px] lg:text-[26px] md:text-[26px] ">Dans le marché</p>
         <div class="">
           <a href=""
-            class="border md:text-[23px] bg-white border-black hover:border-black lg:text[20px] cursor-pointer text-[20px]  rounded-[50px] p-2 transition-all duration-200  ">Nouvelles
+            class="border md:text-[20px] bg-white border-black hover:border-black lg:text[20px] cursor-pointer text-[20px]  rounded-[50px] p-2 transition-all duration-200  ">Nouvelles
             Annonces</a>
           <a href=""
-            class="border md:text-[23px] lg:text-[20px] cursor-pointer text-[20px] hover:border-black   border-transparent rounded-[50px] p-2 transition-all duration-200 ">Prix
+            class="border md:text-[20px] lg:text-[20px] cursor-pointer text-[20px] hover:border-black   border-transparent rounded-[50px] p-2 transition-all duration-200 ">Prix
             bas
           </a>
 
@@ -417,7 +417,7 @@
   <footer
     class="w-full bg-black text-white h-130 mt-6 flex flex-col lg:flex-row lg:h-100 justify-around items-start lg:items-center">
     <div class=" flex-col flex items-start max-w-[1800px] mx-3 lg:mx-14">
-      <img src="logo -white.svg" class="filter invert w-auto  h-auto max-h-30 lg:max-h-40 ">
+      <img src="{{ asset('imgs/logo.svg') }}" class="filter invert w-auto  h-auto max-h-30 lg:max-h-40 ">
       <h2 class="px-3">© 2026 Marché Artisanal. All rights reserved. </h2>
 
     </div>

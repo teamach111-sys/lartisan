@@ -9,7 +9,7 @@
     <style>
         @font-face {
             font-family: 'mabrypro';
-            src: url('./MabryPro-Regular.ttf') format('truetype');
+            src: url('{{ asset('fonts/MabryPro-Regular.ttf') }}') format('truetype');
             font-display: swap;
         }
 
@@ -26,7 +26,7 @@
             <div class="flex flex-col w-full">
                 <div class="flex  justify-between w-full px-3">
                     <div class="">
-                        <img class="h-25 mt-2" src="{{ asset('storage/logo.svg') }}" alt="">
+                        <img class="h-25 mt-2" src="{{ asset('imgs/logo.svg') }}" alt="">
 
                     </div>
                     <a class="mt-3" href="{{ route('register') }}">Inscription</a>
@@ -50,14 +50,14 @@
                     <div class="flex flex-col">
                         <label class="text-[17px]" for="email">Email</label>
                         <input
-                            class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]"
+                            class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]"
                             type="email" id="email" name="email">
 
                     </div>
                     <div class="flex flex-col">
                         <label class="text-[17px]" for="password">Mot de passe</label>
                         <input
-                            class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[15px]"
+                            class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]"
                             type="password" id="password" name="password">
                         <div class="flex gap-1 justify-between ">
                             <div>

@@ -18,3 +18,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middl
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post')->middleware('guest');
 
 route::get('/dashboard', [DashController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+
+route::get('/home', function () {
+    return view('home');
+})->name('home');
