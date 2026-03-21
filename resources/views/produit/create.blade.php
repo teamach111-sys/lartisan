@@ -9,7 +9,7 @@
                     Mes annonces
                  </h1>
         <button
-                            class="text-[15px] md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                            class="text-[15px]  md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
                             Ajouter une annonce
                         </button>
 
@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <button
-                            class="text-[13px] hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                            class="text-[15px]  hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
                             Ajouter une annonce
                         </button>
                     </div>
@@ -73,7 +73,7 @@
                             @endforeach
                         </div>
                     @endif
-                    <div class="flex gap-3">
+                    <div class="flex-col flex md:flex-row  gap-3">
 
 <div class="flex flex-col gap-2 flex-1">
 <div  class="flex flex-col">
@@ -93,9 +93,9 @@
                             >
 
                     </div>
-                    <div class=" flex gap-2 ">
+                    <div class=" flex gap-2 hidden lg:flex">
                                         <BUTTON type="submit" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full">Ajouter le produit</BUTTON>
-                    <BUTTON type="reset" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full ">Annuler</BUTTON>
+                    <BUTTON onclick="window.location.href='{{ route('annonces') }}'" type="reset" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full ">Annuler</BUTTON>
 
 
                    </div>
@@ -130,11 +130,18 @@
 
                         </div>
                      <div  class="flex flex-col">
-                        <label class="text-[17px] max-w-42 h-13 flex flex-col items-center justify-center hover:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-7" for="photo">Photo du produit</label>
+                        <label class="text-[17px] max-w-42 h-13 flex flex-col items-center justify-center hover:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-7" for="photo">5 Photos du produit</label>
                         <input name="images[]" id="photo" class="w-full" type="file" multiple accept="image/*" 
                             >
 
                     </div>
+
+                     <div class=" flex gap-2 lg:hidden ">
+                                        <BUTTON type="submit" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full">Ajouter le produit</BUTTON>
+                    <BUTTON onclick="window.location.href='{{ route('annonces') }}'" type="reset" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full ">Annuler</BUTTON>
+
+
+                   </div>
                     </div>
 
 

@@ -9,6 +9,16 @@ use Illuminate\Support\Str;
 
 class ProduitController extends Controller
 {
+
+    public function index()
+{
+    // 1. Fetch the products from your database
+    $produits = Produit::all(); 
+
+    // 2. Pass them to the view
+    return view('home', compact('produits'));
+}
+    
     public function create()
     {
         // Pass categories to the view so you can use them in your dropdown

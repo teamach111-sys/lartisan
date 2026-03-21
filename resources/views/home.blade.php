@@ -349,63 +349,13 @@
 
         <div class="flex flex-col  gap-9 w-full">
           <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 " id="product-grid">
-            <div
-              class="product-card bg-white border rounded-sm  h-120  overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-[4px_4px_0px_0px_#000000]">
-              <img class="object-cover h-full w-full max-h-66 border-b"
-                src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_16x9.jpg?w=1200"
-                alt="">
 
-              <div class="h-full max-h-36 border-b">
-                <div class="px-5 pt-4 ">
-                  <p class="text-[17px] line-clamp-2 font-bold break-words">Titletttttteeeeeeeeeeeeeeeeeeeeeeeeeeeeetttttttttttt</p>
-                </div>
-                <div class="px-5 pt-4">
-                   <div class="mt-3 flex gap-2 items-center">
-              <img class="h-10 w-10 object-cover rounded-[50px] border" src="https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?cs=srgb&dl=pexels-pixabay-104827.jpg&fm=jpg" alt="">
-              <p class="line-clamp-1 underline">Seller name and pfp</p>
-
+             @foreach ($produits as $produit) 
+              <x-produit :produit="$produit" />
+             
+             @endforeach
 
             </div>
-
-                </div>
-
-              </div>
-
-
-              <div class="p-5 h-14">
-
-                <div class="inline-block bg-black p-[1px] 
-               [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
-                  <div class="line-clamp-1 bg-[#FF8E72] text-black font-bold text-sm py-1 pl-4 pr-12 
-                 [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
-                    11 DH
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            
-            
-           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          </div>
-
-
-
 
 
           <button id="load-more"

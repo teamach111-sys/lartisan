@@ -8,8 +8,8 @@
         <h1 class="text-[23px]">
                     Mes annonces
                  </h1>
-        <button
-                           onclick="window.location.href='{{ route('produit.create') }}'" class="text-[15px] md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                        <button onclick="window.location.href='{{ route('produit.create') }}'"
+                           class="lg:text-[23px] text-[15px] md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
                             Ajouter une annonce
                         </button>
 
@@ -27,8 +27,8 @@
 
                     </div>
                     <div>
-                        <button
-                            class="text-[13px] hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                        <button onclick="window.location.href='{{ route('produit.create') }}'"
+                            class="text-[15px]  hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
                             Ajouter une annonce
                         </button>
                     </div>
