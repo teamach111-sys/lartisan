@@ -17,7 +17,8 @@ class Produit extends Model
     'images', 
     'prix', 
     'ville_produit', 
-    'etat_produit'
+    'etat_produit',
+    'vendeur_id'
 ];
 
 protected $casts = [

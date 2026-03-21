@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashController;
-
+use App\Http\Controllers\ProduitController;
 
 Route::get('/', function () {
     return view('home');
@@ -22,3 +22,7 @@ route::get('/annonces', [DashController::class, 'annonces'])->name('annonces')->
 route::get('/home', function () {
     return view('home');
 })->name('home');
+
+route::get('/produit/create', [ProduitController::class, 'create'])->name('produit.create')->middleware('auth');
+route::post('/produit/sotre', [ProduitController::class, 'store'])->name('produit.store')->middleware('auth');
+
