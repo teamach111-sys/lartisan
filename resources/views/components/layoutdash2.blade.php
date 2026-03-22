@@ -195,37 +195,18 @@
 
 
         <div class="pt-6 flex flex-col w-full lg:ml-60">
-            <div class="md:pl-7 px-2 gap-2 flex flex-col md:pr-7 h-28">
+            <div class="pl-7 gap-2 flex flex-col pr-7 h-33">
                 <div class="flex justify-between">
                     <h1 class="text-[23px]">
                         {{ $h1 }}
                      </h1>
-                    <button onclick="window.location.href='{{ $btnlocation }}'"
-                        class="lg:text-[23px] text-[15px] md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                        {{ $btnname }}
-                    </button>
+                   
 
                 </div>
-                <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
-            <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth ">
-                <a href=""
-                    class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px]  rounded-[50px] p-2 transition-all duration-200  ">{{ $firstc }}</a>
-                <a href=""
-                    class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px] hover:border-black   border-transparent rounded-[50px] p-2 transition-all duration-200 ">{{ $secondc }}
-                </a>
-
-            </div>
-            <div>
-                <button onclick="window.location.href='{{ $mobbtnlocation }}'"
-                    class="text-[15px]  hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                  {{ $mobbtnname }}
-                </button>
-            </div>
-        </div>
                 {{ $topbar }}
             </div>
             <div class="bg-black h-[0.5px]"></div>
-            <main class="p-2 md:p-7">
+            <main class="p-7">
                 {{ $slot }}
             </main>
 

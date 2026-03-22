@@ -2,42 +2,35 @@
     <x-slot:title>
         Annonces
     </x-slot:title>
+        <x-slot:h1>
+            Mes Annonces
+        </x-slot:h1>
+        <x-slot:btnlocation>
+            {{ route('annonces') }}
+        </x-slot:btnlocation>
+        <x-slot:btnname>
+            Ajouter une annonce
+
+        </x-slot:btnname>
+
+        <x-slot:firstc>
+            Tous
+        </x-slot:firstc>
+        <x-slot:secondc>
+            Actifs
+        </x-slot:secondc>
+        <x-slot:mobbtnlocation>
+            {{ route('produit.create') }}
+        </x-slot:mobbtnlocation>
+        <x-slot:mobbtnname>
+            Ajouter une annonce
+        </x-slot:mobbtnname>
     <x-slot:topbar>
-<div class="pl-7 gap-2 flex flex-col pr-7">
-    <div class="flex justify-between">
-        <h1 class="text-[23px]">
-                    Mes annonces
-                 </h1>
-                        <button onclick="window.location.href='{{ route('produit.create') }}'"
-                           class="lg:text-[23px] text-[15px] md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                            Ajouter une annonce
-                        </button>
-
-    </div>
-                
-                <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
-                    <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth ">
-                        <a href=""
-                            class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px]  rounded-[50px] p-2 transition-all duration-200  ">Nouvelles
-                            Annonces</a>
-                        <a href=""
-                            class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px] hover:border-black   border-transparent rounded-[50px] p-2 transition-all duration-200 ">Prix
-                            bas
-                        </a>
-
-                    </div>
-                    <div>
-                        <button onclick="window.location.href='{{ route('produit.create') }}'"
-                            class="text-[15px]  hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                            Ajouter une annonce
-                        </button>
-                    </div>
-                </div>
+ 
 
 
 
 
-            </div>
 
 
 
@@ -58,15 +51,26 @@
 
 
 
+    <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
 
- <div
-                    class="flex flex-col items-center justify-center gap-3 bg-white w-full h-70 rounded-md border-dashed border p-4">
-                    <p>Ilya pas des annonce , ajouter </p>
-                    <button
-                     onclick="window.location.href='{{ route('produit.create') }}'"   class="mx-auto bg-[#FF8E72] rounded-sm h-11 p-2 border cursor-pointer transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                        Ajouter une annonce
-                    </button>
+        @forelse ($userProduits as $produit)
+            {{-- Container for active listings --}}
+            <div class="mb-4 last:mb-0 w-full h-auto">
+                <x-mylistings :produit="$produit" />
+            </div>
+        @empty
+            {{-- Dedicated div for the empty state --}}
+            <div
+                class="flex flex-col items-center justify-center gap-4 bg-white w-full h-64 rounded-md border-2 border-dashed border-gray-300 p-8 text-center">
+                <p class="text-gray-600 font-medium">Il n'y a pas d'annonces actuellement.</p>
+
+                <button onclick="window.location.href='{{ route('produit.create') }}'"
+                    class="bg-[#FF8E72] rounded-sm h-11 px-6 border border-black cursor-pointer transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none">
+                    Ajouter une annonce
+                </button>
+            </div>
+        @endforelse
+    </div>
 
 
-                </div>
-            </x-layoutdash>
+</x-layoutdash>

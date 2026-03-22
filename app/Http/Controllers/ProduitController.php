@@ -15,6 +15,7 @@ class ProduitController extends Controller
     // 1. Fetch the products from your database
     $produits = Produit::all(); 
 
+
     // 2. Pass them to the view
     return view('home', compact('produits'));
 }

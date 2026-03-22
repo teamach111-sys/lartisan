@@ -12,6 +12,11 @@ Route::get('/', function () {
     return view('home', ['produits' => $produits]);
 })->name('home');
 
+
+Route::get('/message', function () {
+    return view('message');
+})->name('message');
+
 Route::get('/register', [AuthController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'store'])->middleware('guest');
 
