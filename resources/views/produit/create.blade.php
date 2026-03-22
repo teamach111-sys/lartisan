@@ -2,42 +2,31 @@
     <x-slot:title>
         Annonces
     </x-slot:title>
+        <x-slot:h1>
+            Mes Annonces
+        </x-slot:h1>
+        <x-slot:btnlocation>
+            {{ route('annonces') }}
+        </x-slot:btnlocation>
+        <x-slot:btnname>
+            Ajouter une annonce
+
+        </x-slot:btnname>
+
+        <x-slot:firstc>
+            Tous
+        </x-slot:firstc>
+        <x-slot:secondc>
+            Actifs
+        </x-slot:secondc>
+        <x-slot:mobbtnlocation>
+            {{ route('produit.create') }}
+        </x-slot:mobbtnlocation>
+        <x-slot:mobbtnname>
+            Ajouter une annonce
+        </x-slot:mobbtnname>
     <x-slot:topbar>
-<div class="pl-7 gap-2 flex flex-col pr-7">
-    <div class="flex justify-between">
-        <h1 class="text-[23px]">
-                    Mes annonces
-                 </h1>
-        <button
-                            class="text-[15px]  md:hidden  bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                            Ajouter une annonce
-                        </button>
 
-    </div>
-                
-                <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
-                    <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth ">
-                        <a href=""
-                            class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px]  rounded-[50px] p-2 transition-all duration-200  ">Nouvelles
-                            Annonces</a>
-                        <a href=""
-                            class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px] hover:border-black   border-transparent rounded-[50px] p-2 transition-all duration-200 ">Prix
-                            bas
-                        </a>
-
-                    </div>
-                    <div>
-                        <button
-                            class="text-[15px]  hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
-                            Ajouter une annonce
-                        </button>
-                    </div>
-                </div>
-
-
-
-
-            </div>
 
 
 

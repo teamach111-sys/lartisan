@@ -8,8 +8,8 @@ use App\Models\Produit;
 
 
 Route::get('/', function () {
-    $produits = Produit::all();
-    return view('home', ['produits' => $produits]);
+$produits = Produit::latest()->get();    
+return view('home', ['produits' => $produits]);
 })->name('home');
 
 

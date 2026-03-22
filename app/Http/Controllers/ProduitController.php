@@ -13,8 +13,7 @@ class ProduitController extends Controller
     public function index()
 {
     // 1. Fetch the products from your database
-    $produits = Produit::all(); 
-
+    $produits = Produit::latest()->get();
 
     // 2. Pass them to the view
     return view('home', compact('produits'));

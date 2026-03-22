@@ -206,7 +206,7 @@
                 {{ $topbar }}
             </div>
             <div class="bg-black h-[0.5px]"></div>
-            <main class="p-7">
+            <main class="p-7 h-[calc(100vh-180px)] overflow-hidden">
                 {{ $slot }}
             </main>
 
