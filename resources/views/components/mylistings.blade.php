@@ -6,7 +6,7 @@
                   ? $produit->images[0] 
                   : null;
 @endphp
-            <div class="product-card rounded-t-sm gap-2 rounded-b-sm bg-white border h-full grid grid-cols-1 w-auto overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-[4px_4px_0px_0px_#000000]">
+            <div class="product-card rounded-t-sm gap-2 rounded-b-sm bg-white border h-auto grid grid-cols-1 w-auto overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-[4px_4px_0px_0px_#000000]">
     <div class="w-full h-66 border-b">
         <img class="object-cover h-full w-full"
             src="{{ $firstImage ? asset('storage/' . $firstImage) : 'https://placehold.co/400x300?text=No+Image' }}"

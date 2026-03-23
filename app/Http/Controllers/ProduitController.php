@@ -10,6 +10,20 @@ use Illuminate\Support\Str;
 class ProduitController extends Controller
 {
 
+
+    public function show(Produit $produit)
+{
+    // Eager load the seller data to display their avatar/name on the product page.
+    $produit->load('vendeur');
+
+    // Retrieve other products from the same category (excluding the current one) to display as "Featured".
+    $relatedProducts = Produit::where('categorie_id', $produit->categorie_id)
+        ->where('id', '!=', $produit->id)
+        ->limit(4)
+        ->get();
+
+    return view('produit.show', compact('produit', 'relatedProducts'));
+}
     public function index()
 {
     // 1. Fetch the products from your database

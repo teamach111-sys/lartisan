@@ -52,7 +52,7 @@
 
 
     <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
-
+    
         @forelse ($userProduits as $produit)
             {{-- Container for active listings --}}
             <div class="mb-4 last:mb-0 w-full h-auto">

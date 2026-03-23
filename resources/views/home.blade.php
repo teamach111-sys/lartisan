@@ -437,7 +437,7 @@
         const cards = document.querySelectorAll(".product-card");
         const loadMoreBtn = document.getElementById("load-more");
 
-        let visibleCount = 4; // How many to show initially
+        let visibleCount = 12; // How many to show initially
 
         // 1. Initial Setup: Hide everything past the 9th card
         cards.forEach((card, index) => {
@@ -449,7 +449,7 @@
         // 2. Click Logic
         loadMoreBtn.addEventListener("click", () => {
           let newlyShown = 0;
-          const itemsToLoad = 4; // How many to add per click
+          const itemsToLoad = 12; // How many to add per click
 
           for (let i = visibleCount; i < cards.length; i++) {
             if (newlyShown < itemsToLoad) {

@@ -12,6 +12,18 @@ $produits = Produit::latest()->get();
 return view('home', ['produits' => $produits]);
 })->name('home');
 
+route::get('/produit/create', [ProduitController::class, 'create'])->name('produit.create')->middleware('auth');
+route::post('/produit/store', [ProduitController::class, 'store'])->name('produit.store')->middleware('auth');
+
+// Display the extensive product page using the unique slug for SEO-friendly URLs.
+Route::get('/produit/{produit:slug}', [ProduitController::class, 'show'])->name('produit.show');
+// Creates or finds a conversation between the currently logged-in user and the seller, then redirects to the messaging UI.
+Route::post('/produit/{produit}/contact', [MessageController::class, 'startConversation'])
+    ->name('produit.contact')
+    ->middleware('auth'); // Only logged-in users can initiate a chat.
+
+
+
 
 Route::get('/message', function () {
     return view('message');
@@ -28,7 +40,4 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post
 route::get('/annonces', [DashController::class, 'annonces'])->name('annonces')->middleware('auth');
 
 
-
-route::get('/produit/create', [ProduitController::class, 'create'])->name('produit.create')->middleware('auth');
-route::post('/produit/store', [ProduitController::class, 'store'])->name('produit.store')->middleware('auth');
 
