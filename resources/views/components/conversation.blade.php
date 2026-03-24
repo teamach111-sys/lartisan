@@ -31,7 +31,7 @@
     </svg>
 </div>
 
-<div class="p-4 h-[calc(100%-9.5rem)] border-b w-full overflow-y-auto bg-gray-50 flex flex-col gap-4">
+<div  x-data="messaging({{ auth()->id() }})" x-init="fetchConversations()" class="p-4 h-[calc(100%-9.5rem)] border-b w-full overflow-y-auto bg-gray-50 flex flex-col gap-4">
     @include('components.etranger')
 
     @include('components.authmessage')

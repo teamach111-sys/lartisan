@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\ProduitController;
 use App\Models\Produit;
+use App\Http\Controllers\MessageController;
 
 
 Route::get('/', function () {
@@ -18,16 +19,31 @@ route::post('/produit/store', [ProduitController::class, 'store'])->name('produi
 // Display the extensive product page using the unique slug for SEO-friendly URLs.
 Route::get('/produit/{produit:slug}', [ProduitController::class, 'show'])->name('produit.show');
 // Creates or finds a conversation between the currently logged-in user and the seller, then redirects to the messaging UI.
-Route::post('/produit/{produit}/contact', [MessageController::class, 'startConversation'])
+Route::post('/message/{produit}', [MessageController::class, 'startConversation'])
     ->name('produit.contact')
     ->middleware('auth'); // Only logged-in users can initiate a chat.
 
 
 
 
+
 Route::get('/message', function () {
-    return view('message');
-})->name('message');
+    return view('message', [
+        'auth_user' => auth()->user()
+    ]);
+})->name('message')->middleware('auth');
+Route::middleware('auth')->group(function () {
+
+    // 1. Fetch the master list of all conversations for the logged-in user to populate the left sidebar.
+    Route::get('/api/conversations', [MessageController::class, 'index']);
+    
+    // 2. Fetch the detailed historical array of messages for a single specific conversation.
+    Route::get('/api/conversations/{conversation}/messages', [MessageController::class, 'fetchMessages']);
+    
+    // 3. Send a new message into a specific conversation.
+    Route::post('/api/conversations/{conversation}/messages', [MessageController::class, 'sendMessage']);
+
+});
 
 Route::get('/register', [AuthController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'store'])->middleware('guest');

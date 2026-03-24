@@ -199,8 +199,8 @@
                 <div class="flex justify-between">
                     <h1 class="text-[23px]">
                         {{ $h1 }}
-                     </h1>
-                   
+                    </h1>
+
 
                 </div>
                 {{ $topbar }}
