@@ -2,8 +2,12 @@
 
 namespace App\Filament\Resources\Produits\Schemas;
 
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
@@ -13,32 +17,80 @@ class ProduitForm
     {
         return $schema
             ->components([
-                TextInput::make('vendeur_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('categorie_id')
-                    ->numeric(),
-                TextInput::make('titre')
-                    ->required(),
-                TextInput::make('slug')
-                    ->required(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                Toggle::make('telephone_visible')
-                    ->required(),
-                TextInput::make('prix')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('ville_produit')
-                    ->required(),
-                Textarea::make('images')
-                    ->columnSpanFull(),
-                TextInput::make('etat_produit')
-                    ->required()
-                    ->default('neuf'),
-                TextInput::make('etat_moderation')
-                    ->required()
-                    ->default('en_attente'),
+                Section::make('Détails du Produit')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('titre')
+                                    ->label('Titre du produit')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(255),
+                                Select::make('vendeur_id')
+                                    ->label('Vendeur')
+                                    ->relationship('vendeur', 'name')
+                                    ->required()
+                                    ->searchable()
+                                    ->preload(),
+                                Select::make('categorie_id')
+                                    ->label('Catégorie')
+                                    ->relationship('categorie', 'nom')
+                                    ->searchable()
+                                    ->preload(),
+                                TextInput::make('prix')
+                                    ->label('Prix')
+                                    ->numeric()
+                                    ->prefix('MAD')
+                                    ->required(),
+                                TextInput::make('ville_produit')
+                                    ->label('Ville')
+                                    ->required()
+                                    ->default('Marrakech'),
+                            ]),
+                        RichEditor::make('description')
+                            ->label('Description')
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Images et État')
+                    ->schema([
+                        FileUpload::make('images')
+                            ->label('Images du produit')
+                            ->multiple()
+                            ->disk('public')
+                            ->directory('produits')
+                            ->reorderable()
+                            ->image()
+                            ->columnSpanFull(),
+                        Grid::make(2)
+                            ->schema([
+                                Select::make('etat_produit')
+                                    ->label('État du produit')
+                                    ->options([
+                                        'neuf' => 'Neuf',
+                                        'occasion_bon' => 'Occasion (Bon état)',
+                                        'occasion_moyen' => 'Occasion (État moyen)',
+                                    ])
+                                    ->required()
+                                    ->default('neuf'),
+                                Select::make('etat_moderation')
+                                    ->label('Statut Modération')
+                                    ->options([
+                                        'en_attente' => 'En attente',
+                                        'valide' => 'Validé',
+                                        'rejete' => 'Rejeté',
+                                    ])
+                                    ->required()
+                                    ->default('en_attente'),
+                                Toggle::make('telephone_visible')
+                                    ->label('Afficher le téléphone')
+                                    ->required(),
+                            ]),
+                    ]),
             ]);
     }
 }

@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class SignalementProduitsTable
@@ -15,27 +16,34 @@ class SignalementProduitsTable
     {
         return $table
             ->columns([
-                TextColumn::make('produit_id')
-                    ->numeric()
+                TextColumn::make('produit.titre')
+                    ->label('Produit')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('utilisateur_id')
-                    ->numeric()
+                TextColumn::make('utilisateur.name')
+                    ->label('Signalé par')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('type_signalement')
+                    ->label('Type')
+                    ->badge()
                     ->searchable(),
                 IconColumn::make('est_traite')
-                    ->boolean(),
+                    ->label('Traité')
+                    ->boolean()
+                    ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Signalé le')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('est_traite')
+                    ->label('Statut traitement')
+                    ->options([
+                        '1' => 'Traité',
+                        '0' => 'Non traité',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

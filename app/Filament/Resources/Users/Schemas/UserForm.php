@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -12,29 +16,61 @@ class UserForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('email')
-                    ->label('Email address')
-                    ->email()
-                    ->required(),
-                TextInput::make('password')
-                    ->password()
-                    ->required(),
-                TextInput::make('pfp'),
-                TextInput::make('telephone')
-                    ->tel(),
-                TextInput::make('ville_utilisateur')
-                    ->required()
-                    ->default('Marrakech'),
-                TextInput::make('statut_compte')
-                    ->required()
-                    ->default('actif'),
-                TextInput::make('role')
-                    ->required()
-                    ->default('utilisateur'),
-                DateTimePicker::make('last_seen_at'),
-                DateTimePicker::make('email_verified_at'),
+                Grid::make(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nom complet')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label('Adresse email')
+                            ->email()
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255),
+                        TextInput::make('telephone')
+                            ->label('Téléphone')
+                            ->tel()
+                            ->maxLength(20),
+                        TextInput::make('ville_utilisateur')
+                            ->label('Ville')
+                            ->required()
+                            ->default('Marrakech'),
+                        TextInput::make('password')
+                            ->label('Mot de passe')
+                            ->password()
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->maxLength(255),
+                        Select::make('role')
+                            ->label('Rôle')
+                            ->options([
+                                'admin' => 'Administrateur',
+                                'utilisateur' => 'Utilisateur',
+                            ])
+                            ->required()
+                            ->default('utilisateur'),
+                        Select::make('statut_compte')
+                            ->label('Statut du compte')
+                            ->options([
+                                'actif' => 'Actif',
+                                'suspendu' => 'Suspendu',
+                                'banni' => 'Banni',
+                            ])
+                            ->required()
+                            ->default('actif'),
+                        FileUpload::make('pfp')
+                            ->label('Photo de profil')
+                            ->image()
+                            ->disk('public')
+                            ->directory('user-pfps')
+                            ->avatar(),
+                        DateTimePicker::make('last_seen_at')
+                            ->label('Dernière connexion')
+                            ->disabled(),
+                        DateTimePicker::make('email_verified_at')
+                            ->label('Email vérifié le'),
+                    ]),
             ]);
     }
 }
