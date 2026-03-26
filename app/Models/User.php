@@ -24,7 +24,8 @@ class User extends Authenticatable
     'pfp', 
     'telephone', 
     'telephone_visible', 
-    'ville_utilisateur'
+    'ville_utilisateur',
+    'last_seen_at'
 ];
 
 // Relations
@@ -56,6 +57,7 @@ public function favoris() {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_seen_at' => 'datetime',
         ];
     }
 }

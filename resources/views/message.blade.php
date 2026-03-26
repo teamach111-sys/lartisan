@@ -7,128 +7,121 @@
         Mes Messages
     </x-slot:h1>
     <x-slot:topbar>
+        <style>
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
 
-    </x-slot:topbar>
-    <div x-data="messaging({{ auth()->id() }})" x-init="fetchConversations()" class="flex h-full overflow-hidden">
-        {{-- Sidebar --}}
-        <div :class="currentConversation ? 'hidden md:flex' : 'flex'" 
-             class="w-full md:w-1/3 bg-white h-full flex flex-col border rounded-lg overflow-y-auto shadow-md">
-            <div class="p-4 h-18 border-b relative">
-                <svg data-slot="icon" fill="currentColor" class="absolute top-6 left-6" viewBox="0 0 16 16" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M5.94 8.06a1.5 1.5 0 1 1 2.12-2.12 1.5 1.5 0 0 1-2.12 2.12Z"></path>
-                    <path clip-rule="evenodd" fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM4.879 4.879a3 3 0 0 0 3.645 4.706L9.72 10.78a.75.75 0 0 0 1.061-1.06L9.585 8.524A3.001 3.001 0 0 0 4.879 4.88Z"></path>
-                </svg>
-                <input class="pl-9 w-full h-full p-2 border rounded-[50px]" placeholder="Rechercher..." type="text">
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        </style>
+        <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
+            <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth">
+                <a href=""
+                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] rounded-[50px] p-2 transition-all duration-200">Tous</a>
+                <a href=""
+                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] hover:border-black border-transparent rounded-[50px] p-2 transition-all duration-200">Non lus</a>
             </div>
+            <div>
+                <button onclick="window.location.reload()"
+                    class="text-[15px] hidden md:block mx-auto bg-white rounded-sm h-auto p-2 border cursor-pointer transition-all duration-200 hover:bg-[#FF8E72] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                    Actualiser
+                </button>
+            </div>
+        </div>
+    </x-slot:topbar>
+    <div x-data="messaging({{ auth()->id() }})" class="flex flex-col h-full overflow-hidden gap-6">
+        {{-- Horizontal Contacts List --}}
+        <div class="w-full" :class="currentConversation ? 'hidden md:block' : 'block'">
+            <div class="flex items-center gap-6 mb-4 px-2">
+                <h3 class="text-xs font-bold uppercase opacity-50 tracking-widest">Contacts</h3>
+                <div class="relative w-48 group">
+                    <input type="text" x-model="searchQuery" placeholder="Rechercher..."
+                        class="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-100 rounded-full focus:outline-none focus:border-[#FF8E72] focus:bg-white transition-all text-gray-800 placeholder:opacity-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="size-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#FF8E72] transition-colors">
+                        <path fill-rule="evenodd"
+                            d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                <template x-for="conv in filteredConversations" :key="conv.id">
+                    <div @click="selectConversation(conv)"
+                        :class="currentConversation?.id === conv.id ? 'border-[#FF8E72] bg-white ring-1 ring-[#FF8E72]' :
+                            'bg-white'"
+                        class="flex items-center gap-4 p-3 rounded-sm border cursor-pointer transition-all min-w-[220px] relative group shadow-sm hover:shadow-md">
 
-            <div class="overflow-y-auto flex-1">
-                <template x-for="conv in conversations" :key="conv.id">
-                    <div @click="selectConversation(conv)" 
-                         :class="currentConversation?.id === conv.id ? 'bg-gray-100' : 'hover:bg-gray-50'"
-                         class="py-2 pl-4 h-18 border-b flex gap-3 justify-between items-center cursor-pointer transition-colors">
-                        <div class="flex gap-4 items-center">
-                            <img class="h-12 w-12 object-cover rounded-full"
-                                :src="conv.partner_pfp"
-                                alt="">
-                            <div>
-                                <div class="flex gap-1 flex-col sm:flex-row sm:gap-2 items-center">
-                                    <h2 class="font-bold text-sm" x-text="conv.partner_name"></h2>
-                                    <p class="text-[10px] uppercase opacity-60 font-bold line-clamp-1 " x-text="'Pour: ' + conv.produit_nom"></p>
-                                </div>
-                                <p class="text-xs opacity-70 truncate w-32 sm:w-40" x-text="conv.latest_message"></p>
-                            </div>
+                        <div class="relative">
+                            <img class="h-12 w-12 object-cover rounded-full border border-gray-100 shadow-sm"
+                                :src="conv.partner_pfp" alt="">
+
+                            {{-- Status Dot --}}
+                            <span :class="conv.is_online ? 'bg-green-500' : 'bg-gray-400'"
+                                class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border border-white"></span>
+
+                            <template x-if="conv.unread_count > 0">
+                                <span
+                                    class="absolute -top-1 -right-1 bg-[#FF8E72] text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border border-white"
+                                    x-text="conv.unread_count"></span>
+                            </template>
                         </div>
 
-                        <div class="flex flex-col items-center p-4 gap-2">
-                            <p class="text-[10px] font-bold" x-text="conv.latest_time"></p>
-                            <template x-if="conv.unread_count > 0">
-                                <p class="bg-[#FF8E72] rounded-full w-5 h-5 text-white text-[10px] flex items-center justify-center font-bold" x-text="conv.unread_count"></p>
-                            </template>
+                        <div class="flex-1 overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <h2 class="font-bold text-sm truncate"
+                                    :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : 'text-gray-800'"
+                                    x-text="conv.partner_name"></h2>
+                            </div>
+                            <p class="text-[10px] uppercase opacity-60 font-bold truncate" x-text="conv.produit_nom">
+                            </p>
+                            <p class="text-[10px] opacity-40 truncate" x-text="conv.latest_time"></p>
                         </div>
                     </div>
                 </template>
             </div>
         </div>
 
-        {{-- Conversation area --}}
-        <div :class="currentConversation ? 'flex' : 'hidden md:flex'" 
-             class="w-full md:w-2/3 bg-white h-full flex flex-col md:ml-4 rounded-lg border overflow-hidden shadow-md relative">
+        {{-- Desktop Conversation area (Visible only on MD+) --}}
+        <div class="hidden md:flex flex-1 bg-white flex-col border border-gray-200 shadow-sm relative overflow-hidden rounded-sm">
             <template x-if="currentConversation">
                 <div class="h-full flex flex-col">
-                    {{-- Header --}}
-                    <div class="p-4 h-18 border-b flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <img class="h-10 w-10 md:h-12 md:w-12 object-cover rounded-full"
-                                :src="currentConversation.partner_pfp"
-                                alt="">
-                            <div>
-                                <div class="flex flex-col">
-                                    <h2 class="font-bold text-sm md:text-base" x-text="currentConversation.partner_name"></h2>
-                                    <p class="line-clamp-1 text-[10px] uppercase opacity-60 font-bold" x-text="'Pour: ' + currentConversation.produit_nom"></p>
-                                </div>
-                                <p class="text-green-500 text-[10px] font-bold uppercase tracking-tighter">En Ligne</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            {{-- Close Button for Mobile (Top Right) --}}
-                            <button @click="currentConversation = null" class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                                <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    {{-- Messages container --}}
-                    <div id="messages-container" class="p-4 flex-1 border-b w-full overflow-y-auto bg-gray-50 flex flex-col gap-4">
-                        <template x-for="msg in messages" :key="msg.id">
-                            <div class="flex items-end gap-2" :class="msg.expediteur_id == {{ auth()->id() }} ? 'flex-row-reverse' : 'flex-row'">
-                                {{-- PFP --}}
-                                <img class="h-8 w-8 object-cover rounded-full"
-                                     :src="msg.expediteur_id == {{ auth()->id() }} ? currentConversation.auth_pfp : currentConversation.partner_pfp" 
-                                     alt="">
-
-                                <div class="max-w-[70%] break-words p-3 shadow-sm border"
-                                     :class="msg.expediteur_id == {{ auth()->id() }} ? 'bg-[#FF8E72] text-white rounded-t-lg rounded-bl-lg border-black' : 'bg-white text-gray-800 rounded-t-lg rounded-br-lg'">
-                                    <p class="text-sm" x-text="msg.contenu"></p>
-                                    <p class="text-[10px] mt-1 opacity-60 text-right font-bold" x-text="msg.time"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-
-                    {{-- Input area --}}
-                    <div class="p-4 relative flex items-center h-[5rem]">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                class="cursor-pointer size-6 absolute top-7 left-6 opacity-60 hover:opacity-100 transition-opacity">
-                            <path fill-rule="evenodd" d="M18.97 3.659a2.25 2.25 0 0 0-3.182 0l-10.94 10.94a3.75 3.75 0 1 0 5.304 5.303l7.693-7.693a.75.75 0 0 1 1.06 1.06l-7.693 7.693a5.25 5.25 0 1 1-7.424-7.424l10.939-10.94a3.75 3.75 0 1 1 5.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 0 1 5.91 15.66l7.81-7.81a.75.75 0 0 1 1.061 1.06l-7.81 7.81a.75.75 0 0 0 1.054 1.068L18.97 6.84a2.25 2.25 0 0 0 0-3.182Z" clip-rule="evenodd" />
-                        </svg>
-                        <button @click="sendMessage"
-                                class="bg-[#FF8E72] rounded-full w-[3rem] h-[3rem] text-white flex justify-center items-center cursor-pointer absolute top-4 right-5 transition-all duration-200 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[4px_4px_0px_0px_#000000] active:translate-y-0 active:translate-x-0 active:shadow-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 ">
-                                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-                            </svg>
-                        </button>
-                        <input x-model="newMessage" @keyup.enter="sendMessage"
-                               class="pl-9 w-[calc(100%-4rem)] h-full p-2 border rounded-[50px] focus:outline-none" placeholder="Message" type="text">
-                    </div>
+                    @include('partials.chat-content')
                 </div>
             </template>
             <template x-if="!currentConversation">
-                <div class="h-full flex flex-col items-center justify-center text-center p-8 bg-gray-50 opacity-60">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 mx-auto mb-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
-                    </svg>
-                    <h3 class="text-xl font-bold uppercase tracking-tighter">Sélectionnez une conversation</h3>
-                    <p class="text-sm font-medium">Commencez l'aventure artisanale dès maintenant !</p>
+                <div class="h-full flex flex-col items-center justify-center text-center p-8 bg-gray-50/50">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-4">
+                        <div class="bg-[#FF8E72]/10 p-5 rounded-full text-[#FF8E72]">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase tracking-tighter text-gray-800">Sélectionnez une conversation</h3>
+                        <p class="text-sm font-medium text-gray-500 max-w-[250px]">Cliquez sur un artisan en haut pour commencer l'aventure !</p>
+                    </div>
                 </div>
             </template>
         </div>
+
+        {{-- Mobile Full Screen Chat (Teleported to Body) --}}
+        <template x-teleport="body">
+            <div x-show="currentConversation && isMobile" 
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="translate-y-full"
+                 x-transition:enter-end="translate-y-0"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="translate-y-0"
+                 x-transition:leave-end="translate-y-full"
+                 class="fixed inset-0 z-[10000] bg-white flex flex-col md:hidden overflow-hidden h-full w-full">
+                <div class="flex flex-col flex-1 h-full w-full bg-white">
+                    @include('partials.chat-content')
+                </div>
+            </div>
+        </template>
     </div>
     <script>
         document.addEventListener('alpine:init', () => {
@@ -137,7 +130,25 @@
                 messages: [], // State array of chats for the selected contact
                 currentConversation: null, // The currently active chat
                 newMessage: '',
+                searchQuery: '',
                 authUser: @json($auth_user),
+                isMobile: window.innerWidth < 768,
+
+                init() {
+                    window.addEventListener('resize', () => {
+                        this.isMobile = window.innerWidth < 768;
+                    });
+                    this.fetchConversations();
+                },
+
+                get filteredConversations() {
+                    if (!this.searchQuery.trim()) return this.conversations;
+                    const query = this.searchQuery.toLowerCase();
+                    return this.conversations.filter(c =>
+                        c.partner_name.toLowerCase().includes(query) ||
+                        c.produit_nom.toLowerCase().includes(query)
+                    );
+                },
 
                 // Fires immediately when the page loads
                 async fetchConversations() {
@@ -157,8 +168,22 @@
 
                 // Triggered by Alpine `@click="selectConversation(conversation)"` on the sidebar
                 selectConversation(conversation) {
+                    if (this.currentConversation) {
+                        window.Echo.leave(`messenger.${this.currentConversation.id}`);
+                    }
+
                     this.currentConversation = conversation;
                     this.messages = []; // Visually wipe the screen clean for a UI transition effect
+
+                    // Real-time listener
+                    window.Echo.private(`messenger.${conversation.id}`)
+                        .listen('.message.sent', (e) => {
+                            if (this.currentConversation && e.id && !this.messages.find(m => m
+                                    .id === e.id)) {
+                                this.messages.push(e);
+                                this.scrollToBottom();
+                            }
+                        });
 
                     // Optimistic UI update: pretend the messages are read immediately so the notification badge clears instantly
                     conversation.unread_count = 0;
@@ -170,7 +195,8 @@
                 // Backend pull 
                 async fetchMessages(conversationId) {
                     const res = await axios.get(`/api/conversations/${conversationId}/messages`);
-                    this.messages = res.data; // Alpine automatically detects array changes and draws the bubbles via HTML `x-for` tracking
+                    this.messages = res
+                    .data; // Alpine automatically detects array changes and draws the bubbles via HTML `x-for` tracking
 
                     // Optional: force scroll to the bottom of the container
                     this.scrollToBottom();
@@ -187,15 +213,19 @@
                         id: Date.now(),
                         expediteur_id: myId,
                         contenu: content,
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        time: new Date().toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
                     };
                     this.messages.push(tempMessage);
                     this.scrollToBottom();
 
                     try {
-                        const res = await axios.post(`/api/conversations/${this.currentConversation.id}/messages`, {
-                            contenu: content
-                        });
+                        const res = await axios.post(
+                            `/api/conversations/${this.currentConversation.id}/messages`, {
+                                contenu: content
+                            });
                     } catch (err) {
                         console.error(err);
                     }
@@ -203,8 +233,10 @@
 
                 scrollToBottom() {
                     this.$nextTick(() => {
-                        const container = document.getElementById('messages-container');
-                        if (container) container.scrollTop = container.scrollHeight;
+                        const containers = document.querySelectorAll('.messages-container');
+                        containers.forEach(container => {
+                            if (container) container.scrollTop = container.scrollHeight;
+                        });
                     });
                 }
             }));

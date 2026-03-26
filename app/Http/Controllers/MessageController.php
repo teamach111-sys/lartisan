@@ -41,6 +41,9 @@ public function sendMessage(Request $request, Conversation $conversation)
         'contenu' => $request->contenu,
     ]);
 
+    broadcast(new \App\Events\MessageSent($message))->toOthers();
+    \Illuminate\Support\Facades\Log::info('Message broadcasting triggered', ['id' => $message->id]);
+
     return response()->json([
         'id' => $message->id,
         'expediteur_id' => $message->expediteur_id,
@@ -87,7 +90,8 @@ public function index()
             'auth_pfp' => auth()->user()->pfp ? asset('storage/' . auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
             'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
             'latest_time' => $latestMessage ? $latestMessage->created_at->format('H:i') : '',
-            'unread_count' => $unreadCount
+            'unread_count' => $unreadCount,
+            'is_online' => $partner && $partner->last_seen_at && $partner->last_seen_at->gt(now()->subMinutes(5))
         ];
     });
 
