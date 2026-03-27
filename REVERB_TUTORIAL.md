@@ -164,11 +164,18 @@ selectConversation(conversation) {
 
 ---
 
-## 🚀 Running the Project
+---
 
-Open **three** terminal windows:
-1. `php artisan serve` (Web server)
-2. `npm run dev` (Assets)
-3. `php artisan reverb:start` (WebSocket server)
+## ⚡ Automation: Single-Command Setup
 
-**Done! You now have a custom, real-time messaging system ready.**
+Instead of opening three terminals, you can now start everything in one window:
+
+```bash
+npm run dev:all
+```
+
+This command uses `concurrently` to launch:
+- `php artisan serve` (port 8000)
+- `npm run dev` (Vite)
+- `php artisan reverb:start` (port 8080)
+- It also runs `npm run build` once before starting the servers.

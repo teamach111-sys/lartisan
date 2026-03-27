@@ -32,77 +32,67 @@
             </div>
         </div>
     </x-slot:topbar>
-    <div x-data="messaging({{ auth()->id() }})" class="flex flex-col h-full overflow-hidden gap-6">
-        {{-- Horizontal Contacts List --}}
-        <div class="w-full" :class="currentConversation ? 'hidden md:block' : 'block'">
-            <div class="flex items-center gap-6 mb-4 px-2">
-                <h3 class="text-xs font-bold uppercase opacity-50 tracking-widest">Contacts</h3>
-                <div class="relative w-48 group">
+    <div x-data="messaging({{ auth()->id() }})" class="flex flex-col md:flex-row h-full overflow-hidden gap-0 md:gap-10">
+        {{-- Contacts Sidebar --}}
+        <div class="w-full md:w-[320px] lg:w-[380px] flex flex-col flex-shrink-0" :class="currentConversation ? 'hidden md:flex' : 'flex'">
+            <div class="flex items-center justify-between mb-6 px-1">
+                <h3 class="text-xs font-black uppercase tracking-widest text-black opacity-30">Conversations</h3>
+                <div class="relative w-52 group">
                     <input type="text" x-model="searchQuery" placeholder="Rechercher..."
-                        class="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-100 rounded-full focus:outline-none focus:border-[#FF8E72] focus:bg-white transition-all text-gray-800 placeholder:opacity-50">
+                        class="w-full pl-9 pr-4 py-2 text-sm bg-white border border-black rounded-sm focus:outline-none focus:bg-[#FF8E72]/5 transition-all text-black placeholder:text-black/20 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                        class="size-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#FF8E72] transition-colors">
+                        class="size-4 absolute left-3 top-1/2 -translate-y-1/2 opacity-30">
                         <path fill-rule="evenodd"
                             d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
                             clip-rule="evenodd" />
                     </svg>
                 </div>
             </div>
-            <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+
+            <div class="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto pb-4 md:pb-0 pl-1 md:pl-2 pt-1 md:pt-2 md:pr-2 scrollbar-hide flex-1">
                 <template x-for="conv in filteredConversations" :key="conv.id">
                     <div @click="selectConversation(conv)"
-                        :class="currentConversation?.id === conv.id ? 'border-[#FF8E72] bg-white ring-1 ring-[#FF8E72]' :
-                            'bg-white'"
-                        class="flex items-center gap-4 p-3 rounded-sm border cursor-pointer transition-all min-w-[220px] relative group shadow-sm hover:shadow-md">
+                        :class="currentConversation?.id === conv.id ? 'bg-white border-[#FF8E72] shadow-[6px_6px_0px_0px_#000000] -translate-x-1 -translate-y-1' :
+                            'bg-white border-black hover:shadow-[4px_4px_0px_0px_#000000] hover:-translate-x-0.5 hover:-translate-y-0.5'"
+                        class="flex items-center gap-4 p-4 rounded-sm border border-black cursor-pointer transition-all min-w-[280px] md:min-w-0 relative group">
 
-                        <div class="relative">
-                            <img class="h-12 w-12 object-cover rounded-full border border-gray-100 shadow-sm"
+                        <div class="relative flex-shrink-0">
+                            <img class="h-14 w-14 md:h-16 md:w-16 object-cover rounded-full border border-black/5"
                                 :src="conv.partner_pfp" alt="">
 
                             {{-- Status Dot --}}
-                            <span :class="conv.is_online ? 'bg-green-500' : 'bg-gray-400'"
-                                class="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border border-white"></span>
-
-                            <template x-if="conv.unread_count > 0">
-                                <span
-                                    class="absolute -top-1 -right-1 bg-[#FF8E72] text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border border-white"
-                                    x-text="conv.unread_count"></span>
-                            </template>
+                            <div :class="conv.is_online ? 'bg-green-500' : 'bg-gray-300'"
+                                class="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white shadow-sm"></div>
                         </div>
 
                         <div class="flex-1 overflow-hidden">
-                            <div class="flex items-center justify-between">
-                                <h2 class="font-bold text-sm truncate"
-                                    :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : 'text-gray-800'"
-                                    x-text="conv.partner_name"></h2>
+                            <div class="flex items-center justify-between mb-0.5">
+                                <h2 class="font-bold text-base truncate text-black" :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : ''" x-text="conv.partner_name"></h2>
+                                <span class="text-[10px] font-medium opacity-30 whitespace-nowrap ml-2" x-text="conv.latest_time"></span>
                             </div>
-                            <p class="text-[10px] uppercase opacity-60 font-bold truncate" x-text="conv.produit_nom">
-                            </p>
-                            <p class="text-[10px] opacity-40 truncate" x-text="conv.latest_time"></p>
+                            <p class="text-[10px] font-black uppercase text-black/40 truncate mb-1" x-text="conv.produit_nom"></p>
+                            <p class="text-xs text-gray-400 truncate font-medium leading-none" x-text="conv.latest_message || 'Démarrer la discussion'"></p>
                         </div>
+                        
+                        <template x-if="conv.unread_count > 0">
+                            <div class="absolute -top-2 -right-2 bg-[#FF8E72] text-white text-[10px] font-black h-6 w-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm z-10"
+                                x-text="conv.unread_count"></div>
+                        </template>
                     </div>
                 </template>
             </div>
         </div>
 
-        {{-- Desktop Conversation area (Visible only on MD+) --}}
-        <div class="hidden md:flex flex-1 bg-white flex-col border border-gray-200 shadow-sm relative overflow-hidden rounded-sm">
+        {{-- Desktop Conversation area --}}
+        <div class="hidden md:flex flex-1 bg-white flex-col border border-black/10 relative overflow-hidden rounded-sm">
             <template x-if="currentConversation">
                 <div class="h-full flex flex-col">
                     @include('partials.chat-content')
                 </div>
             </template>
             <template x-if="!currentConversation">
-                <div class="h-full flex flex-col items-center justify-center text-center p-8 bg-gray-50/50">
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center gap-4">
-                        <div class="bg-[#FF8E72]/10 p-5 rounded-full text-[#FF8E72]">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-12">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold uppercase tracking-tighter text-gray-800">Sélectionnez une conversation</h3>
-                        <p class="text-sm font-medium text-gray-500 max-w-[250px]">Cliquez sur un artisan en haut pour commencer l'aventure !</p>
-                    </div>
+                <div class="h-full flex flex-col items-center justify-center text-center p-12 bg-gray-50/20">
+                    <p class="text-sm font-black text-black/20 uppercase tracking-[0.2em]">Cliquez sur un artisan à gauche pour démarrer la discussion !</p>
                 </div>
             </template>
         </div>

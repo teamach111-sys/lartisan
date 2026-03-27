@@ -13,9 +13,9 @@ class StatsOverview extends BaseWidget
 {
     protected function getStats(): array
     {
-        $newUsersToday = User::whereDate('created_at', '=', Carbon::today())->count();
-        $totalProduits = Produit::count();
-        $pendingReports = SignalementProduit::where('est_traite', '=', false)->count();
+        $newUsersToday = User::whereDate('created_at', '=', Carbon::today(), 'and')->count('*');
+        $totalProduits = Produit::count('*');
+        $pendingReports = SignalementProduit::where('est_traite', '=', false, 'and')->count('*');
 
         return [
             Stat::make('Nouveaux Utilisateurs (Aujourd\'hui)', $newUsersToday)
