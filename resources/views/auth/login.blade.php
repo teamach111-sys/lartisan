@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription</title>
+    <title>Connexion - L'Artisan</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         @font-face {
@@ -20,71 +20,71 @@
     </style>
 </head>
 
-<body class="bg-[#f4f4f0]">
-    <main>
-        <div class="flex justify-between">
-            <div class="flex flex-col w-full">
-                <div class="flex  justify-between w-full px-3">
-                    <div class="">
-                        <img class="h-25 mt-2" src="{{ asset('imgs/logo.svg') }}" alt="">
-
+<body class="bg-[#f4f4f0] min-h-screen flex justify-center sm:items-center p-2 sm:p-4">
+    <main class="w-full max-w-6xl">
+        <div class="flex flex-col lg:flex-row bg-[#f4f4f0] overflow-hidden">
+            <div class="flex flex-col w-full lg:w-1/2 p-4 sm:p-8 md:p-12 pt-6">
+                <div class="flex justify-between items-start w-full mb-6 sm:mb-10">
+                    <div class="flex flex-col gap-1">
+                        <a href="{{ url('/') }}">
+                            <img class="h-10 sm:h-16" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+                        </a>
+                        <p class="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Ravi de vous revoir !</p>
                     </div>
-                    <a class="mt-3" href="{{ route('register') }}">Inscription</a>
-
-
-                </div>
-                <div>
-                    <p class="pl-9 border-b pb-2 text-[26px]">Connexion</p>
-
+                    <a class="font-bold border-b border-black hover:text-[#fb663f] hover:border-[#fb663f] transition-colors text-sm sm:text-base mt-2" href="{{ route('register') }}">Inscription</a>
                 </div>
 
-                <form action="{{ route('login') }}" method="POST" class="flex flex-col lg:p-13 xl:p-18 p-7 pt-10 xl:pt-26 gap-6">
-                    @csrf
-                     @if ($errors->any())
-                        <div class="col-span-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                            @foreach ($errors->all() as $error)
-                                <p>{{ $error }}</p>
-                            @endforeach
-                        </div>
-                    @endif
-                    <div class="flex flex-col">
-                        <label class="text-[17px]" for="email">Email</label>
-                        <input
-                            class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]"
-                            type="email" id="email" name="email">
+                <div class="bg-white border border-black p-6 sm:p-8 rounded-sm transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000]">
+                    <h1 class="text-2xl sm:text-3xl font-black mb-6 sm:mb-8 border-b border-black pb-4 uppercase tracking-tight">Connexion</h1>
 
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="text-[17px]" for="password">Mot de passe</label>
-                        <input
-                            class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px]"
-                            type="password" id="password" name="password">
-                        <div class="flex gap-1 justify-between ">
-                            <div>
-                                <input class="" type="checkbox" id="remember" name="remember" value="1">
-
-                                <label class="text-[17px]" for="remember">Se souvenir de moi</label>
-
-
+                    <form action="{{ route('login') }}" method="POST" class="space-y-4 sm:space-y-6">
+                        @csrf
+                        @if ($errors->any())
+                            <div class="bg-red-100 border border-red-500 text-red-700 px-4 py-3 rounded-sm mb-6 font-bold text-sm">
+                                @foreach ($errors->all() as $error)
+                                    <p class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                                        </svg>
+                                        {{ $error }}
+                                    </p>
+                                @endforeach
                             </div>
-                            <a href="">Mot de passe oublié?</a>
+                        @endif
 
+                        <div class="flex flex-col gap-1 sm:gap-2">
+                            <label class="font-bold text-xs sm:text-sm uppercase tracking-wider" for="email">Email</label>
+                            <input name="email" id="email" type="email" value="{{ old('email') }}" required
+                                   class="focus:shadow-[0_0_0_3px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 sm:h-14 px-4 font-bold transition-all hover:bg-gray-50"
+                                   placeholder="artisan@exemple.com">
                         </div>
 
-                    </div>
+                        <div class="flex flex-col gap-1 sm:gap-2">
+                            <div class="flex justify-between items-center">
+                                <label class="font-bold text-xs sm:text-sm uppercase tracking-wider" for="password">Mot de passe</label>
+                                <a href="{{ route('password.request') }}" class="text-[10px] sm:text-xs font-bold underline hover:text-[#fb663f]">Oublié ?</a>
+                            </div>
+                            <input name="password" id="password" type="password" required
+                                   class="focus:shadow-[0_0_0_3px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 sm:h-14 px-4 font-bold transition-all hover:bg-gray-50">
+                        </div>
 
+                        <div class="flex items-center gap-3">
+                            <input class="w-4 h-4 sm:w-5 sm:h-5 border border-black rounded-sm checked:bg-[#fb663f] cursor-pointer" type="checkbox" id="remember" name="remember" value="1">
+                            <label class="font-bold text-xs sm:text-sm cursor-pointer" for="remember">Se souvenir de moi</label>
+                        </div>
 
-                    <BUTTON
-                        class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm">Connexion</BUTTON>
-                </form>
-
-
-
+                        <button type="submit"
+                                class="w-full h-12 sm:h-14 bg-black text-white border border-black rounded-sm font-black uppercase tracking-widest transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none cursor-pointer mt-2 sm:mt-4">
+                            Se connecter
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="hidden lg:block">
-                <img class="border-l object-cover min-w-192 h-screen" src="{{ asset('storage/login2.svg') }}" alt="">
-            </div>
 
+            <div class="hidden lg:block lg:w-1/2 relative">
+                <div class="absolute inset-0 bg-black/5 z-10"></div>
+                <img class="w-full h-full object-cover border-l border-black" src="{{ asset('storage/login2.svg') }}" alt="Craftsman working">
+            </div>
         </div>
     </main>
 </body>

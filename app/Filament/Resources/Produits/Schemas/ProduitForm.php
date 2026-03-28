@@ -65,6 +65,7 @@ class ProduitForm
                             ->directory('produits')
                             ->reorderable()
                             ->image()
+                            ->panelLayout('grid')
                             ->columnSpanFull(),
                         Grid::make(2)
                             ->schema([

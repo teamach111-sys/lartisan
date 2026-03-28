@@ -65,7 +65,7 @@
 {{-- Input area --}}
 <div class="p-6 md:p-8 bg-white border-t border-black/5">
     <div class="relative flex items-center gap-4">
-        <div class="flex-1 relative group">
+        <div class="flex-1 relative group flex items-center">
             <textarea x-model="newMessage" @keydown.enter.prevent="sendMessage"
                 class="w-full pl-5 pr-5 py-4 bg-gray-50 border border-black rounded-sm focus:outline-none focus:bg-white focus:shadow-[4px_4px_0px_0px_#000000] transition-all font-bold text-base placeholder:text-black/10 resize-none h-16"
                 placeholder="Votre message ici..."></textarea>

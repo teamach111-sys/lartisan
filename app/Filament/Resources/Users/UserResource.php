@@ -21,6 +21,12 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $navigationLabel = 'Utilisateurs';
+
+    protected static ?string $pluralLabel = 'Utilisateurs';
+
+    protected static ?string $modelLabel = 'Utilisateur';
+
     protected static string|UnitEnum|null $navigationGroup = 'Système';
 
     protected static ?string $recordTitleAttribute = 'name';

@@ -55,43 +55,52 @@ public function sendMessage(Request $request, Conversation $conversation)
 public function index()
 {
     $userId = auth()->id();
-    
-    // Execute a massive relationship map fetching the messages ordered by timing.
-    $conversations = Conversation::with(['produit.vendeur', 'acheteur', 'messages' => function($q) {
+
+    // Buyer: always sees their own conversations (they initiated them).
+    $buyerConversations = Conversation::with(['produit.vendeur', 'acheteur', 'messages' => function($q) {
         $q->orderBy('created_at', 'desc');
     }])
     ->where('acheteur_id', $userId)
-    ->orWhereHas('produit', function ($query) use ($userId) {
+    ->get();
+
+    // Seller: only sees conversations where at least one message has been sent.
+    $sellerConversations = Conversation::with(['produit.vendeur', 'acheteur', 'messages' => function($q) {
+        $q->orderBy('created_at', 'desc');
+    }])
+    ->whereHas('produit', function ($query) use ($userId) {
         $query->where('vendeur_id', $userId);
     })
-    ->get()
+    ->where('acheteur_id', '!=', $userId) // Avoid duplicates if viewing own products
+    ->whereHas('messages') // Only show if at least one message exists
+    ->get();
+
+    $conversations = $buyerConversations->merge($sellerConversations)
     ->map(function ($conversation) use ($userId) {
-        // Automatically determine if the user on the other side of the screen is the buyer or seller relative to you.
-        $partner = $userId === $conversation->acheteur_id 
-            ? $conversation->produit->vendeur 
+        // Determine who the partner is relative to the logged-in user.
+        $partner = $userId === $conversation->acheteur_id
+            ? $conversation->produit->vendeur
             : $conversation->acheteur;
 
         $latestMessage = $conversation->messages->first();
 
-        // Calculate unread message badge count
         $unreadCount = $conversation->messages()
             ->where('est_lu', false)
             ->where('expediteur_id', '!=', $userId)
             ->count();
 
-        // Return a perfectly formatted associative array that the javascript will easily digest.
         return [
-            'id' => $conversation->id,
-            'produit_id' => $conversation->produit_id,
-            'produit_nom' => $conversation->produit->titre ?? 'Produit',
-            'produit_slug' => $conversation->produit->slug ?? '', // Needed for URL linking
+            'id'           => $conversation->id,
+            'produit_id'   => $conversation->produit_id,
+            'produit_nom'  => $conversation->produit->titre ?? 'Produit',
+            'produit_slug' => $conversation->produit->slug ?? '',
+            'partner_id'   => $partner->id ?? null,
             'partner_name' => $partner->name ?? 'Inconnu',
-            'partner_pfp' => $partner->pfp ? asset('storage/' . $partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
-            'auth_pfp' => auth()->user()->pfp ? asset('storage/' . auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
+            'partner_pfp'  => $partner->pfp ? asset('storage/' . $partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
+            'auth_pfp'     => auth()->user()->pfp ? asset('storage/' . auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
             'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
-            'latest_time' => $latestMessage ? $latestMessage->created_at->format('H:i') : '',
-            'unread_count' => $unreadCount,
-            'is_online' => $partner && $partner->last_seen_at && $partner->last_seen_at->gt(now()->subMinutes(5))
+            'latest_time'    => $latestMessage ? $latestMessage->created_at->format('H:i') : '',
+            'unread_count'   => $unreadCount,
+            'is_online'      => $partner && $partner->last_seen_at && $partner->last_seen_at->gt(now()->subMinutes(5))
         ];
     });
 
@@ -124,5 +133,17 @@ public function fetchMessages(Conversation $conversation)
         });
 
     return response()->json($messages);
+}
+
+public function destroy(Conversation $conversation)
+{
+    // Strict Database security check
+    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit->vendeur_id !== auth()->id()) {
+        abort(403);
+    }
+
+    $conversation->delete();
+
+    return response()->json(['success' => true]);
 }
 }

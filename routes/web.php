@@ -8,10 +8,9 @@ use App\Models\Produit;
 use App\Http\Controllers\MessageController;
 
 
-Route::get('/', function () {
-$produits = Produit::latest()->get();    
-return view('home', ['produits' => $produits]);
-})->name('home');
+use App\Http\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 route::get('/produit/create', [ProduitController::class, 'create'])->name('produit.create')->middleware('auth');
 route::post('/produit/store', [ProduitController::class, 'store'])->name('produit.store')->middleware('auth');
@@ -42,7 +41,19 @@ Route::middleware('auth')->group(function () {
     
     // 3. Send a new message into a specific conversation.
     Route::post('/api/conversations/{conversation}/messages', [MessageController::class, 'sendMessage']);
+    
+    // 4. Delete a conversation
+    Route::delete('/api/conversations/{conversation}', [MessageController::class, 'destroy']);
 
+    // Favorites
+    Route::get('/favoris', [DashController::class, 'favoris'])->name('favoris');
+    Route::post('/produit/{produit}/favorite', [ProduitController::class, 'toggleFavorite'])->name('produit.favorite');
+    Route::post('/produit/{produit}/signaler', [ProduitController::class, 'signaler'])->name('produit.signaler');
+    Route::post('/produit/{produit}/sponsoriser', [ProduitController::class, 'demanderSponsor'])->name('produit.sponsoriser');
+
+    // Profile
+    Route::get('/profil', [DashController::class, 'profil'])->name('profil');
+    Route::post('/profil', [DashController::class, 'updateProfil'])->name('profil.update');
 });
 
 Route::get('/register', [AuthController::class, 'create'])->name('register')->middleware('guest');
@@ -53,7 +64,17 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post')->middleware('guest');
 
+// Password Reset
+use App\Http\Controllers\PasswordResetController;
+Route::get('/mot-de-passe-oublie', [PasswordResetController::class, 'showForgotForm'])->name('password.request')->middleware('guest');
+Route::post('/mot-de-passe-oublie', [PasswordResetController::class, 'sendResetLink'])->name('password.email')->middleware('guest');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset')->middleware('guest');
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update')->middleware('guest');
+
 route::get('/annonces', [DashController::class, 'annonces'])->name('annonces')->middleware('auth');
+Route::delete('/produit/{produit}', [ProduitController::class, 'destroy'])->name('produit.destroy')->middleware('auth');
+Route::get('/produit/{produit}/edit', [ProduitController::class, 'edit'])->name('produit.edit')->middleware('auth');
+Route::put('/produit/{produit}', [ProduitController::class, 'update'])->name('produit.update')->middleware('auth');
 
 
 

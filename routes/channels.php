@@ -12,3 +12,11 @@ Broadcast::channel('messenger.{conversationId}', function ($user, $conversationI
     return (int) $user->id === (int) $conversation->acheteur_id || 
            (int) $user->id === (int) $conversation->produit->vendeur_id;
 });
+
+Broadcast::channel('chat.presence', function ($user) {
+    return ['id' => $user->id, 'name' => $user->name];
+});
+
+Broadcast::channel('user.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});

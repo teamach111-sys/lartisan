@@ -88,20 +88,17 @@
 
             </a>
 
-            <a href="/annonces"
-                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('annonces') ? 'text-[#FF8E72]' : 'text-white' }}">
-
+            <a href="{{ route('favoris') }}"
+                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-
                     <path
                         d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-
                 </svg>
+                Mes Favoris
+            </a>
 
-                Mes Favoris</a>
-
-            <a href="/settings"
-                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('annonces') ? 'text-[#FF8E72]' : 'text-white' }}">
+            <a href="{{ route('message') }}"
+                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('message') ? 'text-[#FF8E72]' : 'text-white' }}">
 
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
 
@@ -115,8 +112,8 @@
 
                 Mes Messages</a>
 
-            <a href="{{ route('message') }}"
-                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('message') ? 'text-[#FF8E72]' : 'text-white' }}">
+            <a href="{{ route('profil') }}"
+                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}">
 
                 <svg data-slot="icon" fill="white" class="size-5" stroke-width="1.5" stroke="currentColor"
                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -145,15 +142,19 @@
 
                 Acceuil</a>
 
-            <a href="/logout" class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5">
-
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-
-                    <path fill-rule="evenodd"
-                        d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z"
-                        clip-rule="evenodd" />
-
-                </svg>Se deconnecter</a>
+            <div class="px-6 py-4 border-b border-white/33 hover:bg-white/5">
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="gap-4 flex text-white w-full text-left items-center cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                            <path fill-rule="evenodd"
+                                d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Se déconnecter</span>
+                    </button>
+                </form>
+            </div>
 
 
 
@@ -213,7 +214,7 @@
 
                     </svg>
 
-                    <a class="hover:text-[#FF8E72]" href="">Mes Favoris</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('favoris') }}">Mes Favoris</a>
 
 
 
@@ -260,7 +261,7 @@
 
 
 
-                    <a class="hover:text-[#FF8E72]" href="">Mon Profil</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('profil') }}">Mon Profil</a>
 
 
 
@@ -380,17 +381,18 @@
                 <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
 
                     <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth ">
-
-                        <a href=""
-                            class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px]  rounded-[50px] p-2 transition-all duration-200  ">{{ $firstc }}</a>
-
-                        <a href=""
-                            class="    flex-shrink-0 snap-center border  cursor-pointer text-[15px] hover:border-black   border-transparent rounded-[50px] p-2 transition-all duration-200 ">{{ $secondc }}
-
-                        </a>
-
-
-
+                        @if(isset($customFilters))
+                            {{ $customFilters }}
+                        @else
+                            @if(isset($firstc) && trim($firstc) !== '')
+                                <a href=""
+                                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] rounded-[50px] p-2 transition-all duration-200">{{ $firstc }}</a>
+                            @endif
+                            @if(isset($secondc) && trim($secondc) !== '')
+                                <a href=""
+                                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] hover:border-black border-transparent rounded-[50px] p-2 transition-all duration-200 ">{{ $secondc }}</a>
+                            @endif
+                        @endif
                     </div>
 
                     <div>

@@ -86,4 +86,34 @@ get filteredConversations() {
 2.  **Partials**: Keep UI fragments in `resources/views/partials`.
 3.  **State**: Keep all Alpine logic inside a single `x-data` component to share data between the list and the teleported chat.
 
+---
+
+## 🔧 6. Recent Fixes
+
+### Send Button Alignment · `chat-content.blade.php`
+The `<textarea>` and send button share the same `h-16` height, but the wrapper div around the textarea was not a flex container, causing the button to appear off-center vertically.
+
+**Fix:** Add `flex items-center` to the wrapper div:
+```html
+<div class="flex-1 relative group flex items-center">
+```
+
+### Conversation Visibility · `MessageController.php`
+When a buyer clicks "Contacter le vendeur", a `Conversation` row is created immediately — before any message is sent. This caused the seller to see an empty, phantom conversation in their list.
+
+**Fix:** Split the `index()` query into two parts:
+```php
+// Buyer: always sees their conversations
+$buyerConversations = Conversation::...->where('acheteur_id', $userId)->get();
+
+// Seller: only if at least one message exists
+$sellerConversations = Conversation::...
+    ->whereHas('produit', fn($q) => $q->where('vendeur_id', $userId))
+    ->whereHas('messages') // ← key filter
+    ->get();
+
+$conversations = $buyerConversations->merge($sellerConversations)->map(...);
+```
+
 **Happy Coding! 🚀**
+

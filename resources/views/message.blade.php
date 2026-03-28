@@ -18,11 +18,13 @@
             }
         </style>
         <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
-            <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth">
-                <a href=""
-                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] rounded-[50px] p-2 transition-all duration-200">Tous</a>
-                <a href=""
-                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] hover:border-black border-transparent rounded-[50px] p-2 transition-all duration-200">Non lus</a>
+            <div x-data="{ filter: 'all' }" class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth">
+                <button @click="$dispatch('set-filter', 'all'); filter = 'all'"
+                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] rounded-[50px] p-2 transition-all duration-200"
+                    :class="filter === 'all' ? 'border-black' : 'border-transparent hover:border-black'">Tous</button>
+                <button @click="$dispatch('set-filter', 'unread'); filter = 'unread'"
+                    class="flex-shrink-0 snap-center border cursor-pointer text-[15px] rounded-[50px] p-2 transition-all duration-200"
+                    :class="filter === 'unread' ? 'border-black' : 'border-transparent hover:border-black'">Non lus</button>
             </div>
             <div>
                 <button onclick="window.location.reload()"
@@ -32,7 +34,7 @@
             </div>
         </div>
     </x-slot:topbar>
-    <div x-data="messaging({{ auth()->id() }})" class="flex flex-col md:flex-row h-full overflow-hidden gap-0 md:gap-10">
+    <div x-data="messaging({{ auth()->id() }})" @set-filter.window="filter = $event.detail" class="flex flex-col md:flex-row h-full overflow-hidden gap-0 md:gap-10">
         {{-- Contacts Sidebar --}}
         <div class="w-full md:w-[320px] lg:w-[380px] flex flex-col flex-shrink-0" :class="currentConversation ? 'hidden md:flex' : 'flex'">
             <div class="flex items-center justify-between mb-6 px-1">
@@ -66,11 +68,21 @@
                         </div>
 
                         <div class="flex-1 overflow-hidden">
-                            <div class="flex items-center justify-between mb-0.5">
-                                <h2 class="font-bold text-base truncate text-black" :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : ''" x-text="conv.partner_name"></h2>
-                                <span class="text-[10px] font-medium opacity-30 whitespace-nowrap ml-2" x-text="conv.latest_time"></span>
+                            <div class="flex items-start justify-between mb-0.5">
+                                <div class="flex-1 overflow-hidden">
+                                    <h2 class="font-bold text-base truncate text-black" :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : ''" x-text="conv.partner_name"></h2>
+                                    <p class="text-[10px] font-black uppercase text-black/40 truncate mb-1" x-text="conv.produit_nom"></p>
+                                </div>
+                                <div class="flex flex-col items-end ml-2 mt-0.5">
+                                    <span class="text-[10px] font-medium opacity-30 whitespace-nowrap mb-1.5" x-text="conv.latest_time"></span>
+                                    <button @click.stop="deleteConversation(conv.id)" title="Supprimer la conversation"
+                                        class="cursor-pointer text-black/20 hover:text-red-500 z-20">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <p class="text-[10px] font-black uppercase text-black/40 truncate mb-1" x-text="conv.produit_nom"></p>
                             <p class="text-xs text-gray-400 truncate font-medium leading-none" x-text="conv.latest_message || 'Démarrer la discussion'"></p>
                         </div>
                         
@@ -78,6 +90,11 @@
                             <div class="absolute -top-2 -right-2 bg-[#FF8E72] text-white text-[10px] font-black h-6 w-6 rounded-full flex items-center justify-center border-2 border-white shadow-sm z-10"
                                 x-text="conv.unread_count"></div>
                         </template>
+                    </div>
+                </template>
+                <template x-if="filteredConversations.length === 0">
+                    <div class="flex items-center justify-center h-full py-16 px-6">
+                        <p class="text-sm text-black/30 font-bold text-center leading-relaxed" x-text="filter === 'unread' ? 'Aucun message non lu.' : 'Contactez des artisans pour commencer à converser.'"></p>
                     </div>
                 </template>
             </div>
@@ -121,29 +138,95 @@
                 currentConversation: null, // The currently active chat
                 newMessage: '',
                 searchQuery: '',
+                filter: 'all',
                 authUser: @json($auth_user),
                 isMobile: window.innerWidth < 768,
+                onlineUsers: new Set(),
+                presenceLoaded: false,
 
                 init() {
                     window.addEventListener('resize', () => {
                         this.isMobile = window.innerWidth < 768;
                     });
+                    
+                    window.Echo.join('chat.presence')
+                        .here((users) => {
+                            this.presenceLoaded = true;
+                            this.onlineUsers = new Set(users.map(u => u.id));
+                            this.updateOnlineStatuses();
+                        })
+                        .joining((user) => {
+                            this.onlineUsers.add(user.id);
+                            this.updateOnlineStatuses();
+                        })
+                        .leaving((user) => {
+                            this.onlineUsers.delete(user.id);
+                            this.updateOnlineStatuses();
+                        });
+
                     this.fetchConversations();
                 },
 
+                updateOnlineStatuses() {
+                    if (!this.presenceLoaded) return;
+                    this.conversations.forEach(conv => {
+                        conv.is_online = this.onlineUsers.has(conv.partner_id);
+                    });
+                },
+
                 get filteredConversations() {
-                    if (!this.searchQuery.trim()) return this.conversations;
-                    const query = this.searchQuery.toLowerCase();
-                    return this.conversations.filter(c =>
-                        c.partner_name.toLowerCase().includes(query) ||
-                        c.produit_nom.toLowerCase().includes(query)
-                    );
+                    let filtered = this.conversations;
+                    
+                    if (this.filter === 'unread') {
+                        filtered = filtered.filter(c => c.unread_count > 0);
+                    }
+                    
+                    if (this.searchQuery.trim()) {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(c =>
+                            c.partner_name.toLowerCase().includes(query) ||
+                            c.produit_nom.toLowerCase().includes(query)
+                        );
+                    }
+                    
+                    return filtered;
                 },
 
                 // Fires immediately when the page loads
                 async fetchConversations() {
                     const res = await axios.get('/api/conversations');
                     this.conversations = res.data;
+                    this.updateOnlineStatuses();
+
+                    // Intercept messages for ALL existing conversations for real-time sidebar notifications
+                    this.conversations.forEach(conv => {
+                        window.Echo.private(`messenger.${conv.id}`)
+                            .listen('.message.sent', (e) => {
+                                // If this is the active conversation
+                                if (this.currentConversation && this.currentConversation.id === conv.id) {
+                                    if (!this.messages.find(m => m.id === e.id)) {
+                                        this.messages.push(e);
+                                        this.scrollToBottom();
+                                    }
+                                    conv.unread_count = 0;
+                                } else {
+                                    // Inactive conversation
+                                    if (e.expediteur_id !== myId) {
+                                        conv.unread_count++;
+                                    }
+                                }
+                                
+                                // Update sidebar text
+                                conv.latest_message = e.contenu;
+                                conv.latest_time = e.time;
+                                
+                                // Float to top
+                                this.conversations = [
+                                    conv,
+                                    ...this.conversations.filter(c => c.id !== conv.id)
+                                ];
+                            });
+                    });
 
                     // URL Param Listener: Checks if the user was sent here from a specific product page e.g., `/message?conversation=1`
                     const urlParams = new URLSearchParams(window.location.search);
@@ -158,22 +241,8 @@
 
                 // Triggered by Alpine `@click="selectConversation(conversation)"` on the sidebar
                 selectConversation(conversation) {
-                    if (this.currentConversation) {
-                        window.Echo.leave(`messenger.${this.currentConversation.id}`);
-                    }
-
                     this.currentConversation = conversation;
                     this.messages = []; // Visually wipe the screen clean for a UI transition effect
-
-                    // Real-time listener
-                    window.Echo.private(`messenger.${conversation.id}`)
-                        .listen('.message.sent', (e) => {
-                            if (this.currentConversation && e.id && !this.messages.find(m => m
-                                    .id === e.id)) {
-                                this.messages.push(e);
-                                this.scrollToBottom();
-                            }
-                        });
 
                     // Optimistic UI update: pretend the messages are read immediately so the notification badge clears instantly
                     conversation.unread_count = 0;
@@ -228,6 +297,23 @@
                             if (container) container.scrollTop = container.scrollHeight;
                         });
                     });
+                },
+
+                async deleteConversation(id) {
+                    if (!confirm('Voulez-vous vraiment supprimer cette conversation ?')) return;
+
+                    // Optimistic UI updates
+                    this.conversations = this.conversations.filter(c => c.id !== id);
+                    if (this.currentConversation && this.currentConversation.id === id) {
+                        this.currentConversation = null;
+                        this.messages = [];
+                    }
+
+                    try {
+                        await axios.delete(`/api/conversations/${id}`);
+                    } catch (err) {
+                        console.error('Erreur lors de la suppression', err);
+                    }
                 }
             }));
         });

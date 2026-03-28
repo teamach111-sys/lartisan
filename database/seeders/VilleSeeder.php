@@ -1,0 +1,21 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class VilleSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $villes = ['Marrakech', 'Casablanca', 'Fès', 'Rabat', 'Tanger', 'Agadir'];
+
+        foreach ($villes as $ville) {
+            \App\Models\Ville::firstOrCreate(['nom' => $ville]);
+        }
+    }
+}

@@ -11,7 +11,8 @@ class AuthController extends Controller
 {
     public function create()
     {
-        return view('auth.register');
+        $villes = \App\Models\Ville::all();
+        return view('auth.register', compact('villes'));
     }
 
 public function store(Request $request)
@@ -21,9 +22,11 @@ public function store(Request $request)
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed', // Vérifie password_confirmation
-            'ville_utilisateur' => 'required|string',
-            'telephone' => 'nullable|string',
+            'ville_utilisateur' => 'required|exists:villes,nom',
+            'telephone' => 'nullable|string|unique:users,telephone',
             'pfp' => 'nullable|image|max:2048', // 2MB max
+        ], [
+            'telephone.unique' => 'Ce numéro de téléphone est déjà utilisé par un autre compte.'
         ]);
 
         // Création de l'objet User

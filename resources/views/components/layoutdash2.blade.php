@@ -49,15 +49,15 @@
                 </svg>
                 Mes Annonces
             </a>
-            <a href="/annonces"
-                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('annonces') ? 'text-[#FF8E72]' : 'text-white' }}">
+            <a href="{{ route('favoris') }}"
+                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                     <path
                         d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                 </svg>
                 Mes Favoris</a>
-            <a href="/settings"
-                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('annonces') ? 'text-[#FF8E72]' : 'text-white' }}">
+            <a href="{{ route('message') }}"
+                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('message') ? 'text-[#FF8E72]' : 'text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                     <path
                         d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
@@ -65,8 +65,8 @@
                         d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
                 </svg>
                 Mes Messages</a>
-            <a href="{{ route('message') }}"
-                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('message') ? 'text-[#FF8E72]' : 'text-white' }}">
+            <a href="{{ route('profil') }}"
+                class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5 {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}">
                 <svg data-slot="icon" fill="white" class="size-5" stroke-width="1.5" stroke="currentColor"
                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -83,12 +83,19 @@
                         d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
                 </svg>
                 Acceuil</a>
-            <a href="/logout" class="gap-4 flex text-white px-6 py-4 border-b border-white/33 hover:bg-white/5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                    <path fill-rule="evenodd"
-                        d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z"
-                        clip-rule="evenodd" />
-                </svg>Se deconnecter</a>
+            <div class="px-6 py-4 border-b border-white/33 hover:bg-white/5">
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="gap-4 flex text-white w-full text-left items-center cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                            <path fill-rule="evenodd"
+                                d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Se déconnecter</span>
+                    </button>
+                </form>
+            </div>
 
 
         </div>
@@ -120,7 +127,7 @@
                         <path
                             d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                     </svg>
-                    <a class="hover:text-[#FF8E72]" href="">Mes Favoris</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('favoris') }}">Mes Favoris</a>
 
                 </div>
 
@@ -146,7 +153,7 @@
                             clip-rule="evenodd" />
                     </svg>
 
-                    <a class="hover:text-[#FF8E72]" href="">Mon Profil</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('profil') }}">Mon Profil</a>
 
                 </div>
                 <div class="bg-white h-[0.5px]"></div>

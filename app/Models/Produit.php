@@ -17,13 +17,18 @@ class Produit extends Model
     'images', 
     'prix', 
     'ville_produit', 
+    'telephone_visible',
     'etat_produit',
-    'vendeur_id'
+    'etat_moderation',
+    'vendeur_id',
+    'sponsor_status',
+    'sponsored_until'
 ];
 
 protected $casts = [
     'images' => 'array',
-    'prix' => 'decimal:2'
+    'prix' => 'decimal:2',
+    'sponsored_until' => 'datetime'
 ];
 
 // Relations

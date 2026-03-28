@@ -22,7 +22,7 @@ These files define how the data is stored in the database.
 These files handles the data flow and API endpoints.
 
 *   **[MessageController.php](file:///d:/marcheartisanalfinalpages/lartisan/app/Http/Controllers/MessageController.php)**:
-    - `index()`: Maps conversations for the horizontal contact bar (calculates online status, unread counts, etc.).
+    - `index()`: Maps conversations for the sidebar. Buyers always see their conversations; sellers only see conversations **once a message has been sent** (`whereHas('messages')`).
     - `fetchMessages()`: Retrieves chat history for a specific contact.
     - `sendMessage()`: Saves new messages and **broadcasts** them in real-time.
 *   **[web.php](file:///d:/marcheartisanalfinalpages/lartisan/routes/web.php)**:
@@ -58,6 +58,7 @@ This is the "Face" of the messaging system.
 *   **[chat-content.blade.php](file:///d:/marcheartisanalfinalpages/lartisan/resources/views/partials/chat-content.blade.php)**:
     - **Reusable Fragment**: Contains the header, message loop, and input area.
     - Used by both the Desktop layout (static) and Mobile layout (teleported).
+    - The textarea wrapper uses `flex items-center` to keep the send button vertically centered on the same line as the input.
 *   **[echo.js](file:///d:/marcheartisanalfinalpages/lartisan/resources/js/echo.js)**:
     - Configuration for **Laravel Echo**. Connects to Reverb on port `8080`.
 
@@ -88,3 +89,21 @@ To solve "cramped" layouts on small screens, we use a portal pattern:
 3. Reverb receives the event → Instantly pushes it to the recipient's browser.
 4. Recipient's AlpineJS hears the event → Updates the message array locally.
 5. UI reflects change instantly in both Desktop and Teleported Mobile views.
+
+---
+
+## 🔧 7. Recent Changes
+
+### Send Button Vertical Alignment · `chat-content.blade.php`
+The wrapper `<div>` around the `<textarea>` in the input area lacked `flex items-center`, causing the send button SVG to appear misaligned. Fixed by adding `flex items-center` to the div:
+```diff
+- <div class="flex-1 relative group">
++ <div class="flex-1 relative group flex items-center">
+```
+
+### Conversation Visibility: Buyers vs. Sellers · `MessageController.php`
+Previously, a conversation appeared in the seller's list the moment the buyer clicked "Contact", even before any message was sent. Now:
+- **Buyer** → always sees their conversation (they created it)
+- **Seller** → only sees the conversation once `whereHas('messages')` is satisfied
+
+The `index()` method was split into `$buyerConversations` and `$sellerConversations`, then merged.

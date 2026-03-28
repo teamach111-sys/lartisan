@@ -28,17 +28,22 @@
       <div class="flex justify-between items-center ">
         <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="">
        @auth
-     <div class="lg:hidden">
+     <div class="lg:hidden relative">
       <a href="{{ route('annonces') }}">
-        <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . auth()->user()->pfp ?? 'default.svg') }}">
+        <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . (auth()->user()->pfp ?? 'default.svg')) }}">
       </a>
+      @if($unreadCount > 0)
+        <div class="absolute -top-1 -right-1 bg-[#FF8E72] text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm pointer-events-none">
+            {{ $unreadCount }}
+        </div>
+      @endif
      </div>
      @endauth
 
       </div>
       
-      <div class="relative lg:flex-grow h-12 my-auto flex justify-between gap-3">
-        <input placeholder="Rechercher"
+      <form action="{{ route('home') }}" method="GET" class="relative lg:flex-grow h-12 my-auto flex justify-between gap-3">
+        <input name="q" value="{{ request('q') }}" placeholder="Rechercher"
           class=" pl-9 border border-black  my-auto rounded-sm w-full h-full bg-white outline-[0rem] shadow-none focus:shadow-[0_0_0_1px_#fb663f]"
           type="text">
         <svg class="absolute top-[28%] left-3 size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -46,7 +51,8 @@
           <path stroke-linecap="round" stroke-linejoin="round"
             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
         </svg>
-        <button onclick="togglesidebar()" class="lg:hidden relative w-auto h-full flex flex-col transition-all duration-200  border rounded-sm bg-white
+        <button type="submit" class="hidden"></button>
+        <button type="button" onclick="togglesidebar()" class="lg:hidden relative w-auto h-full flex flex-col transition-all duration-200  border rounded-sm bg-white
         hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] hover:cursor-pointer ">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"
             class="size-5 w-auto h-full  p-3  ">
@@ -54,29 +60,22 @@
             <path d="M5.5 11H18.5V13H5.5z"></path>
             <path d="M8 17H16V19H8z"></path>
           </svg>
-
-
-
         </button>
-
-
-
-
-      </div>
+      </form>
 
 
 
 
       @guest
-      <button onclick="window.location.href='{{ route('register') }}'" class="rounded-sm bg-[#F4F4F0] p-1  hidden lg:block lg:w-30 border border-black h-12 my-auto cursor-pointer 
+      <button onclick="window.location.href='{{ route('login') }}'" class="rounded-sm bg-[#F4F4F0] p-1  hidden lg:block lg:w-30 border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
     ">
-        Inscription
+        Connexion
 </button>
       @else
-      <button class="rounded-sm bg-[#F4F4F0] p-1  hidden lg:block lg:w-30 border border-black h-12 my-auto cursor-pointer 
+      <button onclick="window.location.href='{{ route('favoris') }}'" class="rounded-sm bg-[#F4F4F0] p-1  hidden lg:block lg:w-30 border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -85,8 +84,7 @@
       </button>
       @endguest
 
-
-      <button onclick="window.location.href='{{ route('register') }}'" class="rounded-sm bg-black text-white p-1  hidden lg:block lg:w-50 border border-black h-12 my-auto cursor-pointer 
+      <button onclick="window.location.href='{{ auth()->check() ? route('annonces') : route('login') }}'" class="rounded-sm bg-black text-white p-1  hidden lg:block lg:w-50 border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -107,7 +105,7 @@
           </button>
           <div class="flex justify-between p-4 gap-3">
             @auth
-            <button class="rounded-sm bg-[#F4F4F0] p-1 w-30 text-[15px]  border border-black h-12 my-auto cursor-pointer 
+            <button onclick="window.location.href='{{ route('favoris') }}'" class="rounded-sm bg-[#F4F4F0] p-1 w-30 text-[15px]  border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -115,16 +113,16 @@
               Mes favoris
             </button>
             @else
-            <button class="rounded-sm bg-[#F4F4F0] p-1 w-30 text-[15px]  border border-black h-12 my-auto cursor-pointer 
+            <button onclick="window.location.href='{{ route('login') }}'" class="rounded-sm bg-[#F4F4F0] p-1 w-30 text-[15px]  border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
     ">
-              Inscription
+              Connexion
             </button>
             @endauth
 
-            <button onclick="window.location.href='{{ route('register') }}'" class="rounded-sm bg-black text-white p-1  w-40 text-[15px] border border-black h-12 my-auto cursor-pointer 
+            <button onclick="window.location.href='{{ auth()->check() ? route('annonces') : route('login') }}'" class="rounded-sm bg-black text-white p-1  w-40 text-[15px] border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -137,12 +135,12 @@
           </div>
           <div class="h-0.5 border-b border-black"></div>
           <div class="flex flex-col pt-0 mt-0">
-            <a href=""
-              class="p-4 h-15 flex items-center text-black text-[17px] hover:bg-black hover:text-white">Tout</a>
-            <a href=""
-              class="p-4 h-15 flex items-center text-black text-[17px] hover:bg-black hover:text-white">Mosaique</a>
-            <a href=""
-              class="p-4 h-15 flex items-center text-black text-[17px] hover:bg-black hover:text-white">Pottery</a>
+            <a href="{{ route('home') }}"
+              class="p-4 h-15 flex items-center text-black text-[17px] hover:bg-black hover:text-white {{ !request('cat') ? 'bg-black text-white' : '' }}">Tout</a>
+            @foreach($categories as $category)
+            <a href="{{ route('home', ['cat' => $category->id]) }}"
+              class="p-4 h-15 flex items-center text-black text-[17px] hover:bg-black hover:text-white {{ request('cat') == $category->id ? 'bg-black text-white' : '' }}">{{ $category->nom }}</a>
+            @endforeach
           </div>
 
 
@@ -162,46 +160,34 @@
     <div>
        <div class="flex text-black gap-3 ">
 
-      <a class="rounded-[50px] border border-black bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
+      <a class="rounded-[50px] border px-3 py-2 w-auto h-auto transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-   
-    hover:text-black" href="">Tout</a>
+    hover:rounded-[50px] hover:border-black hover:bg-white
+    hover:text-black {{ !request('cat') ? 'border-black bg-white' : 'border-transparent' }}" href="{{ route('home') }}">Tout</a>
 
-      <a class="border border-transparent hover:rounded-[50px] hover:border-black hover:bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
+      @foreach($categories->take(8) as $category)
+      <a class="border px-3 py-2 w-auto h-auto transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
     hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-    
-    hover:text-black" href="">Carrelage</a>
-      <a class="border border-transparent hover:rounded-[50px] hover:border-black hover:bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
-    hover:-translate-x-1 hover:-translate-y-1 
-    hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-    hover:text-black" href="">Marbrerie</a>
-      <a class="border border-transparent hover:rounded-[50px] hover:border-black hover:bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
-    hover:-translate-x-1 hover:-translate-y-1 
-    hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-    hover:text-black" href="">Poterie</a>
-      <a class="border border-transparent hover:rounded-[50px] hover:border-black hover:bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
-    hover:-translate-x-1 hover:-translate-y-1 
-    hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-    hover:text-black" href="">Céramique</a>
-      <a class="border border-transparent hover:rounded-[50px] hover:border-black hover:bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
-    hover:-translate-x-1 hover:-translate-y-1 
-    hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-    hover:text-black" href="">Marqueterie</a>
-      <a class="border border-transparent hover:rounded-[50px] hover:border-black hover:bg-white px-3 py-2 w-auto h-auto transition-all duration-200 
-    hover:-translate-x-1 hover:-translate-y-1 
-    hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-    hover:text-black" href="">Menuiserie</a>
+    hover:rounded-[50px] hover:border-black hover:bg-white
+    hover:text-black {{ request('cat') == $category->id ? 'rounded-[50px] border-black bg-white' : 'border-transparent' }}" 
+    href="{{ route('home', ['cat' => $category->id]) }}">{{ $category->nom }}</a>
+      @endforeach
 
       </div>
     
     </div>
     @auth
-     <div>
+     <div class="relative">
       <a href="{{ route('annonces') }}">
-        <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . auth()->user()->pfp ?? 'default.svg') }}">
+        <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ asset('storage/' . (auth()->user()->pfp ?? 'default.svg')) }}">
       </a>
+      @if($unreadCount > 0)
+        <div class="absolute -top-1 -right-1 bg-[#FF8E72] text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm pointer-events-none">
+            {{ $unreadCount }}
+        </div>
+      @endif
      </div>
      @endauth
    
@@ -231,22 +217,14 @@
     <div class="flex justify-between flex-col gap-14 w-auto max-w-144 px-3">
       <div class="flex justify-between  max-w-75">
         <div class=" flex flex-col gap-6 ">
-
-          <a href="">Carrelage</a>
-          <a href="">Céramique</a>
-          <a href="">Carrelage</a>
-          <a href="">Céramique</a>
-
-
-
+          @foreach($categories->take(4) as $cat)
+            <a href="{{ route('home', ['cat' => $cat->id]) }}">{{ $cat->nom }}</a>
+          @endforeach
         </div>
-        <div class="flex flex-col gap-4">
-
-          <a href="">Carrelage</a>
-          <a href="">Céramique</a>
-
-
-
+        <div class="flex flex-col gap-6">
+          @foreach($categories->skip(4)->take(4) as $cat)
+            <a href="{{ route('home', ['cat' => $cat->id]) }}">{{ $cat->nom }}</a>
+          @endforeach
         </div>
 
 

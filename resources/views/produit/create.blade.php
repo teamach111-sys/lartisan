@@ -1,162 +1,158 @@
 <x-layoutdash>
     <x-slot:title>
-        Annonces
+        Ajouter une annonce
     </x-slot:title>
-        <x-slot:h1>
-            Mes Annonces
-        </x-slot:h1>
-        <x-slot:btnlocation>
-            {{ route('annonces') }}
-        </x-slot:btnlocation>
-        <x-slot:btnname>
-            Ajouter une annonce
+    <x-slot:h1>
+        Ajouter une annonce
+    </x-slot:h1>
+    <x-slot:btnlocation>
+        {{ route('annonces') }}
+    </x-slot:btnlocation>
+    <x-slot:btnname>
+        Retour
+    </x-slot:btnname>
 
-        </x-slot:btnname>
-
-        <x-slot:firstc>
-            Tous
-        </x-slot:firstc>
-        <x-slot:secondc>
-            Actifs
-        </x-slot:secondc>
-        <x-slot:mobbtnlocation>
-            {{ route('produit.create') }}
-        </x-slot:mobbtnlocation>
-        <x-slot:mobbtnname>
-            Ajouter une annonce
-        </x-slot:mobbtnname>
+    <x-slot:mobbtnlocation>
+        {{ route('annonces') }}
+    </x-slot:mobbtnlocation>
+    <x-slot:mobbtnname>
+        Retour
+    </x-slot:mobbtnname>
     <x-slot:topbar>
-
-
-
-
-
-
-
-
     </x-slot:topbar>
 
+    <div class="max-w-4xl">
+        <form action="{{ route('produit.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+            @csrf
 
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-sm mb-6">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-
-
-
-
-
-
-
-
-
-
- 
-                    
-
-
-
-                <form action="{{ route('produit.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-2">
-                    @csrf
-                    @if ($errors->any())
-                        <div class="col-span-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                            @foreach ($errors->all() as $error)
-                                <p>{{ $error }}</p>
-                            @endforeach
-                        </div>
-                    @endif
-                    <div class="flex-col flex md:flex-row  gap-3">
-
-<div class="flex flex-col gap-2 flex-1">
-<div  class="flex flex-col">
-                        <label class="text-[17px]" for="nom">Titre</label>
-                        <input name="titre" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px] w-full" type="text" id="nom"
-                            >
-
+            <!-- Informations Générales -->
+            <div class="bg-white border border-black p-6 rounded-sm transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <h3 class="text-xl font-bold mb-6 border-b border-black pb-2">Informations générales</h3>
+                <div class="space-y-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="font-bold text-sm" for="titre">Titre de l'annonce</label>
+                        <input name="titre" id="titre" value="{{ old('titre') }}" 
+                               class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" 
+                               type="text" placeholder="Ex: Plat en céramique peint à la main">
                     </div>
-                    <div class="flex flex-col">
-                        <label class="text-[17px]" for="description">Description</label>
-                        <textarea name="description" class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm text-[17px] w-full" rows="4" id="description"></textarea>
-
+                    <div class="flex flex-col gap-2">
+                        <label class="font-bold text-sm" for="description">Description détaillée</label>
+                        <textarea name="description" id="description" rows="4"
+                                  class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm p-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                                  placeholder="Décrivez votre produit, son histoire, ses matériaux...">{{ old('description') }}</textarea>
                     </div>
-                    <div  class="flex flex-col">
-                        <label class="text-[17px]" for="prix">Prix</label>
-                        <input name="prix" class="focus:text-[17px] focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px] w-full" type="number" id="prix"
-                            >
-
+                    <div class="flex flex-col gap-2">
+                        <label class="font-bold text-sm" for="prix">Prix (DH)</label>
+                        <input name="prix" id="prix" type="number" value="{{ old('prix') }}" 
+                               class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" 
+                               placeholder="0.00">
                     </div>
-                    <div class=" flex gap-2 hidden lg:flex">
-                                        <BUTTON type="submit" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full">Ajouter le produit</BUTTON>
-                    <BUTTON onclick="window.location.href='{{ route('annonces') }}'" type="reset" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full ">Annuler</BUTTON>
+                </div>
+            </div>
 
-
-                   </div>
-                     </div>
-                      
-                    <div class="flex flex-col gap-2 flex-1">
-                         <div  class="flex flex-col">
-                        <label class="text-[17px]" for="categorie">Categorie</label>
-                        <select class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px] w-full" name="categorie" id="categorie">
-                            <option class="" value="">Sélectionnez une categorie</option>
-                            
+            <!-- Détails de l'Annonce -->
+            <div class="bg-white border border-black p-6 rounded-sm transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <h3 class="text-xl font-bold mb-6 border-b border-black pb-2">Détails techniques</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="font-bold text-sm" for="categorie">Catégorie</label>
+                        <select name="categorie" id="categorie" 
+                                class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer">
+                            <option value="">Sélectionnez une catégorie</option>
                             @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
+                                <option value="{{ $cat->id }}" {{ old('categorie') == $cat->id ? 'selected' : '' }}>{{ $cat->nom }}</option>
                             @endforeach
                         </select>
-
-                        </div>
-                        <div  class="flex flex-col">
-                        <label class="text-[17px]" for="ville_produit">Ville de produit</label>
-                        <select class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px] w-full" name="ville_produit" id="ville_produit">
-                            <option class="" value="">Sélectionnez une ville</option>
-                            <option value="Marrakech">Marrakech</option>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-bold text-sm" for="ville_produit">Ville de vente</label>
+                        <select name="ville_produit" id="ville_produit" 
+                                class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer">
+                            <option value="">Sélectionnez une ville</option>
+                            @foreach($villes as $ville)
+                                <option value="{{ $ville->nom }}" {{ old('ville_produit') == $ville->nom ? 'selected' : '' }}>{{ $ville->nom }}</option>
+                            @endforeach
                         </select>
-
-                        </div>
-                        <div  class="flex flex-col">
-                        <label class="text-[17px]" for="etat_produit">état de produit</label>
-                        <select class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-13 text-[17px] w-full" name="etat_produit" id="etat_produit">
-                            <option class="" value="">Sélectionnez une état</option>
-                            <option value="premiere_main">premiere main</option>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-bold text-sm" for="etat_produit">État du produit</label>
+                        <select name="etat_produit" id="etat_produit" 
+                                class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer">
+                            <option value="premiere_main" {{ old('etat_produit') == 'premiere_main' ? 'selected' : '' }}>Première main / Neuf</option>
+                            <option value="occasion" {{ old('etat_produit') == 'occasion' ? 'selected' : '' }}>Occasion</option>
                         </select>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Médias -->
+            <div class="bg-white border border-black p-6 rounded-sm transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <h3 class="text-xl font-bold mb-6 border-b border-black pb-2">Photos du produit (5 requises)</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                    @for ($i = 0; $i < 5; $i++)
+                        <div class="aspect-square border-2 border-dashed border-black/20 rounded-sm bg-gray-50 flex items-center justify-center relative overflow-hidden group cursor-pointer hover:border-[#fb663f] transition-all" 
+                             onclick="document.getElementById('photo-{{ $i }}').click()">
+                            <img id="preview-{{ $i }}" class="absolute inset-0 w-full h-full object-cover hidden">
+                            <div id="overlay-{{ $i }}" class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hidden">
+                                <span class="text-white text-[10px] font-bold uppercase tracking-widest">Remplacer</span>
+                            </div>
+                            <div id="placeholder-{{ $i }}" class="flex flex-col items-center text-gray-400 group-hover:text-[#fb663f]">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                                <span class="text-[10px] font-bold mt-1 uppercase">Photo {{ $i + 1 }}</span>
+                            </div>
+                            <input name="images[{{ $i }}]" id="photo-{{ $i }}" class="hidden" type="file" accept="image/*" required onchange="previewIndividual(this, {{ $i }})">
                         </div>
-                     <div  class="flex flex-col">
-                        <label class="text-[17px] max-w-42 h-13 flex flex-col items-center justify-center hover:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border rounded-sm h-7" for="photo">5 Photos du produit</label>
-                        <input name="images[]" id="photo" class="w-full" type="file" multiple accept="image/*" 
-                            >
+                    @endfor
+                </div>
 
-                    </div>
+                <p class="text-xs text-gray-400 mt-2 italic text-center">Cliquez sur chaque case pour ajouter une photo. Format acceptés : JPG, PNG.</p>
+            </div>
 
-                     <div class=" flex gap-2 lg:hidden ">
-                                        <BUTTON type="submit" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full">Ajouter le produit</BUTTON>
-                    <BUTTON onclick="window.location.href='{{ route('annonces') }}'" type="reset" class="transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer mt-3 bg-black text-white h-13 rounded-sm w-full ">Annuler</BUTTON>
+            <div class="flex justify-end gap-3 pt-4 pb-12">
+                <button onclick="window.location.href='{{ route('annonces') }}'" type="button" 
+                        class="px-12 h-13 bg-white border border-black rounded-sm font-bold transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-gray-50 hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none cursor-pointer">
+                    Annuler
+                </button>
+                <button type="submit" 
+                        class="px-12 h-13 bg-black text-white border border-black rounded-sm font-bold transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-[#FF8E72] hover:text-black hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none cursor-pointer">
+                    Publier l'annonce
+                </button>
+            </div>
+        </form>
+    </div>
 
-
-                   </div>
-                    </div>
-
-
-                    </div>
-                     
+    <script>
+        function previewIndividual(input, index) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById(`preview-${index}`);
+                    const placeholder = document.getElementById(`placeholder-${index}`);
+                    const overlay = document.getElementById(`overlay-${index}`);
                     
-                    
-                   
-                </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                </x-layoutdash>
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    if (overlay) {
+                        overlay.classList.remove('hidden');
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</x-layoutdash>
