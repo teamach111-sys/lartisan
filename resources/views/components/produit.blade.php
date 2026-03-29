@@ -22,7 +22,7 @@
 
     <div class="p-4">
         <div class="flex flex-col gap-1">
-            <span class="text-[10px] font-black uppercase text-black/40">{{ $produit->ville_produit }}</span>
+            <span class="text-[10px] font-black uppercase text-black/40">{{ $produit->ville_produit }} • {{ $produit->created_at->diffForHumans() }}</span>
             <div class="flex gap-2 items-center">
                 <img class="h-7 w-7 object-cover rounded-[50px] border" 
                      src="{{ $produit->vendeur?->pfp ? asset('storage/' . $produit->vendeur->pfp) : asset('imgs/default.svg') }}" alt="">
