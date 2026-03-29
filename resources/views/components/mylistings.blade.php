@@ -26,7 +26,7 @@
                 </svg>
             </a>
 
-            @if($produit->sponsor_status === 'none' || ($produit->sponsor_status === 'approuve' && $produit->sponsored_until && $produit->sponsored_until < now()))
+            @if($produit->etat_moderation === 'valide' && ($produit->sponsor_status === 'none' || ($produit->sponsor_status === 'approuve' && $produit->sponsored_until && $produit->sponsored_until < now())))
             <form action="{{ route('produit.sponsoriser', $produit) }}" method="POST" onsubmit="return confirm('Voulez-vous demander la mise en avant de cette annonce ?');">
                 @csrf
                 <button type="submit" title="Sponsoriser" class="p-2 bg-white/90 backdrop-blur-sm border-2 border-black rounded-sm hover:bg-[#FF8E72] hover:text-black transition-colors duration-200 cursor-pointer shadow-[2px_2px_0px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">

@@ -19,8 +19,8 @@
                 <h2 class="font-bold text-base md:text-lg text-black truncate" x-text="currentConversation?.partner_name"></h2>
                 <span :class="currentConversation?.is_online ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'" class="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest whitespace-nowrap" x-text="currentConversation?.is_online ? 'En Ligne' : 'Hors Ligne'"></span>
             </div>
-            <p class="line-clamp-1 text-[10px] font-black uppercase text-black/40 tracking-tight"
-                x-text="'Article: ' + currentConversation?.produit_nom"></p>
+            <a :href="'/produit/' + currentConversation?.produit_slug" class="line-clamp-1 text-[10px] font-black uppercase text-black/40 hover:text-[#FF8E72] transition-colors tracking-tight block"
+                x-text="'Article: ' + currentConversation?.produit_nom"></a>
         </div>
     </div>
 

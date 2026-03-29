@@ -71,7 +71,7 @@
                             <div class="flex items-start justify-between mb-0.5">
                                 <div class="flex-1 overflow-hidden">
                                     <h2 class="font-bold text-base truncate text-black" :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : ''" x-text="conv.partner_name"></h2>
-                                    <p class="text-[10px] font-black uppercase text-black/40 truncate mb-1" x-text="conv.produit_nom"></p>
+                                    <a :href="'/produit/' + conv.produit_slug" class="text-[10px] font-black uppercase text-black/40 hover:text-[#FF8E72] transition-colors truncate mb-1 block" x-text="conv.produit_nom"></a>
                                 </div>
                                 <div class="flex flex-col items-end ml-2 mt-0.5">
                                     <span class="text-[10px] font-medium opacity-30 whitespace-nowrap mb-1.5" x-text="conv.latest_time"></span>
