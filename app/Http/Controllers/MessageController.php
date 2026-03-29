@@ -110,9 +110,12 @@ public function index()
             'unread_count'   => $unreadCount,
             'is_online'      => $partner && $partner->last_seen_at && ($partner->last_seen_at instanceof \Carbon\Carbon ? $partner->last_seen_at : \Carbon\Carbon::parse($partner->last_seen_at))->gt(now()->subMinutes(5)),
             'is_blocked'     => auth()->user()->hasBlocked($partner->id ?? 0),
-            'blocked_by'     => auth()->user()->isBlockedBy($partner->id ?? 0)
+            'blocked_by'     => auth()->user()->isBlockedBy($partner->id ?? 0),
+            'sort_time'      => $latestMessage ? $latestMessage->created_at->timestamp : $conversation->created_at->timestamp,
         ];
-    });
+    })
+    ->sortByDesc('sort_time')
+    ->values(); // Crucial: Re-indexes the collection so it converts to a JSON Array, not a JSON Object
 
     return response()->json($conversations);
 }
