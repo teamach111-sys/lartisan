@@ -361,7 +361,7 @@
 
         <div class="pt-6 flex flex-col w-full lg:ml-60">
 
-            <div class="pl-7 gap-2 flex flex-col pr-7 h-33">
+            <div class="px-3 md:px-7 lg:px-14 gap-2 flex flex-col h-33">
 
                 <div class="flex justify-between">
 
@@ -418,7 +418,7 @@
 
             <div class="bg-black h-[0.5px]"></div>
 
-            <main class="p-7">
+            <main class="px-3 py-7 md:px-7 lg:px-14">
 
                 {{ $slot }}
 

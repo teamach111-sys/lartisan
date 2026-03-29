@@ -1,5 +1,5 @@
 <x-layout>
-    <div class="flex flex-col lg:w-2/3 w-full mx-auto h-full overflow-y-auto py-9 px-4 sm:px-0">
+    <div class="flex flex-col lg:w-2/3 w-full mx-auto h-full overflow-y-auto py-9 px-3 md:px-7 lg:px-0">
         {{-- navigation --}}
         <div class="mb-6 ml-1">
             <a href="{{ route('home') }}" class="inline-flex items-center gap-2 px-4 py-2 border border-black bg-white rounded-sm font-bold transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">

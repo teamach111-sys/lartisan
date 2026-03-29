@@ -33,6 +33,11 @@ class ProduitsTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('vendeur.telephone')
+                    ->label('Téléphone')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('categorie.nom')
                     ->label('Catégorie')
                     ->searchable()
