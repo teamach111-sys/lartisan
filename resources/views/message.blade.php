@@ -146,6 +146,7 @@
                 presenceLoaded: false,
                 is_blocked: false,
                 blocked_by: false,
+                pollTimer: null, // Polling interval for near-real-time messages
 
                 init() {
                     window.addEventListener('resize', () => {
@@ -268,26 +269,53 @@
                 // Triggered by Alpine `@click="selectConversation(conversation)"` on the sidebar
                 selectConversation(conversation) {
                     this.currentConversation = conversation;
-                    this.messages = []; // Visually wipe the screen clean for a UI transition effect
+                    this.messages = [];
 
-                    // Optimistic UI update: pretend the messages are read immediately so the notification badge clears instantly
                     conversation.unread_count = 0;
                     this.is_blocked = conversation.is_blocked;
                     this.blocked_by = conversation.blocked_by;
 
-                    // Make the heavy server lookup across the network
                     this.fetchMessages(conversation.id);
+                    this.startPolling(conversation.id);
+                },
+
+                // Start polling for new messages every 3 seconds
+                startPolling(conversationId) {
+                    if (this.pollTimer) clearInterval(this.pollTimer);
+                    this.pollTimer = setInterval(async () => {
+                        if (!this.currentConversation || this.currentConversation.id !== conversationId) {
+                            clearInterval(this.pollTimer);
+                            return;
+                        }
+                        try {
+                            const res = await axios.get(`/api/conversations/${conversationId}/messages`);
+                            const newMessages = res.data.messages || [];
+                            if (newMessages.length > this.messages.length) {
+                                this.messages = newMessages;
+                                this.scrollToBottom();
+                                // Update sidebar preview
+                                const conv = this.conversations.find(c => c.id === conversationId);
+                                if (conv && newMessages.length > 0) {
+                                    const last = newMessages[newMessages.length - 1];
+                                    conv.latest_message = last.contenu;
+                                    conv.latest_time = last.time;
+                                }
+                            }
+                        } catch (e) { /* silent */ }
+                    }, 3000);
                 },
 
                 // Backend pull 
                 async fetchMessages(conversationId) {
-                    const res = await axios.get(`/api/conversations/${conversationId}/messages`);
-                    this.messages = res.data.messages;
-                    this.is_blocked = res.data.is_blocked;
-                    this.blocked_by = res.data.blocked_by;
-
-                    // Optional: force scroll to the bottom of the container
-                    this.scrollToBottom();
+                    try {
+                        const res = await axios.get(`/api/conversations/${conversationId}/messages`);
+                        this.messages = res.data.messages || [];
+                        this.is_blocked = res.data.is_blocked;
+                        this.blocked_by = res.data.blocked_by;
+                        this.scrollToBottom();
+                    } catch (err) {
+                        console.error('Failed to fetch messages:', err);
+                    }
                 },
 
                 async sendMessage() {
