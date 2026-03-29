@@ -69,9 +69,9 @@
             <div class="flex flex-col w-full md:w-2/3 border-r-0 md:border-r border-b md:border-b-0">
 
                 {{-- Title --}}
-                <div class="bg-white p-5 lg:p-6 border-b flex justify-between items-center">
-                    <h1 class="text-2xl font-bold">{{ $produit->titre }}</h1>
-                    <span class="px-3 py-1 bg-gray-100 border border-black/10 rounded-sm text-sm font-bold">{{ $produit->ville_produit }} • {{ $produit->created_at->diffForHumans() }}</span>
+                <div class="bg-white p-5 lg:p-6 border-b flex justify-between items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
+                    <h1 class="text-2xl font-bold break-words w-full md:max-w-[70%] leading-tight">{{ $produit->titre }}</h1>
+                    <span class="px-3 py-1 bg-gray-100 border border-black/10 rounded-sm text-sm font-bold shrink-0">{{ $produit->ville_produit }} • {{ $produit->created_at->diffForHumans() }}</span>
                 </div>
 
                 {{-- Price & Seller --}}

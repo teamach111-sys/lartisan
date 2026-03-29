@@ -42,7 +42,7 @@
                 <div class="space-y-6">
                     <div class="flex flex-col gap-2">
                         <label class="font-bold text-sm" for="titre">Titre de l'annonce</label>
-                        <input name="titre" id="titre" value="{{ old('titre', $produit->titre) }}" 
+                        <input name="titre" id="titre" value="{{ old('titre', $produit->titre) }}" maxlength="60" 
                                class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" 
                                type="text">
                     </div>
