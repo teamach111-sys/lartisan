@@ -442,8 +442,6 @@
 
 
 
+    <x-image-compressor />
 </body>
-
-
-
 </html>

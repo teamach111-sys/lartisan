@@ -173,6 +173,7 @@
             btn.classList.add('opacity-70', 'cursor-not-allowed');
         });
     </script>
+    <x-image-compressor />
 </body>
 
 </html>
