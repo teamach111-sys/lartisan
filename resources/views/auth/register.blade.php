@@ -127,9 +127,18 @@
     </main>
 
     <script>
-        function previewPfp(input) {
-            const file = input.files[0];
+        async function previewPfp(input) {
+            let file = input.files[0];
             if (file) {
+                try {
+                    if (window.ImageCompressor) {
+                        file = await window.ImageCompressor.compress(file);
+                        window.ImageCompressor.replaceFileInput(input, file);
+                    }
+                } catch (e) {
+                    console.error("Compression failed", e);
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.getElementById('pfp-preview');
@@ -138,11 +147,31 @@
                     img.src = e.target.result;
                     img.classList.remove('hidden');
                     placeholder.classList.add('hidden');
-                    overlay.classList.remove('hidden');
+                    if (overlay) overlay.classList.remove('hidden');
                 }
                 reader.readAsDataURL(file);
             }
         }
+
+        // Form validation for file size
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('pfp');
+            const maxSize = 2 * 1024 * 1024; // 2MB
+
+            if (fileInput.files && fileInput.files[0]) {
+                if (fileInput.files[0].size > maxSize) {
+                    alert('La photo de profil dépasse la limite de 2 Mo. Veuillez choisir une image plus légère.');
+                    e.preventDefault();
+                    return;
+                }
+            }
+
+            // Afficher l'état de chargement
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="flex items-center gap-2 justify-center"><svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Inscription...</span>';
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+        });
     </script>
 </body>
 

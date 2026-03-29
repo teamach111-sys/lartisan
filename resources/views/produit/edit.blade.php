@@ -144,13 +144,40 @@
     </div>
 
     <script>
-        function previewIndividual(input, index) {
-            const file = input.files[0];
+        async function previewIndividual(input, index) {
+            let file = input.files[0];
             if (file) {
+                // Show a small loading state on the placeholder if it exists
+                const placeholder = document.getElementById(`placeholder-${index}`);
+                if (placeholder) {
+                    const originalHTML = placeholder.innerHTML;
+                    placeholder.innerHTML = '<svg class="animate-spin h-8 w-8 text-[#fb663f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span class="text-[10px] font-bold mt-1 uppercase text-[#fb663f]">Compression...</span>';
+                    
+                    try {
+                        if (window.ImageCompressor) {
+                            file = await window.ImageCompressor.compress(file);
+                            window.ImageCompressor.replaceFileInput(input, file);
+                        }
+                    } catch (e) {
+                        console.error("Compression failed", e);
+                    }
+                    
+                    placeholder.innerHTML = originalHTML; // restore if needed
+                } else {
+                     // Still process the file even if no placeholder
+                     try {
+                        if (window.ImageCompressor) {
+                            file = await window.ImageCompressor.compress(file);
+                            window.ImageCompressor.replaceFileInput(input, file);
+                        }
+                    } catch (e) {
+                        console.error("Compression failed", e);
+                    }
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.getElementById(`preview-${index}`);
-                    const placeholder = document.getElementById(`placeholder-${index}`);
                     if (img) {
                         img.src = e.target.result;
                         img.classList.remove('hidden');
@@ -162,5 +189,42 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        // Form validation for file size
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const files = document.querySelectorAll('input[type="file"]');
+            let totalSize = 0;
+            const maxSizePerFile = 2 * 1024 * 1024; // 2MB
+            const maxTotalSize = 10 * 1024 * 1024; // 10MB
+            let isValid = true;
+
+            files.forEach((input, index) => {
+                if (input.files && input.files[0]) {
+                    const fileSize = input.files[0].size;
+                    totalSize += fileSize;
+                    
+                    if (fileSize > maxSizePerFile) {
+                        alert(`La photo ${index + 1} dépasse la limite de 2 Mo.`);
+                        isValid = false;
+                    }
+                }
+            });
+
+            if (totalSize > maxTotalSize) {
+                alert(`Le poids total des images (${(totalSize / (1024 * 1024)).toFixed(2)} Mo) dépasse la limite autorisée de 10 Mo.`);
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                return;
+            }
+
+            // Afficher l'état de chargement
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="flex items-center gap-2"><svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Mise à jour en cours...</span>';
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+        });
     </script>
 </x-layoutdash>

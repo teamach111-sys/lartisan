@@ -7,6 +7,7 @@ use App\Models\Produit;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\ImageHelper;
 
 class DashController extends Controller
 {
@@ -79,7 +80,7 @@ class DashController extends Controller
             if ($user->pfp && $user->pfp !== 'default.svg') {
                 Storage::disk('public')->delete($user->pfp);
             }
-            $user->pfp = $request->file('pfp')->store('pfps', 'public');
+            $user->pfp = ImageHelper::compressAndStore($request->file('pfp'), 'pfps');
         }
 
         $user->save();

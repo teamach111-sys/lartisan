@@ -6,6 +6,7 @@ use App\Models\Produit;
 use App\Models\Categorie; // Import your Categorie model
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class ProduitController extends Controller
 {
@@ -59,7 +60,7 @@ class ProduitController extends Controller
         $files = $request->file('images');
         ksort($files); // Ensure order 0, 1, 2, 3, 4
         foreach ($files as $file) {
-            $paths[] = $file->store('produits', 'public');
+            $paths[] = ImageHelper::compressAndStore($file, 'produits');
         }
 
         // 3. Generate a UNIQUE Slug
@@ -129,9 +130,9 @@ class ProduitController extends Controller
             foreach ($newFiles as $index => $file) {
                 // Replace specific index
                 if (isset($currentPaths[$index])) {
-                    $currentPaths[$index] = $file->store('produits', 'public');
+                    $currentPaths[$index] = ImageHelper::compressAndStore($file, 'produits');
                 } else {
-                    $currentPaths[] = $file->store('produits', 'public');
+                    $currentPaths[] = ImageHelper::compressAndStore($file, 'produits');
                 }
             }
             $produit->images = $currentPaths;

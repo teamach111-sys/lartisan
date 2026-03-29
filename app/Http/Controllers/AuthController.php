@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ImageHelper;
 
 class AuthController extends Controller
 {
@@ -39,7 +40,7 @@ public function store(Request $request)
 
         // Stockage de la photo si présente
         if ($request->hasFile('pfp')) {
-            $user->pfp = $request->file('pfp')->store('profiles', 'public');
+            $user->pfp = ImageHelper::compressAndStore($request->file('pfp'), 'profiles');
         }
 
         $user->save();
