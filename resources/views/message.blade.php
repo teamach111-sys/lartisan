@@ -59,7 +59,7 @@
                         class="flex items-center gap-4 p-4 rounded-sm border border-black cursor-pointer transition-all min-w-[280px] md:min-w-0 relative group">
 
                         <div class="relative flex-shrink-0">
-                            <img class="h-14 w-14 md:h-16 md:w-16 object-cover rounded-full border border-black/5"
+                            <img class="h-14 w-14 md:h-16 md:w-16 object-cover rounded-full border border-black/5 flex-shrink-0 aspect-square"
                                 :src="conv.partner_pfp" alt="">
 
                             {{-- Status Dot --}}

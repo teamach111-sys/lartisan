@@ -1,20 +1,20 @@
 {{-- Header --}}
-<div class="p-4 h-20 border-b border-black/5 flex items-center justify-between bg-white z-10 flex-shrink-0">
-    <div class="flex items-center gap-4">
+<div class="p-4 min-h-20 border-b border-black/5 flex items-center justify-between bg-white z-10 flex-shrink-0">
+    <div class="flex items-center gap-4 min-w-0">
         {{-- Back Arrow for Mobile --}}
-        <button @click="currentConversation = null" class="md:hidden p-2 hover:bg-gray-50 border border-black rounded-sm transition-all text-black">
+        <button @click="currentConversation = null" class="md:hidden p-2 hover:bg-gray-50 border border-black rounded-sm transition-all text-black flex-shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
         </button>
 
-        <div class="relative">
+        <div class="relative flex-shrink-0">
             <img class="h-12 w-12 md:h-14 md:w-14 object-cover rounded-full border border-black/5 shadow-sm flex-shrink-0 aspect-square"
                 :src="currentConversation?.partner_pfp" alt="">
             <div :class="currentConversation?.is_online ? 'bg-green-500' : 'bg-gray-300'"
                 class="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white shadow-sm"></div>
         </div>
-        <div>
+        <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 overflow-hidden flex-nowrap">
                 <h2 class="font-bold text-base md:text-lg text-black truncate" x-text="currentConversation?.partner_name"></h2>
                 <span :class="currentConversation?.is_online ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'" class="px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest whitespace-nowrap" x-text="currentConversation?.is_online ? 'En Ligne' : 'Hors Ligne'"></span>
