@@ -9,7 +9,7 @@
         </button>
 
         <div class="relative">
-            <img class="h-12 w-12 md:h-14 md:w-14 object-cover rounded-full border border-black/5 shadow-sm"
+            <img class="h-12 w-12 md:h-14 md:w-14 object-cover rounded-full border border-black/5 shadow-sm flex-shrink-0 aspect-square"
                 :src="currentConversation?.partner_pfp" alt="">
             <div :class="currentConversation?.is_online ? 'bg-green-500' : 'bg-gray-300'"
                 class="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white shadow-sm"></div>
@@ -56,7 +56,7 @@
         <div class="flex items-end gap-3"
             :class="msg.expediteur_id == {{ auth()->id() }} ? 'flex-row-reverse' : 'flex-row'">
             {{-- PFP --}}
-            <img class="h-9 w-9 md:h-10 md:w-10 object-cover rounded-full border border-black/5 bg-white shadow-sm"
+            <img class="h-9 w-9 md:h-10 md:w-10 object-cover rounded-full border border-black/5 bg-white shadow-sm flex-shrink-0 aspect-square"
                 :src="msg.expediteur_id == {{ auth()->id() }} ? currentConversation?.auth_pfp :
                     currentConversation?.partner_pfp"
                 alt="">
