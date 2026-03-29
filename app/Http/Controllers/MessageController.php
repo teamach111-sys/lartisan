@@ -49,8 +49,11 @@ public function sendMessage(Request $request, Conversation $conversation)
         'contenu' => $request->contenu,
     ]);
 
-    broadcast(new \App\Events\MessageSent($message))->toOthers();
-    \Illuminate\Support\Facades\Log::info('Message broadcasting triggered', ['id' => $message->id]);
+    try {
+        broadcast(new \App\Events\MessageSent($message))->toOthers();
+    } catch (\Throwable $e) {
+        \Illuminate\Support\Facades\Log::warning('Broadcasting failed (Pusher not configured?): ' . $e->getMessage());
+    }
 
     return response()->json([
         'id' => $message->id,
