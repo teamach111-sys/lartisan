@@ -196,38 +196,48 @@
 
                 // Fires immediately when the page loads
                 async fetchConversations() {
-                    const res = await axios.get('/api/conversations');
-                    this.conversations = res.data;
+                    try {
+                        const res = await axios.get('/api/conversations');
+                        this.conversations = Array.isArray(res.data) ? res.data : [];
+                    } catch (err) {
+                        console.error('Failed to fetch conversations:', err);
+                        this.conversations = [];
+                    }
+                    
                     this.updateOnlineStatuses();
 
                     // Intercept messages for ALL existing conversations for real-time sidebar notifications
                     this.conversations.forEach(conv => {
-                        window.Echo.private(`messenger.${conv.id}`)
-                            .listen('.message.sent', (e) => {
-                                // If this is the active conversation
-                                if (this.currentConversation && this.currentConversation.id === conv.id) {
-                                    if (!this.messages.find(m => m.id === e.id)) {
-                                        this.messages.push(e);
-                                        this.scrollToBottom();
+                        try {
+                            window.Echo.private(`messenger.${conv.id}`)
+                                .listen('.message.sent', (e) => {
+                                    // If this is the active conversation
+                                    if (this.currentConversation && this.currentConversation.id === conv.id) {
+                                        if (!this.messages.find(m => m.id === e.id)) {
+                                            this.messages.push(e);
+                                            this.scrollToBottom();
+                                        }
+                                        conv.unread_count = 0;
+                                    } else {
+                                        // Inactive conversation
+                                        if (e.expediteur_id !== myId) {
+                                            conv.unread_count++;
+                                        }
                                     }
-                                    conv.unread_count = 0;
-                                } else {
-                                    // Inactive conversation
-                                    if (e.expediteur_id !== myId) {
-                                        conv.unread_count++;
-                                    }
-                                }
-                                
-                                // Update sidebar text
-                                conv.latest_message = e.contenu;
-                                conv.latest_time = e.time;
-                                
-                                // Float to top
-                                this.conversations = [
-                                    conv,
-                                    ...this.conversations.filter(c => c.id !== conv.id)
-                                ];
-                            });
+                                    
+                                    // Update sidebar text
+                                    conv.latest_message = e.contenu;
+                                    conv.latest_time = e.time;
+                                    
+                                    // Float to top
+                                    this.conversations = [
+                                        conv,
+                                        ...this.conversations.filter(c => c.id !== conv.id)
+                                    ];
+                                });
+                        } catch (echoErr) {
+                            // Echo/websockets not available — ignore silently
+                        }
                     });
 
                     // URL Param Listener: Checks if the user was sent here from a specific product page e.g., `/message?conversation=1`
