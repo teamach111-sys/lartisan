@@ -463,14 +463,15 @@
                     </ul>
                 </div>
 
-                <!-- Support -->
+                <!-- Sécurité & Aide -->
                 <div>
-                    <h3 class="text-lg font-bold mb-6">L'Artisan</h3>
+                    <h3 class="text-lg font-bold mb-6">Sécurité</h3>
                     <ul class="space-y-4 text-gray-400 transition-colors">
-                        <li><a href="#" class="hover:text-[#FF8E72]">À propos de nous</a></li>
-                        <li><a href="#" class="hover:text-[#FF8E72]">Devenir Exposant</a></li>
-                        <li><a href="#" class="hover:text-[#FF8E72]">Charte Qualité</a></li>
-                        <li><a href="#" class="hover:text-[#FF8E72]">Contactez-nous</a></li>
+                        <li><a href="{{ route('centre-aide') }}#eviter-arnaques" class="hover:text-[#FF8E72]">Éviter les arnaques</a></li>
+                        <li><a href="{{ route('centre-aide') }}#paiement-securise" class="hover:text-[#FF8E72]">Paiement sécurisé</a></li>
+                        <li><a href="{{ route('centre-aide') }}#signaler-probleme" class="hover:text-[#FF8E72]">Signaler un problème</a></li>
+                        <li><a href="{{ route('centre-aide') }}#acheter-confiance" class="hover:text-[#FF8E72]">Acheter en confiance</a></li>
+                        <li><a href="{{ route('centre-aide') }}" class="hover:text-[#FF8E72] font-semibold">Centre d'aide →</a></li>
                     </ul>
                 </div>
 
@@ -506,12 +507,8 @@
             <!-- Bottom Bar -->
             <div
                 class="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-                <p>© 2026 Marché Artisanal. Fièrement fabriqué à Marrakech. </p>
-                <div class="flex gap-6">
-                    <a href="#" class="hover:text-white transition-colors">Confidentialité</a>
-                    <a href="#" class="hover:text-white transition-colors">Conditions</a>
-                    <a href="#" class="hover:text-white transition-colors">Cookies</a>
-                </div>
+                <p>© 2026 Marché Artisanal. Fièrement fabriqué à Marrakech.</p>
+                <a href="{{ route('centre-aide') }}" class="hover:text-white transition-colors">Centre d'aide</a>
             </div>
         </div>
 

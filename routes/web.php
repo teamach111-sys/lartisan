@@ -76,5 +76,7 @@ Route::delete('/produit/{produit}', [ProduitController::class, 'destroy'])->name
 Route::get('/produit/{produit}/edit', [ProduitController::class, 'edit'])->name('produit.edit')->middleware('auth');
 Route::put('/produit/{produit}', [ProduitController::class, 'update'])->name('produit.update')->middleware('auth');
 
-
-
+// Centre d'Aide (Help Center)
+Route::get('/centre-aide', function () {
+    return view('centre-aide');
+})->name('centre-aide');
