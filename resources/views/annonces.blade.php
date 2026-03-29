@@ -60,25 +60,27 @@
                 <x-mylistings :produit="$produit" />
             </div>
         @empty
-            {{-- Dedicated div for the empty state --}}
-            <div
-                class="col-span-full flex flex-col items-center justify-center gap-4 bg-white w-full h-64 rounded-md border-2 border-dashed border-gray-300 p-8 text-center">
-                <p class="text-gray-600 font-medium">
-                    @if ($filter === 'valide')
-                        Vous n'avez pas d'annonces actives pour le moment.
-                    @elseif ($filter === 'en_attente')
-                        Aucune annonce n'est en attente de validation.
-                    @elseif ($filter === 'rejete')
-                        Vous n'avez aucune annonce rejetée.
-                    @elseif ($filter === 'sponsorise')
-                        Vous n'avez aucune annonce sponsorisée actuellement.
-                    @else
-                        Il n'y a pas d'annonces actuellement.
-                    @endif
-                </p>
+            <div class="col-span-full flex flex-col items-center justify-center gap-4 bg-white w-full rounded-sm border border-black p-4 md:p-8 text-center transition-all duration-300 mt-4 md:mt-0">
+                
+                @if ($filter === 'valide')
+                    <p class="text-black font-black text-xl md:text-2xl">Aucune annonce active.</p>
+                    <p class="text-gray-500 max-w-sm mx-auto font-medium text-sm md:text-base">Vous n'avez pas d'annonces en ligne pour le moment. Créez-en une maintenant.</p>
+                @elseif ($filter === 'en_attente')
+                    <p class="text-black font-black text-xl md:text-2xl">Aucune annonce en attente.</p>
+                    <p class="text-gray-500 max-w-sm mx-auto font-medium text-sm md:text-base">Vos annonces ont toutes été traitées par notre équipe de modération.</p>
+                @elseif ($filter === 'rejete')
+                    <p class="text-black font-black text-xl md:text-2xl">Aucune annonce rejetée.</p>
+                    <p class="text-gray-500 max-w-sm mx-auto font-medium text-sm md:text-base">Excellent travail, aucune de vos créations n'a été refusée.</p>
+                @elseif ($filter === 'sponsorise')
+                    <p class="text-black font-black text-xl md:text-2xl">Aucune annonce sponsorisée.</p>
+                    <p class="text-gray-500 max-w-sm mx-auto font-medium text-sm md:text-base">Mettez en avant vos produits pour atteindre plus de passionnés d'artisanat.</p>
+                @else
+                    <p class="text-black font-black text-xl md:text-2xl">Aucune annonce trouvée.</p>
+                    <p class="text-gray-500 max-w-sm mx-auto font-medium text-sm md:text-base">Vous n'avez pas encore créé d'annonces. Commencez à vendre dès aujourd'hui.</p>
+                @endif
 
                 <button onclick="window.location.href='{{ route('produit.create') }}'"
-                    class="bg-[#FF8E72] rounded-sm h-11 px-6 border border-black cursor-pointer transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none">
+                    class="mt-4 bg-[#FF8E72] w-full md:w-auto flex items-center justify-center rounded-sm h-14 px-4 md:px-8 border border-black cursor-pointer transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none font-black uppercase text-xs md:text-sm tracking-widest text-center whitespace-normal md:whitespace-nowrap">
                     Ajouter une annonce
                 </button>
             </div>

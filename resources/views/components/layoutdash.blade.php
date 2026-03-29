@@ -46,7 +46,7 @@
 
 <body class="bg-[#f4f4f0]">
 
-    <nav x-data="{ open: false }" class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-7">
+    <nav x-data="{ open: false }" class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-3 md:px-7">
 
         <a href="{{ route('home') }}">
             <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
