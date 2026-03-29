@@ -108,7 +108,7 @@ public function index()
             'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
             'latest_time'    => $latestMessage ? $latestMessage->created_at->format('H:i') : '',
             'unread_count'   => $unreadCount,
-            'is_online'      => $partner && $partner->last_seen_at && $partner->last_seen_at->gt(now()->subMinutes(5)),
+            'is_online'      => $partner && $partner->last_seen_at && ($partner->last_seen_at instanceof \Carbon\Carbon ? $partner->last_seen_at : \Carbon\Carbon::parse($partner->last_seen_at))->gt(now()->subMinutes(5)),
             'is_blocked'     => auth()->user()->hasBlocked($partner->id ?? 0),
             'blocked_by'     => auth()->user()->isBlockedBy($partner->id ?? 0)
         ];

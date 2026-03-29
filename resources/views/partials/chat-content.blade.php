@@ -33,11 +33,15 @@
                 </svg>
             </button>
             <div x-show="dropdown" x-cloak
-                class="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-[4px_4px_0px_0px_#000000] z-50 overflow-hidden">
+                class="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden py-1">
                 <button @click="toggleBlock(); dropdown = false"
-                    class="w-full text-left px-4 py-3 text-sm font-bold transition-all hover:bg-[#FF8E72] hover:text-black flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+                    class="w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-gray-50 flex items-center gap-3"
+                    :class="is_blocked ? 'text-green-600' : 'text-red-600'">
+                    <svg x-show="!is_blocked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    <svg x-show="is_blocked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span x-text="is_blocked ? 'Débloquer cet utilisateur' : 'Bloquer cet utilisateur'"></span>
                 </button>
@@ -78,14 +82,14 @@
 {{-- Input area --}}
 <div class="p-6 md:p-8 bg-white border-t border-black/5">
     <template x-if="is_blocked">
-        <div class="bg-gray-100 border border-black p-4 rounded-sm text-center">
-            <p class="text-sm font-bold text-black uppercase tracking-widest">Vous avez bloqué cet utilisateur.</p>
-            <button @click="toggleBlock()" class="mt-2 text-xs font-black text-[#FF8E72] underline uppercase">Débloquer pour envoyer un message</button>
+        <div class="bg-gray-50 border border-gray-100 p-6 rounded-xl text-center shadow-sm">
+            <p class="text-sm font-semibold text-gray-500 mb-2">Vous avez bloqué cet utilisateur. Vous ne recevrez plus de messages de sa part.</p>
+            <button @click="toggleBlock()" class="text-xs font-bold text-[#FF8E72] hover:text-[#fb663f] transition-colors uppercase tracking-wider cursor-pointer">Débloquer pour discuter</button>
         </div>
     </template>
     <template x-if="blocked_by">
-        <div class="bg-red-50 border border-red-200 p-4 rounded-sm text-center">
-            <p class="text-sm font-bold text-red-600 uppercase tracking-widest">Cet utilisateur vous a bloqué. Vous ne pouvez plus lui envoyer de messages.</p>
+        <div class="bg-red-50/50 border border-red-100 p-6 rounded-xl text-center">
+            <p class="text-sm font-semibold text-red-600">Cet utilisateur vous a bloqué. La communication est désactivée.</p>
         </div>
     </template>
     <template x-if="!is_blocked && !blocked_by">
