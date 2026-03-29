@@ -26,7 +26,9 @@
   <div class="bg-[#F4F4F0] max-w-[1800px] mx-3 lg:mx-14">
     <nav class="lg:flex gap-5 lg:h-29 h-auto items-center justify-between py-1  mt-1  ">
       <div class="flex justify-between items-center ">
-        <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="">
+        <a href="{{ route('home') }}">
+          <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+        </a>
        @auth
      <div class="lg:hidden relative">
       <a href="{{ route('annonces') }}">

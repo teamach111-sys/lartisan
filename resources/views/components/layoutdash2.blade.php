@@ -25,7 +25,9 @@
 
 <body class="bg-[#f4f4f0]">
     <nav x-data="{ open: false }" class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-7">
-        <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="Logo">
+        <a href="{{ route('home') }}">
+            <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+        </a>
         <p class="text-white text-lg">Dashboard</p>
         <button @click="open = !open" class="focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="size-6">
@@ -105,7 +107,9 @@
     <div class="flex">
 
         <aside class="hidden lg:block h-screen w-60 bg-black text-white flex flex-col gap-5 fixed ">
-            <img class="filter invert p-7 border-black  mr-3" src="{{ asset('imgs/logo.svg') }}" alt="">
+            <a href="{{ route('home') }}">
+                <img class="filter invert p-7 border-black  mr-3" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+            </a>
             <div class="gap-5 flex flex-col mr-3">
                 <div class="bg-white h-[0.5px]"></div>
 
