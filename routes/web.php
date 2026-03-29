@@ -27,8 +27,48 @@ Route::post('/message/{produit}', [MessageController::class, 'startConversation'
 
 
 Route::get('/message', function () {
+    $preloadedConversation = null;
+    $convId = request()->query('conversation');
+    
+    if ($convId) {
+        $conversation = \App\Models\Conversation::with(['produit.vendeur', 'acheteur'])->find($convId);
+        
+        if ($conversation) {
+            $userId = auth()->id();
+            // Security: only allow if user is part of this conversation
+            if ($conversation->acheteur_id === $userId || ($conversation->produit && $conversation->produit->vendeur_id === $userId)) {
+                $partner = $userId === $conversation->acheteur_id
+                    ? $conversation->produit?->vendeur
+                    : $conversation->acheteur;
+
+                if ($partner) {
+                    $latestMessage = $conversation->messages()->orderBy('created_at', 'desc')->first();
+                    
+                    $preloadedConversation = [
+                        'id'             => $conversation->id,
+                        'produit_id'     => $conversation->produit_id,
+                        'produit_nom'    => $conversation->produit?->titre ?? 'Produit',
+                        'produit_slug'   => $conversation->produit?->slug ?? '',
+                        'partner_id'     => $partner->id,
+                        'partner_name'   => $partner->name ?? 'Inconnu',
+                        'partner_pfp'    => $partner->pfp ? asset('storage/' . $partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
+                        'auth_pfp'       => auth()->user()->pfp ? asset('storage/' . auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
+                        'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
+                        'latest_time'    => ($latestMessage && $latestMessage->created_at) ? $latestMessage->created_at->format('H:i') : '',
+                        'unread_count'   => 0,
+                        'is_online'      => false,
+                        'is_blocked'     => auth()->user()->hasBlocked($partner->id),
+                        'blocked_by'     => auth()->user()->isBlockedBy($partner->id),
+                        'sort_time'      => time(),
+                    ];
+                }
+            }
+        }
+    }
+
     return view('message', [
-        'auth_user' => auth()->user()
+        'auth_user' => auth()->user(),
+        'preloaded_conversation' => $preloadedConversation,
     ]);
 })->name('message')->middleware('auth');
 Route::middleware('auth')->group(function () {

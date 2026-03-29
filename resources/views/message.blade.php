@@ -140,6 +140,7 @@
                 searchQuery: '',
                 filter: 'all',
                 authUser: @json($auth_user),
+                preloadedConv: @json($preloaded_conversation),
                 isMobile: window.innerWidth < 768,
                 onlineUsers: new Set(),
                 presenceLoaded: false,
@@ -151,20 +152,24 @@
                         this.isMobile = window.innerWidth < 768;
                     });
                     
-                    window.Echo.join('chat.presence')
-                        .here((users) => {
-                            this.presenceLoaded = true;
-                            this.onlineUsers = new Set(users.map(u => u.id));
-                            this.updateOnlineStatuses();
-                        })
-                        .joining((user) => {
-                            this.onlineUsers.add(user.id);
-                            this.updateOnlineStatuses();
-                        })
-                        .leaving((user) => {
-                            this.onlineUsers.delete(user.id);
-                            this.updateOnlineStatuses();
-                        });
+                    try {
+                        window.Echo.join('chat.presence')
+                            .here((users) => {
+                                this.presenceLoaded = true;
+                                this.onlineUsers = new Set(users.map(u => u.id));
+                                this.updateOnlineStatuses();
+                            })
+                            .joining((user) => {
+                                this.onlineUsers.add(user.id);
+                                this.updateOnlineStatuses();
+                            })
+                            .leaving((user) => {
+                                this.onlineUsers.delete(user.id);
+                                this.updateOnlineStatuses();
+                            });
+                    } catch (e) {
+                        // Echo not available on this environment
+                    }
 
                     this.fetchConversations();
                 },
@@ -203,6 +208,15 @@
                         console.error('Failed to fetch conversations:', err);
                         this.conversations = [];
                     }
+
+                    // If the server pre-loaded a conversation (via "Contacter l'artisan"), 
+                    // inject it into the list if it's not already there
+                    if (this.preloadedConv) {
+                        const exists = this.conversations.find(c => c.id === this.preloadedConv.id);
+                        if (!exists) {
+                            this.conversations.unshift(this.preloadedConv);
+                        }
+                    }
                     
                     this.updateOnlineStatuses();
 
@@ -240,13 +254,13 @@
                         }
                     });
 
-                    // URL Param Listener: Checks if the user was sent here from a specific product page e.g., `/message?conversation=1`
+                    // Auto-select the target conversation from URL param or preloaded data
                     const urlParams = new URLSearchParams(window.location.search);
                     const convId = urlParams.get('conversation');
                     if (convId) {
                         const targetConv = this.conversations.find(c => c.id == convId);
                         if (targetConv) {
-                            this.selectConversation(targetConv); // Automatically click it!
+                            this.selectConversation(targetConv);
                         }
                     }
                 },
