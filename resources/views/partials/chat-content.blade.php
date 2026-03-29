@@ -25,11 +25,24 @@
     </div>
 
     <div class="flex items-center gap-2">
-        <button class="p-2 hover:bg-gray-50 rounded-full transition-colors opacity-30 hover:opacity-100">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
-            </svg>
-        </button>
+        <div class="relative" x-data="{ dropdown: false }" @click.away="dropdown = false">
+            <button @click="dropdown = !dropdown" 
+                class="p-2 hover:bg-gray-50 rounded-full transition-colors opacity-30 hover:opacity-100 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div x-show="dropdown" x-cloak
+                class="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-[4px_4px_0px_0px_#000000] z-50 overflow-hidden">
+                <button @click="toggleBlock(); dropdown = false"
+                    class="w-full text-left px-4 py-3 text-sm font-bold transition-all hover:bg-[#FF8E72] hover:text-black flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    <span x-text="is_blocked ? 'Débloquer cet utilisateur' : 'Bloquer cet utilisateur'"></span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -64,17 +77,30 @@
 
 {{-- Input area --}}
 <div class="p-6 md:p-8 bg-white border-t border-black/5">
-    <div class="relative flex items-center gap-4">
-        <div class="flex-1 relative group flex items-center">
-            <textarea x-model="newMessage" @keydown.enter.prevent="sendMessage"
-                class="w-full pl-5 pr-5 py-4 bg-gray-50 border border-black rounded-sm focus:outline-none focus:bg-white focus:shadow-[4px_4px_0px_0px_#000000] transition-all font-bold text-base placeholder:text-black/10 resize-none h-16"
-                placeholder="Votre message ici..."></textarea>
+    <template x-if="is_blocked">
+        <div class="bg-gray-100 border border-black p-4 rounded-sm text-center">
+            <p class="text-sm font-bold text-black uppercase tracking-widest">Vous avez bloqué cet utilisateur.</p>
+            <button @click="toggleBlock()" class="mt-2 text-xs font-black text-[#FF8E72] underline uppercase">Débloquer pour envoyer un message</button>
         </div>
-        <button @click="sendMessage"
-            class="bg-black text-white h-16 w-16 flex items-center justify-center border border-black rounded-sm hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] hover:bg-[#FF8E72] hover:text-black transition-all active:translate-x-0 active:translate-y-0 active:shadow-none flex-shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-            </svg>
-        </button>
-    </div>
+    </template>
+    <template x-if="blocked_by">
+        <div class="bg-red-50 border border-red-200 p-4 rounded-sm text-center">
+            <p class="text-sm font-bold text-red-600 uppercase tracking-widest">Cet utilisateur vous a bloqué. Vous ne pouvez plus lui envoyer de messages.</p>
+        </div>
+    </template>
+    <template x-if="!is_blocked && !blocked_by">
+        <div class="relative flex items-center gap-4">
+            <div class="flex-1 relative group flex items-center">
+                <textarea x-model="newMessage" @keydown.enter.prevent="sendMessage"
+                    class="w-full pl-5 pr-5 py-4 bg-gray-50 border border-black rounded-sm focus:outline-none focus:bg-white focus:shadow-[4px_4px_0px_0px_#000000] transition-all font-bold text-base placeholder:text-black/10 resize-none h-16"
+                    placeholder="Votre message ici..."></textarea>
+            </div>
+            <button @click="sendMessage"
+                class="bg-black text-white h-16 w-16 flex items-center justify-center border border-black rounded-sm hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] hover:bg-[#FF8E72] hover:text-black transition-all active:translate-x-0 active:translate-y-0 active:shadow-none flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                </svg>
+            </button>
+        </div>
+    </template>
 </div>

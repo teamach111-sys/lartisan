@@ -143,6 +143,8 @@
                 isMobile: window.innerWidth < 768,
                 onlineUsers: new Set(),
                 presenceLoaded: false,
+                is_blocked: false,
+                blocked_by: false,
 
                 init() {
                     window.addEventListener('resize', () => {
@@ -246,6 +248,8 @@
 
                     // Optimistic UI update: pretend the messages are read immediately so the notification badge clears instantly
                     conversation.unread_count = 0;
+                    this.is_blocked = conversation.is_blocked;
+                    this.blocked_by = conversation.blocked_by;
 
                     // Make the heavy server lookup across the network
                     this.fetchMessages(conversation.id);
@@ -254,8 +258,9 @@
                 // Backend pull 
                 async fetchMessages(conversationId) {
                     const res = await axios.get(`/api/conversations/${conversationId}/messages`);
-                    this.messages = res
-                    .data; // Alpine automatically detects array changes and draws the bubbles via HTML `x-for` tracking
+                    this.messages = res.data.messages;
+                    this.is_blocked = res.data.is_blocked;
+                    this.blocked_by = res.data.blocked_by;
 
                     // Optional: force scroll to the bottom of the container
                     this.scrollToBottom();
@@ -313,6 +318,25 @@
                         await axios.delete(`/api/conversations/${id}`);
                     } catch (err) {
                         console.error('Erreur lors de la suppression', err);
+                    }
+                },
+
+                async toggleBlock() {
+                    if (!this.currentConversation) return;
+                    const partnerId = this.currentConversation.partner_id;
+                    const endpoint = this.is_blocked ? `/api/unblock/${partnerId}` : `/api/block/${partnerId}`;
+                    
+                    try {
+                        const res = await axios.post(endpoint);
+                        this.is_blocked = res.data.is_blocked;
+                        // Update the conversation list matching the current one
+                        const conv = this.conversations.find(c => c.id === this.currentConversation.id);
+                        if (conv) {
+                            conv.is_blocked = this.is_blocked;
+                        }
+                    } catch (err) {
+                        console.error('Erreur lors du blocage/déblocage', err);
+                        alert(err.response?.data?.message || 'Une erreur est survenue.');
                     }
                 }
             }));

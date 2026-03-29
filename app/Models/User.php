@@ -53,6 +53,22 @@ public function favoris() {
     return $this->belongsToMany(Produit::class, 'favoris', 'utilisateur_id', 'produit_id')->withTimestamps();
 }
 
+public function blockedUsers() {
+    return $this->belongsToMany(User::class, 'blocked_users', 'blocker_id', 'blocked_id')->withTimestamps();
+}
+
+public function blockedByUsers() {
+    return $this->belongsToMany(User::class, 'blocked_users', 'blocked_id', 'blocker_id')->withTimestamps();
+}
+
+public function hasBlocked($userId) {
+    return $this->blockedUsers()->where('blocked_id', $userId)->exists();
+}
+
+public function isBlockedBy($userId) {
+    return $this->blockedByUsers()->where('blocker_id', $userId)->exists();
+}
+
     /**
      * The attributes that should be hidden for serialization.
      *

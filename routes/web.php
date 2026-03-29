@@ -54,6 +54,10 @@ Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profil', [DashController::class, 'profil'])->name('profil');
     Route::post('/profil', [DashController::class, 'updateProfil'])->name('profil.update');
+
+    // Blocking
+    Route::post('/api/block/{user}', [\App\Http\Controllers\BlockController::class, 'block']);
+    Route::post('/api/unblock/{user}', [\App\Http\Controllers\BlockController::class, 'unblock']);
 });
 
 Route::get('/register', [AuthController::class, 'create'])->name('register')->middleware('guest');
