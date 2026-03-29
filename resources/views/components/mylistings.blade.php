@@ -61,9 +61,19 @@
                 <div class="bg-blue-500 border border-black shadow-[2px_2px_0px_0px_#000000] text-white text-xs font-black px-2.5 py-1 uppercase rounded-sm">
                     Mise en avant (En attente)
                 </div>
-            @elseif ($produit->sponsor_status === 'approuve' && $produit->sponsored_until && $produit->sponsored_until > now())
-                <div class="bg-purple-600 border border-black shadow-[2px_2px_0px_0px_#000000] text-white text-xs font-black px-2.5 py-1 uppercase rounded-sm">
-                    Sponsorisé
+            @elseif ($produit->sponsor_status === 'approuve' && $produit->sponsored_until && \Carbon\Carbon::parse($produit->sponsored_until)->isFuture())
+                @php
+                    $diff = \Carbon\Carbon::parse($produit->sponsored_until)->diff(now());
+                    $hours = ($diff->days * 24) + $diff->h;
+                    $minutes = $diff->i;
+                @endphp
+                <div class="flex flex-col gap-1 items-end">
+                    <div class="bg-purple-600 border border-black shadow-[2px_2px_0px_0px_#000000] text-white text-xs font-black px-2.5 py-1 uppercase rounded-sm">
+                        Sponsorisé
+                    </div>
+                    <div class="bg-white border border-black shadow-[2px_2px_0px_0px_#000000] text-purple-600 text-[10px] font-black px-2 py-0.5 uppercase rounded-sm">
+                        {{ $hours }}h {{ $minutes }}m restants
+                    </div>
                 </div>
             @endif
         </div>
