@@ -28,12 +28,12 @@ class MessageController extends Controller
 public function sendMessage(Request $request, Conversation $conversation)
 {
     // Security check: must be part of the conversation
-    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit->vendeur_id !== auth()->id()) {
+    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit?->vendeur_id !== auth()->id()) {
         abort(403);
     }
 
     $partner = auth()->id() === $conversation->acheteur_id
-        ? $conversation->produit->vendeur
+        ? $conversation->produit?->vendeur
         : $conversation->acheteur;
 
     if (auth()->user()->isBlockedBy($partner->id) || auth()->user()->hasBlocked($partner->id)) {
@@ -84,9 +84,9 @@ public function index()
 
     $conversations = $buyerConversations->merge($sellerConversations)
     ->map(function ($conversation) use ($userId) {
-        // Determine who the partner is relative to the logged-in user.
+        // Safe relational extraction ensuring we gracefully handle deleted products or users
         $partner = $userId === $conversation->acheteur_id
-            ? $conversation->produit->vendeur
+            ? $conversation->produit?->vendeur
             : $conversation->acheteur;
 
         $latestMessage = $conversation->messages->first();
@@ -96,22 +96,32 @@ public function index()
             ->where('expediteur_id', '!=', $userId)
             ->count();
 
+        // Extremely safe timestamp fetch to avoid 'getTimestamp on null' errors inside Cloud DB
+        $sortTime = 0;
+        if ($latestMessage && $latestMessage->created_at) {
+            $sortTime = $latestMessage->created_at->timestamp;
+        } elseif ($conversation->created_at) {
+            $sortTime = $conversation->created_at->timestamp;
+        } else {
+            $sortTime = time(); 
+        }
+
         return [
             'id'           => $conversation->id,
             'produit_id'   => $conversation->produit_id,
-            'produit_nom'  => $conversation->produit->titre ?? 'Produit',
-            'produit_slug' => $conversation->produit->slug ?? '',
-            'partner_id'   => $partner->id ?? null,
-            'partner_name' => $partner->name ?? 'Inconnu',
-            'partner_pfp'  => $partner->pfp ? asset('storage/' . $partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
+            'produit_nom'  => $conversation->produit?->titre ?? 'Produit Supprimé',
+            'produit_slug' => $conversation->produit?->slug ?? '',
+            'partner_id'   => $partner?->id ?? null,
+            'partner_name' => $partner?->name ?? 'Utilisateur Inconnu',
+            'partner_pfp'  => $partner?->pfp ? asset('storage/' . $partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner?->name ?? 'U'),
             'auth_pfp'     => auth()->user()->pfp ? asset('storage/' . auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
             'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
-            'latest_time'    => $latestMessage ? $latestMessage->created_at->format('H:i') : '',
+            'latest_time'    => ($latestMessage && $latestMessage->created_at) ? $latestMessage->created_at->format('H:i') : '',
             'unread_count'   => $unreadCount,
             'is_online'      => $partner && $partner->last_seen_at && ($partner->last_seen_at instanceof \Carbon\Carbon ? $partner->last_seen_at : \Carbon\Carbon::parse($partner->last_seen_at))->gt(now()->subMinutes(5)),
-            'is_blocked'     => auth()->user()->hasBlocked($partner->id ?? 0),
-            'blocked_by'     => auth()->user()->isBlockedBy($partner->id ?? 0),
-            'sort_time'      => $latestMessage ? $latestMessage->created_at->timestamp : $conversation->created_at->timestamp,
+            'is_blocked'     => auth()->user()->hasBlocked($partner?->id ?? 0),
+            'blocked_by'     => auth()->user()->isBlockedBy($partner?->id ?? 0),
+            'sort_time'      => $sortTime,
         ];
     })
     ->sortByDesc('sort_time')
@@ -123,7 +133,8 @@ public function index()
 public function fetchMessages(Conversation $conversation)
 {
     // Strict Database security check - Ensures an attacker cannot API fetch a conversation belonging to two other people!
-    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit->vendeur_id !== auth()->id()) {
+    // Safely evaluates via null-safe operators in case the product was deleted
+    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit?->vendeur_id !== auth()->id()) {
         abort(403);
     }
 
@@ -151,16 +162,16 @@ public function fetchMessages(Conversation $conversation)
 
     return response()->json([
         'messages' => $messages,
-        'partner_id' => $partner->id ?? null,
-        'is_blocked' => auth()->user()->hasBlocked($partner->id ?? 0),
-        'blocked_by' => auth()->user()->isBlockedBy($partner->id ?? 0)
+        'partner_id' => $partner?->id ?? null,
+        'is_blocked' => auth()->user()->hasBlocked($partner?->id ?? 0),
+        'blocked_by' => auth()->user()->isBlockedBy($partner?->id ?? 0)
     ]);
 }
 
 public function destroy(Conversation $conversation)
 {
     // Strict Database security check
-    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit->vendeur_id !== auth()->id()) {
+    if ($conversation->acheteur_id !== auth()->id() && $conversation->produit?->vendeur_id !== auth()->id()) {
         abort(403);
     }
 
