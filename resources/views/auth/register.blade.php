@@ -121,7 +121,7 @@
 
             <div class="hidden lg:block lg:w-1/2 relative">
                 <div class="absolute inset-0 bg-black/5 z-10"></div>
-                <img class="w-full h-full object-cover border-l border-black" src="{{ asset('storage/822e112a3b444c69f7ef.svg') }}" alt="Artisan workshop">
+                <img class="w-full h-full object-cover border-l border-black" src="{{ asset('imgs/register_bg.svg') }}" alt="Artisan workshop">
             </div>
         </div>
     </main>
