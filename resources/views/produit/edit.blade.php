@@ -48,12 +48,12 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="font-bold text-sm" for="description">Description détaillée</label>
-                        <textarea name="description" id="description" rows="4"
+                        <textarea name="description" id="description" rows="4" maxlength="1000"
                                   class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm p-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{{ old('description', $produit->description) }}</textarea>
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="font-bold text-sm" for="prix">Prix (DH)</label>
-                        <input name="prix" id="prix" type="number" value="{{ old('prix', $produit->prix) }}" 
+                        <input name="prix" id="prix" type="number" value="{{ old('prix', $produit->prix) }}" max="9999999999"
                                class="focus:shadow-[0_0_0_2px_#fb663f] outline-none bg-white border border-black rounded-sm h-12 px-4 transition-all duration-200 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                     </div>
                 </div>

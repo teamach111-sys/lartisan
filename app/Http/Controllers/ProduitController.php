@@ -46,7 +46,7 @@ class ProduitController extends Controller
         // 1. Validate the data
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
-            'prix' => 'required|numeric|min:0',
+            'prix' => 'required|numeric|min:0|max:9999999999',
             'description' => 'nullable|string|max:1000',
             'categorie' => 'required|exists:categories,id',
             'ville_produit' => 'required|exists:villes,nom',
@@ -113,7 +113,7 @@ class ProduitController extends Controller
         // 2. Validate the data
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
-            'prix' => 'required|numeric|min:0',
+            'prix' => 'required|numeric|min:0|max:10000',
             'description' => 'nullable|string|max:1000',
             'categorie' => 'required|exists:categories,id',
             'ville_produit' => 'required|exists:villes,nom',

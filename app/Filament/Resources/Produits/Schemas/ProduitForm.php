@@ -24,6 +24,8 @@ class ProduitForm
                                 TextInput::make('titre')
                                     ->label('Titre du produit')
                                     ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (string $operation, $state, callable $set) => $operation === 'create' ? $set('slug', \Illuminate\Support\Str::slug($state)) : null)
                                     ->maxLength(255),
                                 TextInput::make('slug')
                                     ->label('Slug')
@@ -65,6 +67,8 @@ class ProduitForm
                             ->directory('produits')
                             ->reorderable()
                             ->image()
+                            ->imageEditor()
+                            ->maxSize(10240) // 10MB limit per image
                             ->panelLayout('grid')
                             ->columnSpanFull(),
                         Grid::make(2)
