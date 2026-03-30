@@ -66,7 +66,7 @@ class ProduitForm
                         FileUpload::make('images')
                             ->label('Images du produit')
                             ->multiple()
-                            ->disk('public')
+                            ->disk(config('filesystems.default', 'public'))
                             ->directory('produits')
                             ->reorderable()
                             ->image()

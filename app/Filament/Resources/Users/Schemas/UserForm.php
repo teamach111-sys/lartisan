@@ -61,7 +61,7 @@ class UserForm
                             ->default('actif'),
                         FileUpload::make('pfp')
                             ->label('Photo de profil')
-                            ->disk('public')
+                            ->disk(config('filesystems.default', 'public'))
                             ->directory('avatars')
                             ->image()
                             ->avatar(),
