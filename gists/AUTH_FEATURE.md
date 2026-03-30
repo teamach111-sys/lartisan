@@ -92,6 +92,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Helpers\ImageHelper;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -108,7 +109,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'pfp',
         'telephone',
-        'telephone_visible',
+        'display_phone',
         'ville_utilisateur',
         'last_seen_at',
     ];
@@ -119,12 +120,17 @@ class User extends Authenticatable implements FilamentUser
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-            'last_seen_at'      => 'datetime',
+            'password' => 'hashed',
+            'last_seen_at' => 'datetime',
+            'display_phone' => 'boolean',
         ];
     }
 
-    // Relations
+    public function getPfpUrlAttribute(): string
+    {
+        return ImageHelper::getUrl($this->pfp);
+    }
+
     public function produits()
     {
         return $this->hasMany(Produit::class, 'vendeur_id');
@@ -132,8 +138,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function favoris()
     {
-        return $this->belongsToMany(Produit::class, 'favoris', 'utilisateur_id', 'produit_id')
-                    ->withTimestamps();
+        return $this->belongsToMany(Produit::class, 'favoris', 'utilisateur_id', 'produit_id')->withTimestamps();
     }
 }
 ```
@@ -148,10 +153,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ImageHelper;
 
 class AuthController extends Controller
 {
-    // --- REGISTER ---
     public function create()
     {
         return view('auth.register');
@@ -160,32 +165,30 @@ class AuthController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'             => 'required|string|max:255',
-            'email'            => 'required|email|unique:users,email',
-            'password'         => 'required|min:8|confirmed', // needs password_confirmation field
-            'ville_utilisateur'=> 'required|string',
-            'telephone'        => 'nullable|string',
-            'pfp'              => 'nullable|image|max:2048',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+            'ville_utilisateur' => 'required|string',
+            'telephone' => 'required|string',
+            'pfp' => 'nullable|image|max:2048',
         ]);
 
         $user = new User();
-        $user->name             = $validated['name'];
-        $user->email            = $validated['email'];
-        $user->password         = Hash::make($validated['password']);
-        $user->ville_utilisateur= $validated['ville_utilisateur'];
-        $user->telephone        = $request->telephone;
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->password = Hash::make($validated['password']);
+        $user->ville_utilisateur = $validated['ville_utilisateur'];
+        $user->telephone = $validated['telephone'];
 
         if ($request->hasFile('pfp')) {
-            $user->pfp = $request->file('pfp')->store('profiles', 'public');
+            $user->pfp = ImageHelper::compressAndStore($request->file('pfp'), 'avatars');
         }
 
         $user->save();
         Auth::login($user);
-
         return redirect('/')->with('success', 'Bienvenue parmi nous !');
     }
 
-    // --- LOGIN ---
     public function showLogin()
     {
         return view('auth.login');
@@ -194,7 +197,7 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
@@ -203,12 +206,9 @@ class AuthController extends Controller
             return redirect()->intended('/');
         }
 
-        return back()->withErrors([
-            'email' => 'Les identifiants ne correspondent pas à nos enregistrements.',
-        ]);
+        return back()->withErrors(['email' => 'Les identifiants ne correspondent pas à nos enregistrements.']);
     }
 
-    // --- LOGOUT ---
     public function logout(Request $request)
     {
         Auth::logout();

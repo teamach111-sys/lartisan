@@ -212,7 +212,7 @@ class UserForm
                     'suspendu' => 'Suspendu',
                     'banni' => 'Banni',
                 ])->required()->default('actif'),
-                FileUpload::make('pfp')->label('Photo de profil')->image()->disk('public')->directory('user-pfps')->avatar(),
+                FileUpload::make('pfp')->label('Photo de profil')->image()->directory('user-pfps')->avatar(),
                 DateTimePicker::make('last_seen_at')->label('Dernière connexion')->disabled(),
                 DateTimePicker::make('email_verified_at')->label('Email vérifié le'),
             ]),
@@ -239,7 +239,7 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table->columns([
-            ImageColumn::make('pfp')->label('Photo')->disk('public')->circular(),
+            ImageColumn::make('pfp')->label('Photo')->circular(),
             TextColumn::make('name')->label('Nom')->searchable()->sortable(),
             TextColumn::make('email')->label('Email')->searchable()->sortable(),
             TextColumn::make('telephone')->label('Téléphone')->searchable(),
@@ -321,7 +321,7 @@ class ProduitForm
                 RichEditor::make('description')->label('Description')->columnSpanFull(),
             ]),
             Section::make('Images et État')->schema([
-                FileUpload::make('images')->label('Images du produit')->multiple()->disk('public')->directory('produits')->reorderable()->image()->columnSpanFull(),
+                FileUpload::make('images')->label('Images du produit')->multiple()->directory('produits')->reorderable()->image()->columnSpanFull(),
                 Grid::make(2)->schema([
                     Select::make('etat_produit')->label('État du produit')->options([
                         'neuf' => 'Neuf',
@@ -360,7 +360,7 @@ class ProduitsTable
     public static function configure(Table $table): Table
     {
         return $table->columns([
-            ImageColumn::make('images')->label('Image')->disk('public')->circular()->limit(1),
+            ImageColumn::make('images')->label('Image')->circular()->limit(1),
             TextColumn::make('titre')->label('Titre')->searchable()->sortable(),
             TextColumn::make('vendeur.name')->label('Vendeur')->searchable()->sortable(),
             TextColumn::make('categorie.nom')->label('Catégorie')->searchable()->sortable(),

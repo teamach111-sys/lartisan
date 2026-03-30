@@ -134,11 +134,13 @@ class Produit extends Model
         'ville_produit',
         'etat_produit',
         'vendeur_id',
+        'telephone_visible',
     ];
 
     protected $casts = [
         'images' => 'array',
-        'prix'   => 'decimal:2',
+        'prix' => 'decimal:2',
+        'telephone_visible' => 'boolean',
     ];
 
     public function vendeur()
@@ -163,6 +165,7 @@ use App\Models\Produit;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class ProduitController extends Controller
 {
@@ -191,19 +194,21 @@ class ProduitController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'titre'        => 'required|string|max:255',
-            'prix'         => 'required|numeric|min:0',
-            'description'  => 'nullable|string|max:1000',
-            'categorie'    => 'required|exists:categories,id',
-            'ville_produit'=> 'required|string|max:255',
+            'titre' => 'required|string|max:255',
+            'prix' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:1000',
+            'categorie' => 'required|exists:categories,id',
+            'ville_produit' => 'required|string|max:255',
             'etat_produit' => 'required|string|max:255',
-            'images'       => 'required|array|size:5',
-            'images.*'     => 'image|mimes:jpeg,png,jpg|max:2048',
+            'images' => 'required|array|size:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $paths = [];
-        foreach ($request->file('images') as $file) {
-            $paths[] = $file->store('produits', 'public');
+        $files = $request->file('images');
+        ksort($files);
+        foreach ($files as $file) {
+            $paths[] = ImageHelper::compressAndStore($file, 'produits');
         }
 
         $slug = Str::slug($request->titre);
@@ -214,18 +219,19 @@ class ProduitController extends Controller
         }
 
         Produit::create([
-            'titre'        => $validated['titre'],
-            'prix'         => $validated['prix'],
-            'description'  => $validated['description'],
-            'ville_produit'=> $validated['ville_produit'],
+            'titre' => $validated['titre'],
+            'prix' => $validated['prix'],
+            'description' => $validated['description'],
+            'ville_produit' => $validated['ville_produit'],
             'etat_produit' => $validated['etat_produit'],
-            'images'       => $paths,
-            'slug'         => $slug,
-            'vendeur_id'   => auth()->id(),
+            'images' => $paths,
+            'slug' => $slug,
+            'vendeur_id' => auth()->id(),
             'categorie_id' => (int) $request->categorie,
+            'telephone_visible' => auth()->user()->display_phone,
         ]);
 
-        return redirect()->route('produit.create')->with('success', 'Produit créé avec succès!');
+        return redirect()->route('annonces')->with('success', 'Produit créé avec succès!');
     }
 }
 ```

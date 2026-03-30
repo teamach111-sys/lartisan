@@ -183,14 +183,15 @@ class Message extends Model
 ## Fragment: app/Models/User.php
 ```php
 // Add to $fillable:
-'last_seen_at',
+'last_seen_at', 'display_phone',
 
 // Add to $casts:
 'last_seen_at' => 'datetime',
+'display_phone' => 'boolean',
 
-// Add relationship (if you have products):
-public function produits() {
-    return $this->hasMany(Produit::class, 'vendeur_id');
+// Add accessor for consistent image rendering:
+public function getPfpUrlAttribute(): string {
+    return \App\Helpers\ImageHelper::getUrl($this->pfp);
 }
 ```
 
@@ -365,12 +366,8 @@ class MessageController extends Controller
                 'produit_nom'    => $conversation->produit->titre ?? 'Produit',
                 'produit_slug'   => $conversation->produit->slug ?? '',
                 'partner_name'   => $partner->name ?? 'Inconnu',
-                'partner_pfp'    => $partner->pfp
-                    ? asset('storage/' . $partner->pfp)
-                    : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
-                'auth_pfp'       => auth()->user()->pfp
-                    ? asset('storage/' . auth()->user()->pfp)
-                    : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
+                'partner_pfp'    => $partner->pfp_url,
+                'auth_pfp'       => auth()->user()->pfp_url,
                 'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
                 'latest_time'    => $latestMessage ? $latestMessage->created_at->format('H:i') : '',
                 'unread_count'   => $unreadCount,

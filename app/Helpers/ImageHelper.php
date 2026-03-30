@@ -83,18 +83,28 @@ class ImageHelper
             return asset('imgs/default.svg');
         }
 
-        // Simply use the default disk's URL method (just like Filament does).
-        // On Cloud (S3/R2), we often need a signed, temporary URL to view private files.
-        // We'll try to generate a temporary URL that's valid for 24 hours.
+        // Simply use the default disk's URL method.
+        // On Cloud (S3/R2), we often prefer the absolute URL defined in AWS_URL.
         $disk = Storage::disk(config('filesystems.default', 'public'));
         
         try {
-            // Check if the disk supports temporary URLs (S3/R2/Cloud disks do)
-            return $disk->temporaryUrl($path, now()->addHours(24));
-        } catch (\RuntimeException $e) {
-            // Fallback for disks that don't support temporary URLs (like the Local disk)
-            // Absolute URL wrapping to ensure its valid on any domain.
-            return url($disk->url($path));
+            // Priority: Default to the absolute URL method (efficient, uses AWS_URL if set)
+            $url = $disk->url($path);
+            
+            // If it's a relative path (likely local storage), wrap it in url()
+            if (!str_starts_with($url, 'http')) {
+                $url = url($url);
+            }
+            
+            return $url;
+        } catch (\Exception $e) {
+            // Fallback: If url() fails or we specifically need a temporary URL for private files:
+            try {
+                return $disk->temporaryUrl($path, now()->addHours(24));
+            } catch (\Exception $ex) {
+                // Last resort fallback
+                return asset('storage/' . $path);
+            }
         }
     }
 }

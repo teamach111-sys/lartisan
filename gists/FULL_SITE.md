@@ -93,6 +93,9 @@ contents:
   - id: 31
     label: resources/views/annonces.blade.php
     language: blade
+  - id: 32
+    label: app/Helpers/ImageHelper.php
+    language: php
 createdAt: 1774641546620
 description: null
 folderId: null
@@ -283,10 +286,16 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -303,6 +312,11 @@ class User extends Authenticatable implements FilamentUser
         'ville_utilisateur',
         'last_seen_at',
     ];
+
+    public function getPfpUrlAttribute()
+    {
+        return \App\Helpers\ImageHelper::getUrl($this->pfp);
+    }
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -371,11 +385,15 @@ class Produit extends Model
         'ville_produit',
         'etat_produit',
         'vendeur_id',
+        'telephone_visible',
+        'sponsor_status',
+        'sponsored_until',
     ];
 
     protected $casts = [
         'images' => 'array',
         'prix'   => 'decimal:2',
+        'sponsored_until' => 'datetime',
     ];
 
     public function vendeur()
@@ -651,57 +669,52 @@ use App\Models\Produit;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\ImageHelper;
 
 class ProduitController extends Controller
 {
-    /** Home page — list all products */
     public function index()
     {
         $produits = Produit::latest()->get();
         return view('home', compact('produits'));
     }
 
-    /** Single product page (slug-based for SEO) */
     public function show(Produit $produit)
     {
         $produit->load('vendeur');
-
         $relatedProducts = Produit::where('categorie_id', $produit->categorie_id)
             ->where('id', '!=', $produit->id)
             ->limit(4)
             ->get();
-
         return view('produit.show', compact('produit', 'relatedProducts'));
     }
 
-    /** Show create product form */
     public function create()
     {
         $categories = Categorie::all();
         return view('produit.create', compact('categories'));
     }
 
-    /** Store a new product */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'titre'        => 'required|string|max:255',
-            'prix'         => 'required|numeric|min:0',
-            'description'  => 'nullable|string|max:1000',
-            'categorie'    => 'required|exists:categories,id',
-            'ville_produit'=> 'required|string|max:255',
+            'titre' => 'required|string|max:255',
+            'prix' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:1000',
+            'categorie' => 'required|exists:categories,id',
+            'ville_produit' => 'required|string|max:255',
             'etat_produit' => 'required|string|max:255',
-            'images'       => 'required|array|size:5',
-            'images.*'     => 'image|mimes:jpeg,png,jpg|max:2048',
+            'images' => 'required|array|size:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Store 5 images
         $paths = [];
-        foreach ($request->file('images') as $file) {
-            $paths[] = $file->store('produits', 'public');
+        $files = $request->file('images');
+        ksort($files);
+        foreach ($files as $file) {
+            $paths[] = ImageHelper::compressAndStore($file, 'produits');
         }
 
-        // Generate unique slug
         $slug = Str::slug($request->titre);
         $originalSlug = $slug;
         $count = 1;
@@ -710,18 +723,29 @@ class ProduitController extends Controller
         }
 
         Produit::create([
-            'titre'        => $validated['titre'],
-            'prix'         => $validated['prix'],
-            'description'  => $validated['description'],
-            'ville_produit'=> $validated['ville_produit'],
+            'titre' => $validated['titre'],
+            'prix' => $validated['prix'],
+            'description' => $validated['description'],
+            'ville_produit' => $validated['ville_produit'],
             'etat_produit' => $validated['etat_produit'],
-            'images'       => $paths,
-            'slug'         => $slug,
-            'vendeur_id'   => auth()->id(),
+            'images' => $paths,
+            'slug' => $slug,
+            'vendeur_id' => auth()->id(),
             'categorie_id' => (int) $request->categorie,
+            'telephone_visible' => auth()->user()->display_phone,
         ]);
 
-        return redirect()->route('produit.create')->with('success', 'Produit créé avec succès!');
+        return redirect()->route('annonces')->with('success', 'Produit créé avec succès!');
+    }
+
+    public function toggleFavorite(Produit $produit)
+    {
+        $user = auth()->user();
+        if ($produit->vendeur_id === $user->id) {
+            return back()->with('error', 'Vous ne pouvez pas ajouter vos propres produits en favoris.');
+        }
+        $user->favoris()->toggle($produit->id);
+        return back();
     }
 }
 ```
@@ -882,73 +906,33 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\ProduitController;
-use App\Models\Produit;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PasswordResetController;
 
-// ─── PUBLIC ROUTES ──────────────────────────────────────────────────────────
-
-// Home — list all products
-Route::get('/', function () {
-    $produits = Produit::latest()->get();
-    return view('home', ['produits' => $produits]);
-})->name('home');
-
-// ─── AUTH ROUTES (GUEST ONLY) ────────────────────────────────────────────────
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/register', [AuthController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [AuthController::class, 'store'])->middleware('guest');
-
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post')->middleware('guest');
-
-// ─── AUTH ROUTES (LOGGED-IN ONLY) ───────────────────────────────────────────
-
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// ─── PRODUCT ROUTES ──────────────────────────────────────────────────────────
+Route::get('/produit/create', [ProduitController::class, 'create'])->name('produit.create')->middleware('auth');
+Route::post('/produit/store', [ProduitController::class, 'store'])->name('produit.store')->middleware('auth');
+Route::get('/produit/{produit:slug}', [ProduitController::class, 'show'])->name('produit.show');
 
-// IMPORTANT: /produit/create MUST come before /produit/{produit:slug}
-// otherwise Laravel would try to find a product with slug "create"
-Route::get('/produit/create', [ProduitController::class, 'create'])
-    ->name('produit.create')
-    ->middleware('auth');
-
-Route::post('/produit/store', [ProduitController::class, 'store'])
-    ->name('produit.store')
-    ->middleware('auth');
-
-// Slug-based product page (public)
-Route::get('/produit/{produit:slug}', [ProduitController::class, 'show'])
-    ->name('produit.show');
-
-// Start a conversation from the product page (POST from Contact button)
-// MUST be after the static /produit/create to avoid conflicts
-Route::post('/message/{produit}', [MessageController::class, 'startConversation'])
-    ->name('produit.contact')
-    ->middleware('auth');
-
-// ─── MESSAGING ROUTES ────────────────────────────────────────────────────────
-
-// Messaging page (SPA shell)
-Route::get('/message', function () {
-    return view('message', ['auth_user' => auth()->user()]);
-})->name('message')->middleware('auth');
-
-// Messaging API (all protected, grouped for clarity)
 Route::middleware('auth')->group(function () {
-    // 1. Fetch all conversations for the sidebar
+    Route::get('/annonces', [DashController::class, 'annonces'])->name('annonces');
+    Route::get('/message', function () {
+        return view('message', ['auth_user' => auth()->user()]);
+    })->name('message');
+    
     Route::get('/api/conversations', [MessageController::class, 'index']);
-
-    // 2. Fetch message history for one conversation
     Route::get('/api/conversations/{conversation}/messages', [MessageController::class, 'fetchMessages']);
-
-    // 3. Send a message into a conversation
     Route::post('/api/conversations/{conversation}/messages', [MessageController::class, 'sendMessage']);
+    Route::post('/message/{produit}', [MessageController::class, 'startConversation'])->name('produit.contact');
 });
-
-// ─── DASHBOARD / ANNONCES ────────────────────────────────────────────────────
-
-Route::get('/annonces', [DashController::class, 'annonces'])->name('annonces')->middleware('auth');
 ```
 
 ## Fragment: resources/js/echo.js
@@ -1967,11 +1951,20 @@ import './echo';
 ## Fragment: resources/views/produit/show.blade.php
 ```blade
 <x-layout>
-    <div class="flex flex-col lg:w-2/3 w-full mx-auto h-full overflow-y-auto py-9 px-4 sm:px-0">
+    <div class="flex flex-col lg:w-2/3 w-full mx-auto h-full overflow-y-auto py-4 lg:py-9">
+        {{-- navigation --}}
+        <div class="mb-6 ml-1">
+            <a href="{{ route('home') }}" class="inline-flex items-center gap-2 px-4 py-2 border border-black bg-white rounded-sm font-bold transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
+                Retour au marché
+            </a>
+        </div>
         {{-- 1. Image Gallery --}}
         <div x-data="{
             index: 0,
-            images: {{ json_encode(collect($produit->images)->map(fn($img) => asset('storage/' . $img))->toArray()) }},
+            images: {{ json_encode(collect($produit->images)->map(fn($img) => \App\Helpers\ImageHelper::getUrl($img))->toArray()) }},
             next() { this.index = (this.index + 1) % (this.images.length || 1) },
             prev() { this.index = (this.index - 1 + (this.images.length || 1)) % (this.images.length || 1) }
         }"
@@ -2023,16 +2016,23 @@ import './echo';
 
         {{-- 2. Details & Actions --}}
         <div class="flex flex-col md:flex-row border">
+
             {{-- Left Side: Details --}}
             <div class="flex flex-col w-full md:w-2/3 border-r-0 md:border-r border-b md:border-b-0">
-                <div class="bg-white p-5 lg:p-6 border-b">
-                    <h1 class="text-2xl font-bold">{{ $produit->titre }}</h1>
+
+                {{-- Title --}}
+                <div class="bg-white p-5 lg:p-6 border-b flex justify-between items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
+                    <h1 class="text-2xl font-bold break-words w-full md:max-w-[70%] leading-tight">{{ $produit->titre }}</h1>
+                    <span class="px-3 py-1 bg-gray-100 border border-black/10 rounded-sm text-sm font-bold shrink-0">{{ $produit->ville_produit }} • {{ $produit->created_at->diffForHumans() }}</span>
                 </div>
 
+                {{-- Price & Seller --}}
                 <div class="bg-white flex flex-col sm:flex-row border-b">
                     <div class="p-5 lg:p-6 flex items-center border-b sm:border-b-0 sm:border-r">
-                        <div class="inline-block bg-black [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
-                            <div class="line-clamp-1 bg-[#FF8E72] text-black font-bold text-lg py-1.5 pl-4 pr-12 [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
+                        <div
+                            class="inline-block bg-black [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
+                            <div
+                                class="line-clamp-1 bg-[#FF8E72] text-black font-bold text-lg py-1.5 pl-4 pr-12 [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
                                 {{ $produit->prix }} DH
                             </div>
                         </div>
@@ -2041,75 +2041,109 @@ import './echo';
                     <div class="p-5 lg:p-6 flex-1 flex items-center">
                         <div class="flex gap-3 items-center">
                             <img class="h-10 w-10 object-cover rounded-full border border-gray-200"
-                                src="{{ $produit->vendeur?->pfp ? asset('storage/' . $produit->vendeur->pfp) : asset('imgs/default.svg') }}"
+                                src="{{ $produit->vendeur?->pfp_url ?? asset('imgs/default.svg') }}"
                                 alt="">
                             <div class="flex flex-col">
-                                <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Vendeur</span>
-                                <p class="line-clamp-1 underline font-medium">{{ $produit->vendeur->name ?? 'Artisan Anonyme' }}</p>
+                                <span
+                                    class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Vendeur</span>
+                                <p class="line-clamp-1 underline font-medium">
+                                    {{ $produit->vendeur?->name ?? 'Artisan Anonyme' }}</p>
+                                <span class="text-[10px] font-black uppercase text-black/40">{{ $produit->ville_produit }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                {{-- Description --}}
                 <div class="bg-white p-5 lg:p-6 grow">
                     <h2 class="text-sm font-bold uppercase text-gray-500 mb-3">Description</h2>
                     <p class="whitespace-pre-line text-gray-800">{{ $produit->description }}</p>
                 </div>
+
             </div>
 
             {{-- Right Side: Actions --}}
             <div class="bg-white w-full md:w-1/3 p-5 lg:p-6 flex flex-col gap-4">
+                {{-- Contact Button --}}
                 <form action="{{ route('produit.contact', $produit->id) }}" method="POST">
                     @csrf
                     <button type="submit"
-                        class="flex justify-center items-center transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer bg-[#ff8e72] text-black border h-14 rounded-sm w-full gap-2 font-bold">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="size-6">
-                            <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
-                            <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
+                        class="flex justify-center items-center transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer bg-[#FF8E72] text-black border border-black h-14 rounded-sm w-full gap-2 font-black uppercase text-sm tracking-wide">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                         </svg>
-                        Contacter le vendeur
+                        Contacter l'artisan
                     </button>
                 </form>
 
-                <div class="flex gap-3 items-center">
-                    <button type="button" class="flex-1 flex justify-center items-center transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer bg-white text-black border h-14 rounded-sm gap-2 font-bold">
-                        Favoris
-                    </button>
+                @if($produit->vendeur->display_phone)
+                <div class="p-4 bg-gray-50 border border-black/5 rounded-sm flex items-center gap-3">
+                    <div class="bg-black p-2 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="white" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.387a12.035 12.035 0 0 1-7.143-7.143c-.155-.441.011-.928.387-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase font-black text-gray-400 leading-none mb-1">Téléphone de l'artisan</span>
+                        <a href="tel:{{ $produit->vendeur->telephone }}" class="font-bold text-lg hover:text-[#fb663f] transition-colors leading-none">
+                            {{ $produit->vendeur->telephone ?? 'Non renseigné' }}
+                        </a>
+                    </div>
                 </div>
+                @endif
+                
+                {{-- Favorites & Share... --}}
             </div>
         </div>
     </div>
 </x-layout>
 ```
 
-## Fragment: resources/views/annonces.blade.php
-```blade
-<x-layoutdash>
-    <x-slot:title>Annonces</x-slot:title>
-    <x-slot:h1>Mes Annonces</x-slot:h1>
-    <x-slot:btnlocation>{{ route('annonces') }}</x-slot:btnlocation>
-    <x-slot:btnname>Ajouter une annonce</x-slot:btnname>
-    <x-slot:firstc>Tous</x-slot:firstc>
-    <x-slot:secondc>Actifs</x-slot:secondc>
-    <x-slot:mobbtnlocation>{{ route('produit.create') }}</x-slot:mobbtnlocation>
-    <x-slot:mobbtnname>Ajouter une annonce</x-slot:mobbtnname>
-    <x-slot:topbar></x-slot:topbar>
+## Fragment: app/Helpers/ImageHelper.php
+```php
+<?php
 
-    <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
-        @forelse ($userProduits as $produit)
-            <div class="mb-4 last:mb-0 w-full h-auto">
-                <x-mylistings :produit="$produit" />
-            </div>
-        @empty
-            <div class="flex flex-col items-center justify-center gap-4 bg-white w-full h-64 rounded-md border-2 border-dashed border-gray-300 p-8 text-center">
-                <p class="text-gray-600 font-medium">Il n'y a pas d'annonces actuellement.</p>
-                <button onclick="window.location.href='{{ route('produit.create') }}'"
-                    class="bg-[#FF8E72] rounded-sm h-11 px-6 border border-black cursor-pointer transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] active:translate-x-0 active:translate-y-0 active:shadow-none">
-                    Ajouter une annonce
-                </button>
-            </div>
-        @endforelse
-    </div>
-</x-layoutdash>
+namespace App\Helpers;
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+class ImageHelper
+{
+    /**
+     * Compress and store an image.
+     */
+    public static function compressAndStore(UploadedFile $file, string $directory, int $quality = 70, int $maxWidth = 1200): string
+    {
+        $filename = Str::random(40) . '.jpg';
+        $path = $directory . '/' . $filename;
+
+        // Compression logic...
+        // Save to storage using the default configured disk
+        Storage::disk(config('filesystems.default', 'public'))->put($path, $imageData, 'public');
+
+        return $path;
+    }
+
+    /**
+     * Get the correct, absolute URL for a stored file, perfectly supporting both XAMPP subfolders and S3 Cloud storage.
+     */
+    public static function getUrl($path): string
+    {
+        if (is_array($path)) { $path = $path[0] ?? null; }
+        if (!$path || $path === 'default.svg') { return asset('imgs/default.svg'); }
+
+        $disk = Storage::disk(config('filesystems.default', 'public'));
+        
+        try {
+            // Check if the disk supports temporary URLs (S3/R2/Cloud disks do)
+            return $disk->temporaryUrl($path, now()->addHours(24));
+        } catch (\RuntimeException $e) {
+            // Fallback for disks that don't support temporary URLs (like the Local disk)
+            return url($disk->url($path));
+        }
+    }
+}
 ```
 
