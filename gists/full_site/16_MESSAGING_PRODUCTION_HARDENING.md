@@ -186,6 +186,40 @@ startPolling(conversationId) {
 },
 ```
 
-## 7. MessageController Full Error Resilience
+## 8. Profile Picture & Header Layout Fixes (Egg-Shape Fix)
 
-The `index()` method is wrapped in `try/catch`, filters out orphaned conversations (deleted products/users), and uses PHP 8 nullsafe operators (`?->`) throughout to prevent 500 errors from broken relationships in the production database.
+On mobile or small screens, long product titles could cause the profile pictures to be squeezed into "egg" shapes. We fixed this by adding `flex-shrink-0` and `aspect-square` to all PFP images and ensuring the text container is `min-w-0 flex-1`.
+
+### `resources/views/partials/chat-content.blade.php` (Header)
+```html
+<div class="p-4 min-h-20 border-b border-black/5 flex items-center justify-between ... flex-shrink-0">
+    <div class="flex items-center gap-4 min-w-0">
+        <div class="relative flex-shrink-0">
+            <img class="h-12 w-12 md:h-14 md:w-14 object-cover rounded-full ... flex-shrink-0 aspect-square"
+                :src="currentConversation?.partner_pfp">
+        </div>
+        <div class="flex-1 min-w-0">
+            <h2 class="font-bold truncate" x-text="currentConversation?.partner_name"></h2>
+            <a class="line-clamp-1 truncate" x-text="'Article: ' + currentConversation?.produit_nom"></a>
+        </div>
+    </div>
+</div>
+```
+
+### `resources/views/message.blade.php` (Sidebar)
+```html
+<div class="relative flex-shrink-0">
+    <img class="h-14 w-14 md:h-16 md:w-16 object-cover rounded-full ... flex-shrink-0 aspect-square"
+        :src="conv.partner_pfp">
+</div>
+```
+
+## 9. Final Polish: Active State Colors
+
+Ensured the active conversation in the sidebar uses the brand orange (`#FF8E72`) for the name to provide clear visual feedback.
+
+```html
+<h2 class="font-bold text-base truncate text-black" 
+    :class="currentConversation?.id === conv.id ? 'text-[#FF8E72]' : ''" 
+    x-text="conv.partner_name"></h2>
+```
