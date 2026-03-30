@@ -78,7 +78,7 @@ class DashController extends Controller
         if ($request->hasFile('pfp')) {
             // Delete old PFP if exists and it's not the default
             if ($user->pfp && $user->pfp !== 'default.svg') {
-                Storage::delete($user->pfp);
+                Storage::disk('public')->delete($user->pfp);
             }
             $user->pfp = ImageHelper::compressAndStore($request->file('pfp'), 'pfps');
         }

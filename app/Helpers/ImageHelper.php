@@ -60,8 +60,8 @@ class ImageHelper
         imagejpeg($image, null, $quality);
         $imageData = ob_get_clean();
 
-        // Save to storage
-        Storage::put($path, $imageData, 'public');
+        // Save to storage using the public disk explicitly
+        Storage::disk('public')->put($path, $imageData);
 
         imagedestroy($image);
 
@@ -82,12 +82,14 @@ class ImageHelper
             return asset('imgs/default.svg');
         }
 
-        // If storing on S3 or another cloud driver, Storage::url is absolute and safe.
-        if (config('filesystems.default') !== 'local' && config('filesystems.default') !== 'public') {
-            return Storage::url($path);
+        // Use the 'public' disk explicitly since we forced Filament to use it for uploads.
+        $disk = Storage::disk('public');
+        
+        // Locally, asset() handles subfolders perfectly. In cloud (S3), Storage::url() is required.
+        if (config('filesystems.disks.public.driver') === 'local') {
+            return asset('storage/' . $path);
         }
 
-        // Locally, we use asset() to guarantee perfect subfolder resolution (e.g. for XAMPP users)
-        return asset('storage/' . $path);
+        return $disk->url($path);
     }
 }
