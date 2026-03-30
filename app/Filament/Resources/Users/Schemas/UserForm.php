@@ -61,9 +61,9 @@ class UserForm
                             ->default('actif'),
                         FileUpload::make('pfp')
                             ->label('Photo de profil')
+                            ->disk(config('filesystems.default'))
+                            ->directory('avatars')
                             ->image()
-                            ->disk('public')
-                            ->directory('user-pfps')
                             ->avatar(),
                         DateTimePicker::make('last_seen_at')
                             ->label('Dernière connexion')

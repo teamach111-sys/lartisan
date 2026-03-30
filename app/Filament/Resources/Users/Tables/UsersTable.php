@@ -18,9 +18,10 @@ class UsersTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 ImageColumn::make('pfp')
-                    ->label('Photo')
-                    ->disk('public')
-                    ->circular(),
+                    ->label('Avatar')
+                    ->disk(config('filesystems.default'))
+                    ->circular()
+                    ->defaultImageUrl(fn ($record) => $record->pfp_url),
                 TextColumn::make('name')
                     ->label('Nom')
                     ->searchable()

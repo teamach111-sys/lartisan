@@ -42,7 +42,7 @@ class ImageHelper
                 break;
             default:
                 // Fallback to standard Laravel store if not supported
-                return $file->store($directory, 'public');
+                return $file->storePublicly($directory);
         }
 
         // Resize if needed
@@ -61,7 +61,7 @@ class ImageHelper
         $imageData = ob_get_clean();
 
         // Save to storage
-        Storage::disk('public')->put($path, $imageData);
+        Storage::put($path, $imageData, 'public');
 
         imagedestroy($image);
 

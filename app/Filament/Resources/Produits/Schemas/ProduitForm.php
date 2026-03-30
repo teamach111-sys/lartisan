@@ -7,6 +7,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -53,8 +54,10 @@ class ProduitForm
                                     ->required()
                                     ->default('Marrakech'),
                             ]),
-                        RichEditor::make('description')
+                        Textarea::make('description')
                             ->label('Description')
+                            ->rows(4)
+                            ->maxLength(1000)
                             ->columnSpanFull(),
                     ]),
 
@@ -63,7 +66,7 @@ class ProduitForm
                         FileUpload::make('images')
                             ->label('Images du produit')
                             ->multiple()
-                            ->disk('public')
+                            ->disk(config('filesystems.default'))
                             ->directory('produits')
                             ->reorderable()
                             ->image()
