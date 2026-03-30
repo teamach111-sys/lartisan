@@ -44,6 +44,14 @@ class User extends Authenticatable implements FilamentUser
     'last_seen_at'
 ];
 
+    public function getPfpUrlAttribute()
+    {
+        if ($this->pfp && $this->pfp !== 'default.svg') {
+            return \Illuminate\Support\Facades\Storage::url($this->pfp);
+        }
+        return asset('imgs/default.svg');
+    }
+
 // Relations
 public function produits() {
     return $this->hasMany(Produit::class, 'vendeur_id');

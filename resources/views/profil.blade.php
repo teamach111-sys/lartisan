@@ -36,7 +36,7 @@
                     <div class="relative group">
                         <img id="pfp-preview" 
                              class="h-32 w-32 rounded-full object-cover border-2 border-black transition-all duration-200 group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" 
-                             src="{{ asset('storage/' . (auth()->user()->pfp ?? 'default.svg')) }}" 
+                             src="{{ auth()->user()->pfp_url }}" 
                              alt="Photo de profil">
                         <label for="pfp-input" class="absolute bottom-0 right-0 bg-black text-white p-2 rounded-full cursor-pointer hover:bg-[#fb663f] transition-colors shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">

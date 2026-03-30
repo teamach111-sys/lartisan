@@ -12,7 +12,7 @@
         {{-- 1. Image Gallery --}}
         <div x-data="{
             index: 0,
-            images: {{ json_encode(collect($produit->images)->map(fn($img) => asset('storage/' . $img))->toArray()) }},
+            images: {{ json_encode(collect($produit->images)->map(fn($img) => Storage::url($img))->toArray()) }},
             next() { this.index = (this.index + 1) % (this.images.length || 1) },
             prev() { this.index = (this.index - 1 + (this.images.length || 1)) % (this.images.length || 1) }
         }"
@@ -89,7 +89,7 @@
                     <div class="p-5 lg:p-6 flex-1 flex items-center">
                         <div class="flex gap-3 items-center">
                             <img class="h-10 w-10 object-cover rounded-full border border-gray-200"
-                                src="{{ $produit->vendeur?->pfp ? asset('storage/' . $produit->vendeur->pfp) : asset('imgs/default.svg') }}"
+                                src="{{ $produit->vendeur?->pfp_url ?? asset('imgs/default.svg') }}"
                                 alt="">
                             <div class="flex flex-col">
                                 <span

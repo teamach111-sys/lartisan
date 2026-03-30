@@ -7,9 +7,9 @@
 
 <a href="{{ route('produit.show', $produit->slug) }}" class="product-card rounded-t-sm gap-2 rounded-b-sm bg-white border h-full grid grid-cols-1 w-auto overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-[4px_4px_0px_0px_#000000]">
     <div class="w-full h-66 border-b">
-        <img class="object-cover h-full w-full"
-            src="{{ $firstImage ? asset('storage/' . $firstImage) : 'https://placehold.co/400x300?text=No+Image' }}"
-            alt="">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+            src="{{ $firstImage ? Storage::url($firstImage) : 'https://placehold.co/400x300?text=No+Image' }}"
+            alt="{{ $produit->titre }} Image" loading="lazy">
     </div>
 
     <div class="p-4 pb-0">
@@ -24,8 +24,8 @@
         <div class="flex flex-col gap-1">
             <span class="text-[10px] font-black uppercase text-black/40">{{ $produit->ville_produit }} • {{ $produit->created_at->diffForHumans() }}</span>
             <div class="flex gap-2 items-center">
-                <img class="h-7 w-7 object-cover rounded-[50px] border" 
-                     src="{{ $produit->vendeur?->pfp ? asset('storage/' . $produit->vendeur->pfp) : asset('imgs/default.svg') }}" alt="">
+                <img class="h-6 w-6 rounded-[50px] object-cover border border-[#000000]/10" 
+                     src="{{ $produit->vendeur?->pfp_url ?? asset('imgs/default.svg') }}" alt="">
                 <p class="line-clamp-1 underline text-[15px] opacity-80 decoration-[#FF8E72]/30">{{ $produit->vendeur->name ?? 'Artisan' }}</p>
             </div>
         </div>

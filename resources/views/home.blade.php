@@ -32,8 +32,8 @@
                 @auth
                     <div class="lg:hidden relative">
                         <a href="{{ route('annonces') }}">
-                            <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer"
-                                src="{{ asset('storage/' . (auth()->user()->pfp ?? 'default.svg')) }}">
+                            <img class="h-10 w-10 object-cover rounded-[50px] border border-black hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer"
+                                src="{{ auth()->user()->pfp_url }}">
                         </a>
                         @if ($unreadCount > 0)
                             <div
@@ -197,8 +197,8 @@
         @auth
             <div class="relative">
                 <a href="{{ route('annonces') }}">
-                    <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer"
-                        src="{{ asset('storage/' . (auth()->user()->pfp ?? 'default.svg')) }}">
+                    <img class="h-7 w-7 object-cover rounded-[50px] border border-black"
+                        src="{{ auth()->user()->pfp_url }}">
                 </a>
                 @if ($unreadCount > 0)
                     <div
@@ -248,7 +248,7 @@
                         @php 
                             $firstImage = (is_array($produit->images) && count($produit->images) > 0) ? $produit->images[0] : null;
                         @endphp
-                        <img src="{{ $firstImage ? asset('storage/' . $firstImage) : 'https://placehold.co/1200x900?text=No+Image' }}"
+                        <img src="{{ $firstImage ? Storage::url($firstImage) : 'https://placehold.co/1200x900?text=No+Image' }}"
                             class="overflow-hidden object-cover w-full h-full lg:h-full lg:w-full border-b lg:border-b-0 lg:border-r"
                             alt="{{ $produit->titre }}">
                             
@@ -265,8 +265,8 @@
                             <p class="font-bold break-words line-clamp-2 h-12">{{ $produit->titre }}</p>
                             <p class="text-gray-700 truncate">{{ $produit->description }}</p>
                             <div class="mt-3 flex gap-2 items-center">
-                                <img class="h-10 w-10 object-cover rounded-[50px] border"
-                                    src="{{ asset('storage/' . ($produit->vendeur->pfp ?? 'default.svg')) }}"
+                                <img class="h-7 w-7 object-cover rounded-[50px] border border-black"
+                                    src="{{ $produit->vendeur->pfp_url }}"
                                     alt="">
                                 <p class="underline">{{ $produit->vendeur->name }}</p>
                             </div>
