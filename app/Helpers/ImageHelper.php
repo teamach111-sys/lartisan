@@ -61,7 +61,8 @@ class ImageHelper
         $imageData = ob_get_clean();
 
         // Save to storage using the default configured disk (e.g. S3 in cloud, Public locally)
-        Storage::disk(config('filesystems.default', 'public'))->put($path, $imageData);
+        // Explicitly set public visibility to ensure standard URL accessibility where permitted.
+        Storage::disk(config('filesystems.default', 'public'))->put($path, $imageData, 'public');
 
         imagedestroy($image);
 
@@ -83,7 +84,17 @@ class ImageHelper
         }
 
         // Simply use the default disk's URL method (just like Filament does).
-        // Prefix with url() to ensure we get an absolute link on your cloud domain.
-        return url(Storage::disk(config('filesystems.default', 'public'))->url($path));
+        // On Cloud (S3/R2), we often need a signed, temporary URL to view private files.
+        // We'll try to generate a temporary URL that's valid for 24 hours.
+        $disk = Storage::disk(config('filesystems.default', 'public'));
+        
+        try {
+            // Check if the disk supports temporary URLs (S3/R2/Cloud disks do)
+            return $disk->temporaryUrl($path, now()->addHours(24));
+        } catch (\RuntimeException $e) {
+            // Fallback for disks that don't support temporary URLs (like the Local disk)
+            // Absolute URL wrapping to ensure its valid on any domain.
+            return url($disk->url($path));
+        }
     }
 }
