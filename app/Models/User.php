@@ -46,10 +46,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function getPfpUrlAttribute()
     {
-        if ($this->pfp && $this->pfp !== 'default.svg') {
-            return \Illuminate\Support\Facades\Storage::url($this->pfp);
-        }
-        return asset('imgs/default.svg');
+        return \App\Helpers\ImageHelper::getUrl($this->pfp);
     }
 
 // Relations

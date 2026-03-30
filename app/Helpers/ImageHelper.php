@@ -67,4 +67,22 @@ class ImageHelper
 
         return $path;
     }
+
+    /**
+     * Get the correct, absolute URL for a stored file, perfectly supporting both XAMPP subfolders (via asset) and S3 Cloud storage.
+     */
+    public static function getUrl($path): string
+    {
+        if (!$path || $path === 'default.svg') {
+            return asset('imgs/default.svg');
+        }
+
+        // If storing on S3 or another cloud driver, Storage::url is absolute and safe.
+        if (config('filesystems.default') !== 'local' && config('filesystems.default') !== 'public') {
+            return Storage::url($path);
+        }
+
+        // Locally, we use asset() to guarantee perfect subfolder resolution (e.g. for XAMPP users)
+        return asset('storage/' . $path);
+    }
 }

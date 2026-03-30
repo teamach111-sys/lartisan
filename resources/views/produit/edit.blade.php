@@ -102,7 +102,7 @@
                     @foreach ($produit->images as $index => $image)
                         <div class="aspect-square border-2 border-black rounded-sm relative overflow-hidden group cursor-pointer hover:border-[#fb663f] transition-all" 
                              onclick="document.getElementById('photo-{{ $index }}').click()">
-                            <img id="preview-{{ $index }}" src="{{ Storage::url($image) }}" class="absolute inset-0 w-full h-full object-cover">
+                            <img id="preview-{{ $index }}" src="{{ \App\Helpers\ImageHelper::getUrl($image) }}" class="absolute inset-0 w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <span class="text-white text-[10px] font-bold uppercase tracking-widest">Remplacer</span>
                             </div>

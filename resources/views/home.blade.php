@@ -248,7 +248,7 @@
                         @php 
                             $firstImage = (is_array($produit->images) && count($produit->images) > 0) ? $produit->images[0] : null;
                         @endphp
-                        <img src="{{ $firstImage ? Storage::url($firstImage) : 'https://placehold.co/1200x900?text=No+Image' }}"
+                        <img src="{{ $firstImage ? \App\Helpers\ImageHelper::getUrl($firstImage) : 'https://placehold.co/1200x900?text=No+Image' }}"
                             class="overflow-hidden object-cover w-full h-full lg:h-full lg:w-full border-b lg:border-b-0 lg:border-r"
                             alt="{{ $produit->titre }}">
                             

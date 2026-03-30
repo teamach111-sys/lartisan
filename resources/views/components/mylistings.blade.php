@@ -39,7 +39,7 @@
         </div>
 
         <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-            src="{{ $firstImage ? Storage::url($firstImage) : 'https://placehold.co/400x300?text=No+Image' }}"
+            src="{{ $firstImage ? \App\Helpers\ImageHelper::getUrl($firstImage) : 'https://placehold.co/400x300?text=No+Image' }}"
             alt="">
             
         <div class="absolute top-2 right-2 flex flex-col gap-1 items-end">

@@ -12,7 +12,7 @@
         {{-- 1. Image Gallery --}}
         <div x-data="{
             index: 0,
-            images: {{ json_encode(collect($produit->images)->map(fn($img) => Storage::url($img))->toArray()) }},
+            images: {{ json_encode(collect($produit->images)->map(fn($img) => \App\Helpers\ImageHelper::getUrl($img))->toArray()) }},
             next() { this.index = (this.index + 1) % (this.images.length || 1) },
             prev() { this.index = (this.index - 1 + (this.images.length || 1)) % (this.images.length || 1) }
         }"
