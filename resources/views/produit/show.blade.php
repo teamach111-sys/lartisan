@@ -95,8 +95,8 @@
                                 <span
                                     class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Vendeur</span>
                                 <p class="line-clamp-1 underline font-medium">
-                                    {{ $produit->vendeur->name ?? 'Artisan Anonyme' }}</p>
-                                <span class="text-[10px] font-black uppercase text-black/40">{{ $produit->ville }}</span>
+                                    {{ $produit->vendeur?->name ?? 'Artisan Anonyme' }}</p>
+                                <span class="text-[10px] font-black uppercase text-black/40">{{ $produit->ville_produit }}</span>
                             </div>
                         </div>
                     </div>

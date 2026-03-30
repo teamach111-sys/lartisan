@@ -10,7 +10,7 @@ use App\Http\Controllers\MessageController;
 
 use App\Http\Controllers\HomeController;
 
-Route::get('/', [VisitorController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 route::get('/produit/create', [ProduitController::class, 'create'])->name('produit.create')->middleware('auth');
 route::post('/produit/store', [ProduitController::class, 'store'])->name('produit.store')->middleware('auth');

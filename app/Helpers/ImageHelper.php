@@ -73,6 +73,11 @@ class ImageHelper
      */
     public static function getUrl($path): string
     {
+        // Handle array (take first item) or null/empty
+        if (is_array($path)) {
+            $path = $path[0] ?? null;
+        }
+
         if (!$path || $path === 'default.svg') {
             return asset('imgs/default.svg');
         }
