@@ -82,21 +82,8 @@ class ImageHelper
             return asset('imgs/default.svg');
         }
 
-        // Use the application's default storage disk.
-        $defaultDisk = config('filesystems.default');
-        $disk = Storage::disk($defaultDisk);
-        $driver = config("filesystems.disks.{$defaultDisk}.driver", 'local');
-        
-        // Locally with 'local' or 'public' driver, asset() handles subfolders perfectly.
-        // In cloud (S3), we must use the driver's native url() method.
-        if ($driver === 'local') {
-            // Special handling for public storage folder link
-            if ($defaultDisk === 'public') {
-                return asset('storage/' . $path);
-            }
-            return $disk->url($path);
-        }
-
-        return $disk->url($path);
+        // Simply use the default disk's URL method (just like Filament does).
+        // Prefix with url() to ensure we get an absolute link on your cloud domain.
+        return url(Storage::disk(config('filesystems.default', 'public'))->url($path));
     }
 }
