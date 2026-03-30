@@ -27,7 +27,7 @@ updatedAt: 1774833000000
 ---
 
 ## Fragment: migrations/create_users_table.php
-# This migration creates the core users table with enhancements for artisanal roles, profile pictures, local geolocation (villes), and unique telephone validation.
+# This migration creates the core users table with enhancements for artisanal roles, profile pictures, and local geolocation (villes).
 ```php
 Schema::create('users', function (Blueprint $table) {
     $table->id();
@@ -35,18 +35,19 @@ Schema::create('users', function (Blueprint $table) {
     $table->string('email')->unique();
     $table->string('password');
     $table->string('pfp')->nullable(); 
-    $table->string('telephone', 20)->unique()->nullable(); 
+    $table->string('telephone', 20)->nullable(); 
     $table->string('ville_utilisateur', 100)->default('Marrakech')->index(); 
-    $table->boolean('display_phone')->default(false);
+    $table->string('statut_compte')->default('actif'); 
     $table->string('role')->default('utilisateur'); 
     $table->timestamp('last_seen_at')->nullable();
+    $table->timestamp('email_verified_at')->nullable();
     $table->rememberToken();
     $table->timestamps();
 });
 ```
 
 ## Fragment: migrations/create_produits_table.php
-# This migration defines the artisanal product structure, including category relationships, moderation flags, and the sponsorship system.
+# This migration defines the artisanal product structure, including category relationships and moderation flags.
 ```php
 Schema::create('produits', function (Blueprint $table) {
     $table->id();
@@ -55,12 +56,12 @@ Schema::create('produits', function (Blueprint $table) {
     $table->string('titre');
     $table->string('slug')->unique()->index();
     $table->text('description')->nullable();
+    $table->boolean('telephone_visible')->default(false);
     $table->decimal('prix', 12, 2)->index();
     $table->string('ville_produit', 100)->index();
     $table->json('images')->nullable();
+    $table->string('etat_produit')->default('neuf'); 
     $table->string('etat_moderation')->default('en_attente'); 
-    $table->string('sponsor_status')->default('none'); 
-    $table->dateTime('sponsored_until')->nullable();
     $table->timestamps();
 });
 ```
@@ -117,7 +118,7 @@ class DatabaseSeeder extends Seeder
         // Example: Create Admin User
         User::factory()->create([
             'name' => 'Admin Artisan',
-            'email' => 'admin@lartisan.ma',
+            'email' => 'ethan1989nj@gmail.com',
             'role' => 'admin',
         ]);
         

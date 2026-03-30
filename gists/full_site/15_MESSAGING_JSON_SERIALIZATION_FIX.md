@@ -4,7 +4,7 @@ description: L'Artisan Marketplace - JSON Array Serialization Fix & Messages Das
 
 # Production Backend Logic Fixes & Dashboard 2 UI Updates
 
-This file documents a critical edge-case serialization bug encountered precisely during the transition between the local SQLite environment and the remote Postgres Laravel Cloud infrastructure, along with the completion of mobile dashboard styling.
+This file documents a critical edge-case serialization bug encountered precisely during the transition between the local SQLite environment and the remote MySQL Laravel Cloud infrastructure, along with the completion of mobile dashboard styling.
 
 ## 1. MessageController Collection JSON Object Type Crash (Prod vs Local)
 
