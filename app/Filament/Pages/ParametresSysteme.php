@@ -15,8 +15,8 @@ class ParametresSysteme extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $navigationGroup = 'Système';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\UnitEnum|null $navigationGroup = 'Système';
     protected static ?string $title = 'Paramètres du site';
     
     protected static string $view = 'filament.pages.parametres-systeme';
