@@ -60,9 +60,8 @@ class ImageHelper
         imagejpeg($image, null, $quality);
         $imageData = ob_get_clean();
 
-        // Save to storage using the default configured disk (e.g. S3 in cloud, Public locally)
-        // Explicitly set public visibility to ensure standard URL accessibility where permitted.
-        Storage::disk(config('filesystems.default', 'public'))->put($path, $imageData, 'public');
+        // Save to storage using the explicit lartisan cloud disk
+        Storage::disk('lartisan')->put($path, $imageData, 'public');
 
         imagedestroy($image);
 
@@ -83,9 +82,8 @@ class ImageHelper
             return asset('imgs/default.svg');
         }
 
-        // Simply use the default disk's URL method.
-        // On Cloud (S3/R2), we often prefer the absolute URL defined in AWS_URL.
-        $disk = Storage::disk(config('filesystems.default', 'public'));
+        // Use the explicit lartisan cloud disk
+        $disk = Storage::disk('lartisan');
         
         try {
             // Priority: Default to the absolute URL method (efficient, uses AWS_URL if set)

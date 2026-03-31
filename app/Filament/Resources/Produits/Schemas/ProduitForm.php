@@ -66,7 +66,7 @@ class ProduitForm
                         FileUpload::make('images')
                             ->label('Images du produit')
                             ->multiple()
-                            ->disk(config('filesystems.default', 'public'))
+                            ->disk('lartisan')
                             ->visibility('public')
                             ->getUploadedFileUrlUsing(fn($file) => \App\Helpers\ImageHelper::getProxyUrl($file))
                             ->directory('produits')
