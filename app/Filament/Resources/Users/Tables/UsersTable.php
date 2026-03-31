@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use App\Helpers\ImageHelper;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -19,9 +20,11 @@ class UsersTable
             ->columns([
                 ImageColumn::make('pfp')
                     ->label('Avatar')
-                    ->disk(config('filesystems.default'))
                     ->circular()
-                    ->defaultImageUrl(fn ($record) => $record->pfp_url),
+                    ->state(function ($record) {
+                        return $record->pfp ? ImageHelper::getUrl($record->pfp) : null;
+                    })
+                    ->defaultImageUrl(asset('imgs/default.svg')),
                 TextColumn::make('name')
                     ->label('Nom')
                     ->searchable()
