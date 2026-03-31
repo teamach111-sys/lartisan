@@ -107,4 +107,16 @@ class ImageHelper
             }
         }
     }
+
+    /**
+     * Get a proxy URL for the admin panel to avoid CORS issues.
+     */
+    public static function getProxyUrl($path): string
+    {
+        if (!$path || $path === 'default.svg') {
+            return asset('imgs/default.svg');
+        }
+        
+        return route('admin.storage.proxy', ['path' => $path]);
+    }
 }
