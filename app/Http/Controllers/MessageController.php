@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Helpers\ImageHelper;
 use App\Models\Conversation;
 use App\Models\Produit;
 use Illuminate\Http\Request;
@@ -122,8 +123,8 @@ public function index()
                 'produit_slug'   => $conversation->produit?->slug ?? '',
                 'partner_id'     => $partner->id,
                 'partner_name'   => $partner->name ?? 'Inconnu',
-                'partner_pfp'    => $partner->pfp ? asset('storage/' . $partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
-                'auth_pfp'       => auth()->user()->pfp ? asset('storage/' . auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
+                'partner_pfp'    => $partner->pfp ? ImageHelper::getUrl($partner->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode($partner->name ?? 'U'),
+                'auth_pfp'       => auth()->user()->pfp ? ImageHelper::getUrl(auth()->user()->pfp) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U'),
                 'latest_message' => $latestMessage ? $latestMessage->contenu : 'Nouvelle conversation',
                 'latest_time'    => ($latestMessage && $latestMessage->created_at) ? $latestMessage->created_at->format('H:i') : '',
                 'unread_count'   => $unreadCount,
