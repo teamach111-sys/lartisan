@@ -68,6 +68,7 @@ class ProduitForm
                             ->multiple()
                             ->disk(config('filesystems.default', 'public'))
                             ->visibility('public')
+                            ->getUploadedFileUrlUsing(fn ($file) => \App\Helpers\ImageHelper::getProxyUrl($file))
                             ->directory('produits')
                             ->reorderable()
                             ->image()

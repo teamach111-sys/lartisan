@@ -63,6 +63,7 @@ class UserForm
                             ->label('Photo de profil')
                             ->disk(config('filesystems.default', 'public'))
                             ->visibility('public')
+                            ->getUploadedFileUrlUsing(fn ($file) => \App\Helpers\ImageHelper::getProxyUrl($file))
                             ->directory('avatars')
                             ->image()
                             ->avatar(),

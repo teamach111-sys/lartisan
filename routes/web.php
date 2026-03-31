@@ -124,3 +124,17 @@ Route::put('/produit/{produit}', [ProduitController::class, 'update'])->name('pr
 Route::get('/centre-aide', function () {
     return view('centre-aide');
 })->name('centre-aide');
+
+// Storage Proxy to bypass CORS issues on Cloud/R2
+Route::get('/storage/proxy/{path}', function (string $path) {
+    $disk = \Illuminate\Support\Facades\Storage::disk(config('filesystems.default', 'lartisan'));
+    
+    if (!$disk->exists($path)) {
+        abort(404);
+    }
+
+    $file = $disk->get($path);
+    $type = $disk->mimeType($path);
+
+    return response($file, 200)->header('Content-Type', $type);
+})->where('path', '.*')->name('storage.proxy');
