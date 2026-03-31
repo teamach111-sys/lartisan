@@ -20,7 +20,7 @@ class ProduitsTable
             ->columns([
                 ImageColumn::make('images')
                     ->label('Image')
-                    ->disk('lartisan')
+                    ->disk(config('filesystems.default'))
                     ->circular()
                     ->extraImgAttributes(['loading' => 'lazy'])
                     ->limit(1),

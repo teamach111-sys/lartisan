@@ -120,16 +120,6 @@ Route::delete('/produit/{produit}', [ProduitController::class, 'destroy'])->name
 Route::get('/produit/{produit}/edit', [ProduitController::class, 'edit'])->name('produit.edit')->middleware('auth');
 Route::put('/produit/{produit}', [ProduitController::class, 'update'])->name('produit.update')->middleware('auth');
 
-// Storage Proxy for Admin/Filament to bypass CORS on cloud storage
-Route::get('/admin-proxy/storage/{path}', function ($path) {
-    if (!auth()->check()) abort(403);
-    $disk = \Illuminate\Support\Facades\Storage::disk(config('filesystems.default', 'lartisan'));
-    if (!$disk->exists($path)) abort(404);
-    $file = $disk->get($path);
-    $type = $disk->mimeType($path);
-    return response($file, 200)->header('Content-Type', $type);
-})->where('path', '.*')->name('admin.storage.proxy')->middleware('auth');
-
 // Centre d'Aide (Help Center)
 Route::get('/centre-aide', function () {
     return view('centre-aide');
