@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="favicon_io (3)/android-chrome-512x512.png">
+    <link rel="icon" type="image/x-icon" href="{{ $siteFavicon ?? asset('favicon_io (3)/android-chrome-512x512.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

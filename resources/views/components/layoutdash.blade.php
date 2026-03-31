@@ -10,7 +10,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/x-icon" href="favicon_io (3)/android-chrome-512x512.png">
+    <link rel="icon" type="image/x-icon" href="{{ $siteFavicon ?? asset('favicon_io (3)/android-chrome-512x512.png') }}">
 
     <title>{{ $title }}</title>
 
