@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Produits\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use App\Helpers\ImageHelper;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
@@ -21,14 +20,8 @@ class ProduitsTable
             ->columns([
                 ImageColumn::make('images')
                     ->label('Image')
+                    ->disk(config('filesystems.default'))
                     ->circular()
-                    ->state(function ($record) {
-                        $images = $record->images;
-                        if (empty($images)) return [];
-                        // Return the first image as a fully resolved URL
-                        $first = is_array($images) ? ($images[0] ?? null) : $images;
-                        return $first ? [ImageHelper::getUrl($first)] : [];
-                    })
                     ->extraImgAttributes(['loading' => 'lazy'])
                     ->limit(1),
                 TextColumn::make('titre')

@@ -4,11 +4,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\StorageProxyController;
 use App\Models\Produit;
 use App\Http\Controllers\MessageController;
 
 
 use App\Http\Controllers\HomeController;
+
+// Storage proxy: serves R2 files through app domain to bypass CORS for admin panel
+Route::get('/storage-proxy/{path}', StorageProxyController::class)
+    ->where('path', '.*')
+    ->name('storage.proxy');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
