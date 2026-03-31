@@ -101,23 +101,10 @@ class ImageHelper
             // Fallback: If url() fails or we specifically need a temporary URL for private files:
             try {
                 return $disk->temporaryUrl($path, now()->addHours(24));
+            } catch (\Exception $ex) {
+                // Last resort fallback
+                return asset('storage/' . $path);
             }
         }
-    }
-
-    /**
-     * Get a proxy URL for an image to bypass CORS issues (same-domain request).
-     */
-    public static function getProxyUrl($path): string
-    {
-        if (is_array($path)) {
-            $path = $path[0] ?? null;
-        }
-
-        if (!$path || $path === 'default.svg') {
-            return asset('imgs/default.svg');
-        }
-
-        return route('storage.proxy', ['path' => $path]);
     }
 }
