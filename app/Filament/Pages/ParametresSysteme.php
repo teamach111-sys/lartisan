@@ -17,10 +17,21 @@ class ParametresSysteme extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static string|UnitEnum|null $navigationGroup = 'Système';
-    protected static ?string $title = 'Paramètres du site';
-    
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-cog-6-tooth';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Système';
+    }
+
+    public function getTitle(): string
+    {
+        return 'Paramètres du site';
+    }
+
     protected string $view = 'filament.pages.parametres-systeme';
 
     public ?array $data = [];
