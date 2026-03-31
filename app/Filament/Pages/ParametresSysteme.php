@@ -5,21 +5,19 @@ namespace App\Filament\Pages;
 use Filament\Pages\Page;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\FileUpload;
 use App\Models\SiteSetting;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 
 use BackedEnum;
-use UnitEnum;
-
 class ParametresSysteme extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static string|UnitEnum|null $navigationGroup = 'Système';
+    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static ?string $navigationGroup = 'Système';
     protected static ?string $title = 'Paramètres du site';
     
     protected string $view = 'filament.pages.parametres-systeme';
@@ -28,15 +26,21 @@ class ParametresSysteme extends Page implements HasForms
 
     public function mount(): void
     {
-        $setting = SiteSetting::first();
+        $setting = null;
+        try {
+            $setting = SiteSetting::first();
+        } catch (\Exception $e) {
+            // Table might missing
+        }
+        
         $this->form->fill([
             'favicon' => $setting?->favicon,
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 FileUpload::make('favicon')
                     ->label('Favicon du site (PNG, ICO)')
@@ -48,15 +52,6 @@ class ParametresSysteme extends Page implements HasForms
                     ->maxSize(2048), // 2MB max
             ])
             ->statePath('data');
-    }
-
-    protected function getFormActions(): array
-    {
-        return [
-            Action::make('save')
-                ->label('Enregistrer')
-                ->submit('save'),
-        ];
     }
 
     public function save(): void
