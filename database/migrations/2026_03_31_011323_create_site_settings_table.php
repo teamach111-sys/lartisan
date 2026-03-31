@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('site_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('favicon')->nullable();
             $table->timestamps();
         });
     }

@@ -44,14 +44,6 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 $view->with('unreadCount', 0);
             }
-
-            // Share site favicon
-            try {
-                $siteSetting = \App\Models\SiteSetting::first();
-                $view->with('siteFavicon', $siteSetting ? $siteSetting->favicon_url : asset('favicon_io (3)/android-chrome-512x512.png'));
-            } catch (\Exception $e) {
-                $view->with('siteFavicon', asset('favicon_io (3)/android-chrome-512x512.png'));
-            }
         });
     }
 }
