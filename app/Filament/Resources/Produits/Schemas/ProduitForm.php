@@ -49,8 +49,10 @@ class ProduitForm
                                     ->numeric()
                                     ->prefix('MAD')
                                     ->required(),
-                                TextInput::make('ville_produit')
+                                Select::make('ville_produit')
                                     ->label('Ville')
+                                    ->options(\App\Models\Ville::all()->pluck('nom', 'nom'))
+                                    ->searchable()
                                     ->required()
                                     ->default('Marrakech'),
                             ]),

@@ -49,7 +49,7 @@ class HomeController extends Controller
             $query->latest();
         }
 
-        $produits = $query->get();
+        $produits = $query->paginate(12);
         
         $isSearching = $request->filled('q');
         $isFiltering = $request->anyFilled(['q', 'cat', 'ville', 'min', 'max', 'sort']);
@@ -79,6 +79,8 @@ class HomeController extends Controller
                 'isSearching' => $isSearching,
                 'isFiltering' => $isFiltering,
                 'filterTitle' => $filterTitle,
+                'hasNextPage' => $produits->hasMorePages(),
+                'nextPageUrl' => $produits->nextPageUrl(),
             ])->header('Vary', 'X-Requested-With');
         }
 

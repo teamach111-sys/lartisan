@@ -12,3 +12,19 @@
 
 
 [x-cloak] { display: none !important; }
+
+/* Premium thin scrollbar for long filter lists */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 10px;
+}
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #000 transparent;
+}

@@ -103,6 +103,10 @@ class ProduitsTable
                         'en_attente' => 'En attente',
                         'approuve' => 'Approuvé',
                     ]),
+                SelectFilter::make('ville_produit')
+                    ->label('Ville')
+                    ->options(\App\Models\Ville::all()->pluck('nom', 'nom'))
+                    ->searchable(),
             ])
             ->recordActions([
                 \Filament\Actions\Action::make('accepter_sponsor')

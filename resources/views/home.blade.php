@@ -148,7 +148,7 @@
 
                     </div>
                     <div class="h-0.5 border-b border-black"></div>
-                    <div class="flex flex-col pt-0 mt-0">
+                    <div class="flex flex-col pt-0 mt-0 max-h-[70vh] overflow-y-auto">
                         <a href="{{ route('home') }}"
                             class="p-4 h-15 flex items-center text-black text-[17px]  hover:bg-black hover:text-white {{ !request('cat') ? 'bg-black text-white' : '' }}">Tout</a>
                         @foreach ($categories as $category)
@@ -334,7 +334,7 @@
                                 </svg>
                             </summary>
 
-                            <div class="px-4 pb-4 space-y-2">
+                            <div class="px-4 pb-4 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
                                 @foreach ($categories as $category)
                                     <label class="flex items-center gap-2 cursor-pointer hover:text-[#fb663f] group">
                                         <input type="radio" name="cat" value="{{ $category->id }}"
@@ -361,7 +361,7 @@
                                         stroke-linejoin="round" />
                                 </svg>
                             </summary>
-                            <div class="px-4 pb-4 space-y-2">
+                            <div class="px-4 pb-4 space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
                                 @foreach ($villes as $ville)
                                     <label class="flex items-center gap-2 cursor-pointer hover:text-[#fb663f] group">
                                         <input type="radio" name="ville" value="{{ $ville->nom }}"
@@ -426,9 +426,12 @@
                     </div>
 
 
-                    <button id="load-more"
-                        class="mx-auto p-4 bg-white border rounded-md transition-all duration-200 cursor-pointer hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">Plus
-                        de produits</button>
+                    <button id="load-more" 
+                        data-next-page="{{ $produits->nextPageUrl() }}"
+                        style="{{ $produits->hasMorePages() ? '' : 'display: none;' }}"
+                        class="mx-auto p-4 bg-white border rounded-md transition-all duration-200 cursor-pointer hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
+                        Plus de produits
+                    </button>
                 </div>
 
             </div>
@@ -561,30 +564,42 @@
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                const cards = document.querySelectorAll(".product-card");
                 const loadMoreBtn = document.getElementById("load-more");
-                let visibleCount = 12;
-
-                cards.forEach((card, index) => {
-                    if (index >= visibleCount) {
-                        card.style.display = "none";
-                    }
-                });
-
+                
                 if (loadMoreBtn) {
                     loadMoreBtn.addEventListener("click", () => {
-                        let newlyShown = 0;
-                        const itemsToLoad = 12;
-                        for (let i = visibleCount; i < cards.length; i++) {
-                            if (newlyShown < itemsToLoad) {
-                                cards[i].style.display = "block";
-                                newlyShown++;
+                        const nextUrl = loadMoreBtn.getAttribute('data-next-page');
+                        if (!nextUrl) return;
+
+                        loadMoreBtn.innerHTML = '<span class="animate-pulse">Chargement...</span>';
+                        loadMoreBtn.disabled = true;
+
+                        const ajaxUrl = new URL(nextUrl);
+                        ajaxUrl.searchParams.set('_ajax', '1');
+
+                        fetch(ajaxUrl.toString(), {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
-                        }
-                        visibleCount += itemsToLoad;
-                        if (visibleCount >= cards.length) {
-                            loadMoreBtn.style.display = "none";
-                        }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            const grid = document.getElementById('product-grid');
+                            grid.insertAdjacentHTML('beforeend', data.html);
+                            
+                            if (data.hasNextPage) {
+                                loadMoreBtn.setAttribute('data-next-page', data.nextPageUrl);
+                                loadMoreBtn.innerHTML = 'Plus de produits';
+                                loadMoreBtn.disabled = false;
+                            } else {
+                                loadMoreBtn.style.display = 'none';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            loadMoreBtn.innerHTML = 'Plus de produits';
+                            loadMoreBtn.disabled = false;
+                        });
                     });
                 }
             });
@@ -616,6 +631,15 @@
                     grid.innerHTML = data.html;
                     grid.style.opacity = '1';
                     grid.style.pointerEvents = 'auto';
+
+                    // Update Load More button
+                    const loadMoreBtn = document.getElementById('load-more');
+                    if (data.hasNextPage) {
+                        loadMoreBtn.style.display = 'block';
+                        loadMoreBtn.setAttribute('data-next-page', data.nextPageUrl);
+                    } else {
+                        loadMoreBtn.style.display = 'none';
+                    }
 
                     // Visibilité des sponsorisés (caché si recherche OU filtre actif)
                     if (data.isFiltering) {
