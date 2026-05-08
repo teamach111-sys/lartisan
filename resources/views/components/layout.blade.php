@@ -27,13 +27,14 @@
     <nav class="lg:flex gap-5 lg:h-29 h-auto items-center justify-between py-1  mt-1  ">
       <div class="flex justify-between items-center ">
         <a href="{{ route('home') }}">
-          <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+          <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="Lartisan Logo">
         </a>
        @auth
      <div class="lg:hidden relative">
       <a href="{{ route('annonces') }}">
         <img class="h-10 w-10 object-cover rounded-[50px] hover:border hover:border-[#fb663f] cursor-pointer" src="{{ auth()->user()->pfp_url }}">
       </a>
+      
       @if($unreadCount > 0)
         <div class="absolute -top-1 -right-1 bg-[#FF8E72] text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm pointer-events-none">
             {{ $unreadCount }}

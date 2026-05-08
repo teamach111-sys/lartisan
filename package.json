@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "dev:all": "npm run build && concurrently \"php artisan serve\" \"npm run dev\" \"php artisan reverb:start\""
+        "dev2": "php artisan serve",
+        "all": "concurrently \"npm:dev\" \"npm:dev2\" \"npm:build\""
     },
     "devDependencies": {
         "concurrently": "^9.0.1"

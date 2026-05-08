@@ -1,0 +1,30 @@
+\documentclass[12pt,oneside]{report}
+
+\input{preamble}
+
+\begin{document}
+
+% Page de Garde
+\input{frontmatter}
+
+\include{dedicace}
+\include{remerciements}
+
+% Sommaire
+\tableofcontents
+\newpage
+
+% Liste des Figures
+\listoffigures
+\newpage
+
+% Corps du rapport
+\include{intro}
+\include{conception}
+\include{realisation}
+\include{conclusion}
+
+% Webographie
+\include{webographie}
+
+\end{document}

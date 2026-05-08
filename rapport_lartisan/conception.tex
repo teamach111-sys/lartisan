@@ -1,0 +1,48 @@
+\chapter{Méthode de travail}
+
+\section{Cahier des charges et Spécifications des Besoins}
+La rédaction du cahier des charges constitue la pierre angulaire de tout projet d'ingénierie logicielle. Pour la plateforme \textbf{Lartisan}, cette phase a permis d'établir une cartographie précise des attentes fonctionnelles et des contraintes techniques, garantissant ainsi l'alignement entre le produit final et les exigences du marché de l'artisanat marocain.
+
+L'objectif premier du système est d'offrir une marketplace \textit{CtoC} (Consumer-to-Consumer) et \textit{BtoC} (Business-to-Consumer) désintermédiée. À cette fin, nous avons catégorisé les besoins selon deux axes principaux.
+
+\subsection{Besoins Fonctionnels}
+Les besoins fonctionnels décrivent les interactions directes que les utilisateurs auront avec le système. Pour Lartisan, le périmètre fonctionnel s'étend sur plusieurs modules :
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Gestion des identités et des rôles} : Inscription et authentification sécurisées, différenciation rigoureuse entre le statut "Acheteur" et le statut "Artisan/Vendeur", avec des tableaux de bord spécifiques.
+    \item \textbf{Gestion du catalogue et des annonces} : Possibilité pour les artisans de publier, modifier ou retirer des produits, d'y attacher des médias visuels de haute qualité, et de définir des paramètres de sponsoring.
+    \item \textbf{Interaction et communication} : Implémentation d'une messagerie interne en temps réel, permettant aux acheteurs de négocier et de discuter des détails de confection directement avec le créateur.
+    \item \textbf{Modération et administration} : Un back-office complet destiné aux administrateurs pour valider les annonces (état de modération), gérer les signalements de la communauté, administrer le référentiel des catégories et des villes, et veiller à la sécurité globale de la plateforme.
+\end{itemize}
+
+\subsection{Besoins Non-Fonctionnels}
+Ces besoins qualifient les critères de performance, d'ergonomie et de sécurité inhérents à l'architecture du système :
+\begin{itemize}[label=\textbullet]
+    \item \textbf{Sécurité et intégrité des données} : Chiffrement des mots de passe (algorithme Bcrypt), protection contre les failles courantes (CSRF, XSS, Injection SQL) et sécurisation des routes par \textit{middleware}.
+    \item \textbf{Ergonomie et Accessibilité (UX/UI)} : Interface *Mobile-First*, garantissant une utilisation fluide sur smartphones, tablettes et ordinateurs de bureau.
+    \item \textbf{Maintenabilité et Scalabilité} : Structuration du code source selon des design patterns éprouvés (notamment MVC) afin de faciliter les évolutions futures et la montée en charge.
+\end{itemize}
+
+\section{Modélisation Conceptuelle et Architecture}
+La phase de conception vise à abstraire la complexité du système en modèles visuels standardisés. Cette étape prévient les défauts de conception architecturale avant même le début de la phase d'implémentation. Nous avons opté pour une approche hybride, s'appuyant à la fois sur le langage UML pour l'aspect structurel, et sur l'approche processus pour la dynamique métier.
+
+\subsection{Modélisation Structurelle : Diagramme de Classes (UML)}
+Le choix du diagramme de classes s'impose par sa capacité à modéliser le socle de données en paradigme orienté objet. Ce diagramme illustre les différentes entités du système (\textit{Utilisateurs, Produits, Conversations, Catégories, etc.}), leurs attributs intrinsèques, ainsi que les cardinalités régissant leurs associations. 
+
+Ce modèle constitue la fondation directe pour la conception de notre schéma de base de données relationnelle et la génération des modèles ORM (Object-Relational Mapping).
+
+\begin{figure}[H]
+    \centering
+    \includesvg[inkscapelatex=false,width=\textwidth]{uml.svg}
+    \caption{Diagramme de Classes (UML) définissant l'architecture des données de la plateforme Lartisan}
+\end{figure}
+
+\subsection{Modélisation Comportementale : Modèle Conceptuel de Traitements (MCT)}
+Pour appréhender la logique métier et la chronologie des processus, nous avons fait appel au Modèle Conceptuel de Traitements (MCT). Contrairement à l'approche purement structurelle, le MCT permet de schématiser le cycle de vie d'une transaction métier. 
+
+Il met en exergue les événements déclencheurs (ex: inscription d'un acheteur, publication d'une annonce), les conditions de synchronisation, ainsi que les opérations résultantes (ex: mise en relation, notification de succès ou d'échec). Ce modèle a été crucial pour le développement des algorithmes des contrôleurs.
+
+\begin{figure}[H]
+    \centering
+    \includesvg[inkscapelatex=false,width=\textwidth]{mct.svg}
+    \caption{Modèle Conceptuel de Traitements (MCT) illustrant la dynamique des mises en relation}
+\end{figure}

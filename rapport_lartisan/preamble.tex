@@ -1,0 +1,52 @@
+\usepackage[utf8]{inputenc}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm, bottom=3cm} % Marges académiques classiques
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{svg}
+
+% Packages pour un rendu académique premium
+\usepackage{setspace}
+\setstretch{1.15} % Interligne aéré
+\usepackage{microtype} % Justification parfaite
+
+% Police Inter
+\usepackage[default]{inter}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Couleurs du projet Lartisan
+\definecolor{maincolor}{HTML}{000000} % Noir
+\definecolor{accentcolor}{HTML}{FF8E72} % Orange Lartisan
+
+% Typographie moderne et épurée
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{maincolor}}{\huge\thechapter}{10pt}{\Huge\sffamily}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{maincolor}\sffamily}{\thesection}{1em}{}
+
+% En-tête et pied de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\small Lartisan - Rapport de PFE}
+\fancyhead[R]{\sffamily\small 2025-2026}
+\fancyfoot[C]{\thepage}
+
+% Paramètres Hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=maincolor,
+    filecolor=accentcolor,      
+    urlcolor=accentcolor,
+    pdftitle={Rapport PFE - Lartisan},
+}
