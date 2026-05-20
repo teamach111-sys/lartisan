@@ -34,7 +34,7 @@ class UserForm
                             ->maxLength(20),
                         Select::make('ville_utilisateur')
                             ->label('Ville')
-                            ->options(\App\Models\Ville::pluck('nom', 'nom')->toArray())
+                            ->options(\App\Models\Ville::all()->pluck('nom', 'nom'))
                             ->searchable()
                             ->required()
                             ->default('Marrakech'),
