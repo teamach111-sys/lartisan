@@ -48,7 +48,7 @@ class ProduitController extends Controller
             'titre' => 'required|string|max:255',
             'prix' => 'required|numeric|min:0|max:9999999999',
             'description' => 'nullable|string|max:1000',
-            'categorie' => 'required|exists:categories,id',
+            'categorie' => 'nullable|exists:categories,id',
             'ville_produit' => 'required|exists:villes,nom',
             'etat_produit' => 'required|string|max:255',
             'images' => 'required|array|size:5',
@@ -81,7 +81,7 @@ class ProduitController extends Controller
             'images'        => $paths, // Cast to array in Model
             'slug'          => $slug,
             'vendeur_id'    => auth()->id(),
-            'categorie_id'  => (int) $request->categorie,
+            'categorie_id'  => $request->filled('categorie') ? (int) $request->categorie : null,
             'telephone_visible' => auth()->user()->display_phone,
         ];
 
@@ -115,7 +115,7 @@ class ProduitController extends Controller
             'titre' => 'required|string|max:255',
             'prix' => 'required|numeric|min:0|max:10000',
             'description' => 'nullable|string|max:1000',
-            'categorie' => 'required|exists:categories,id',
+            'categorie' => 'nullable|exists:categories,id',
             'ville_produit' => 'required|exists:villes,nom',
             'etat_produit' => 'required|string|max:255',
             'images' => 'nullable|array',
@@ -155,7 +155,7 @@ class ProduitController extends Controller
         $produit->description = $validated['description'];
         $produit->ville_produit = $validated['ville_produit'];
         $produit->etat_produit = $validated['etat_produit'];
-        $produit->categorie_id = (int) $request->categorie;
+        $produit->categorie_id = $request->filled('categorie') ? (int) $request->categorie : null;
         // telephone_visible is now handled via global profile setting, preserving existing record value if any
         $produit->telephone_visible = auth()->user()->display_phone;
         $produit->etat_moderation = 'en_attente'; // Reset moderation on edit

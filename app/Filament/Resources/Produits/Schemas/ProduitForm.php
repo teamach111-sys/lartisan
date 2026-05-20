@@ -43,7 +43,8 @@ class ProduitForm
                                     ->label('Catégorie')
                                     ->relationship('categorie', 'nom')
                                     ->searchable()
-                                    ->preload(),
+                                    ->preload()
+                                    ->nullable(),
                                 TextInput::make('prix')
                                     ->label('Prix')
                                     ->numeric()

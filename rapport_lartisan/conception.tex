@@ -7,8 +7,8 @@ L'objectif premier du système est d'offrir une marketplace \textit{CtoC} (Consu
 
 \subsection{Besoins Fonctionnels}
 Les besoins fonctionnels décrivent les interactions directes que les utilisateurs auront avec le système. Pour Lartisan, le périmètre fonctionnel s'étend sur plusieurs modules :
-\begin{itemize}[label=\textbullet]
-    \item \textbf{Gestion des identités et des rôles} : Inscription et authentification sécurisées, différenciation rigoureuse entre le statut "Acheteur" et le statut "Artisan/Vendeur", avec des tableaux de bord spécifiques.
+\begin{itemize}
+    \item \textbf{Gestion des identités et des rôles} : Inscription et authentification sécurisées, différenciation rigoureuse entre le statut «\,Acheteur\,» et le statut «\,Artisan/Vendeur\,», avec des tableaux de bord spécifiques.
     \item \textbf{Gestion du catalogue et des annonces} : Possibilité pour les artisans de publier, modifier ou retirer des produits, d'y attacher des médias visuels de haute qualité, et de définir des paramètres de sponsoring.
     \item \textbf{Interaction et communication} : Implémentation d'une messagerie interne en temps réel, permettant aux acheteurs de négocier et de discuter des détails de confection directement avec le créateur.
     \item \textbf{Modération et administration} : Un back-office complet destiné aux administrateurs pour valider les annonces (état de modération), gérer les signalements de la communauté, administrer le référentiel des catégories et des villes, et veiller à la sécurité globale de la plateforme.
@@ -16,9 +16,9 @@ Les besoins fonctionnels décrivent les interactions directes que les utilisateu
 
 \subsection{Besoins Non-Fonctionnels}
 Ces besoins qualifient les critères de performance, d'ergonomie et de sécurité inhérents à l'architecture du système :
-\begin{itemize}[label=\textbullet]
+\begin{itemize}
     \item \textbf{Sécurité et intégrité des données} : Chiffrement des mots de passe (algorithme Bcrypt), protection contre les failles courantes (CSRF, XSS, Injection SQL) et sécurisation des routes par \textit{middleware}.
-    \item \textbf{Ergonomie et Accessibilité (UX/UI)} : Interface *Mobile-First*, garantissant une utilisation fluide sur smartphones, tablettes et ordinateurs de bureau.
+    \item \textbf{Ergonomie et Accessibilité (UX/UI)} : Interface \textit{Mobile-First}, garantissant une utilisation fluide sur smartphones, tablettes et ordinateurs de bureau.
     \item \textbf{Maintenabilité et Scalabilité} : Structuration du code source selon des design patterns éprouvés (notamment MVC) afin de faciliter les évolutions futures et la montée en charge.
 \end{itemize}
 
@@ -32,7 +32,7 @@ Ce modèle constitue la fondation directe pour la conception de notre schéma de
 
 \begin{figure}[H]
     \centering
-    \includesvg[inkscapelatex=false,width=\textwidth]{uml.svg}
+    \includegraphics[width=\textwidth]{uml.pdf}
     \caption{Diagramme de Classes (UML) définissant l'architecture des données de la plateforme Lartisan}
 \end{figure}
 
@@ -43,6 +43,6 @@ Il met en exergue les événements déclencheurs (ex: inscription d'un acheteur,
 
 \begin{figure}[H]
     \centering
-    \includesvg[inkscapelatex=false,width=\textwidth]{mct.svg}
+    \includegraphics[width=\textwidth]{mct.pdf}
     \caption{Modèle Conceptuel de Traitements (MCT) illustrant la dynamique des mises en relation}
 \end{figure}

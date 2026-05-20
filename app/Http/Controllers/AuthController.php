@@ -75,6 +75,15 @@ public function store(Request $request)
         ]);
         
         if (Auth::attempt($credentials, $request->remember)) {
+            if (Auth::user()->statut_compte === 'banni') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->withErrors([
+                    'email' => 'Votre compte a été banni.',
+                ]);
+            }
+
             request()->session()->regenerate();
             return redirect()->intended('/');
         }

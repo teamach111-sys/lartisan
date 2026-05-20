@@ -7,155 +7,110 @@ Ce chapitre présente l'aboutissement technique de notre processus d'ingénierie
 La sélection d'une pile technologique (Stack) est une décision stratégique qui conditionne la performance, la sécurité et l'évolutivité (scalabilité) d'une application web moderne. Notre choix s'est porté sur un écosystème robuste et cohérent, s'articulant autour des technologies suivantes :
 
 \subsection{Technologies utilisées et justification}
-\begin{itemize}[label=\textbullet]
+\begin{itemize}
     \item \textbf{Framework Laravel (Version 12) et Architecture MVC} : Cœur névralgique de l'application, Laravel a été sélectionné pour sa maturité, sa sécurité native et l'implémentation rigoureuse du patron de conception MVC (Modèle-Vue-Contrôleur). L'utilisation de l'ORM \textit{Eloquent} a permis une gestion fluide et orientée objet des interactions avec la base de données.
     \item \textbf{Filament PHP (Version 3/5)} : Pour l'interface d'administration, Filament s'est imposé comme la solution logicielle optimale. Basé sur le couple Laravel/Livewire (TALL stack), il permet la génération rapide et sécurisée de tableaux de bord modulaires complexes (CRUD, graphiques statistiques, gestion fine des permissions).
-    \item \textbf{Tailwind CSS} : Outil de conception "Utility-First" remplaçant les architectures CSS classiques. Il garantit un design réactif (Responsive), un poids de chargement minimal et une grande maintenabilité du code source de la couche de présentation.
+    \item \textbf{Tailwind CSS} : Outil de conception «\,Utility-First\,» remplaçant les architectures CSS classiques. Il garantit un design réactif (Responsive), un poids de chargement minimal et une grande maintenabilité du code source de la couche de présentation.
     \item \textbf{MySQL \& Gestion des fichiers cloud} : Un SGBD relationnel a été choisi pour assurer l'intégrité transactionnelle (ACID). L'architecture est également préparée pour l'intégration de services cloud (AWS S3) pour la sauvegarde résiliente des médias téléversés par les utilisateurs.
 \end{itemize}
 
 \subsection{Charte Graphique et Ergonomie (UX/UI)}
 L'ergonomie de l'interface utilisateur a été conçue en appliquant les principes de la psychologie cognitive et du design d'interface moderne. L'objectif est de mettre en exergue le produit artisanal sans créer de surcharge cognitive pour l'utilisateur. 
 
-\begin{itemize}[label=\textbullet]
-    \item \textbf{Couleur principale (Noir - \#000000)} : Utilisée de manière prédominante pour la typographie, les bordures et les éléments structurels. Le noir symbolise l'élégance, la clarté et garantit un taux de contraste maximal, favorisant l'accessibilité web.
-    \item \textbf{Couleur d'accentuation (Orange Lartisan - \#FF8E72)} : Appliquée avec parcimonie sur les appels à l'action (Boutons "Call to Action", liens interactifs, badges de notification). Cette teinte chaude évoque directement les matériaux traditionnels de l'artisanat marocain tels que l'argile de la poterie et le cuir de la maroquinerie, créant ainsi un lien identitaire fort tout en guidant visuellement l'utilisateur.
+\begin{itemize}
+    \item \textbf{Couleur principale (Noir -- \#000000)} : Utilisée de manière prédominante pour la typographie, les bordures et les éléments structurels. Le noir symbolise l'élégance, la clarté et garantit un taux de contraste maximal, favorisant l'accessibilité web.
+    \item \textbf{Couleur d'accentuation (Orange Lartisan -- \#FF8E72)} : Appliquée avec parcimonie sur les appels à l'action (Boutons «\,Call to Action\,», liens interactifs, badges de notification). Cette teinte chaude évoque directement les matériaux traditionnels de l'artisanat marocain tels que l'argile de la poterie et le cuir de la maroquinerie, créant ainsi un lien identitaire fort tout en guidant visuellement l'utilisateur.
 \end{itemize}
 
 \section{Démonstration et Analyse des Interfaces}
-L'interface finale est le résultat tangible de l'implémentation de nos modèles conceptuels. Dans cette section, nous passons en revue les 19 écrans majeurs constituant l'expérience utilisateur complète de la plateforme.
+L'interface finale est le résultat tangible de l'implémentation de nos modèles conceptuels. Dans cette section, nous passons en revue les écrans majeurs constituant l'expérience utilisateur complète de la plateforme.
 
+% ============================================================
+%  AUTHENTIFICATION
+% ============================================================
 \subsection{Processus d'Authentification et Gestion des Accès}
 La sécurité des points d'entrée constitue la première barrière de défense de l'application. Le processus d'authentification a été conçu pour être à la fois inviolable et sans friction pour l'utilisateur.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{16_inscription.png}
-    \caption{Interface d'Inscription : Collecte et validation sécurisée des informations}
-\end{figure}
+\screenshot{16_inscription.png}{Interface d'Inscription : Collecte et validation sécurisée des informations}
+
 Ce formulaire permet l'enregistrement de nouveaux utilisateurs (profil Acheteur ou Artisan). Il intègre des mécanismes de validation de données stricts côté serveur et client, assurant la conformité des entrées avant leur hachage cryptographique et leur insertion en base de données.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{17_connexion.png}
-    \caption{Interface de Connexion : Contrôle d'accès à l'espace personnel}
-\end{figure}
+\screenshot{17_connexion.png}{Interface de Connexion : Contrôle d'accès à l'espace personnel}
+
 Interface épurée permettant la vérification des identifiants et l'ouverture d'une session sécurisée, conditionnant l'accès aux routes protégées par les \textit{middlewares} de Laravel.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{18_mot_de_passe_oublie.png}
-    \caption{Récupération de Mot de passe : Workflow de réinitialisation}
-\end{figure}
+\screenshot{18_mot_de_passe_oublie.png}{Récupération de Mot de passe : Workflow de réinitialisation}
+
 Mise en place d'un protocole automatisé d'envoi de lien de réinitialisation sécurisé par jeton à usage unique (Token), palliant les problématiques de pertes de données d'identification.
 
+% ============================================================
+%  FRONT-OFFICE
+% ============================================================
 \subsection{Espace Front-Office : Vitrine et Interactions Utilisateurs}
 Cet espace centralise l'expérience d'achat et d'interaction entre les membres de la communauté.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{01_accueil.png}
-    \caption{Page d'accueil : Vitrine du Marché et algorithme d'affichage}
-\end{figure}
+\screenshot{01_accueil.png}{Page d'accueil : Vitrine du Marché et algorithme d'affichage}
+
 Point d'entrée principal (Landing Page). La page exploite des requêtes Eloquent complexes pour afficher dynamiquement les annonces sponsorisées en priorité, suivies d'une pagination fluide des produits récents, le tout filtrable via une barre de navigation asynchrone par catégories, localisation et fourchette tarifaire.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{14_produit_detail.png}
-    \caption{Fiche Produit Détaillée : Valorisation de l'œuvre artisanale}
-\end{figure}
+\screenshot{14_produit_detail.png}{Fiche Produit Détaillée : Valorisation de l'œuvre artisanale}
+
 Rendu de la fiche technique d'un produit, intégrant un système de galerie d'images optimisées, la description de l'article, les métadonnées de l'artisan et l'accès critique au bouton de mise en relation directe.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{13_produit_creation.png}
-    \caption{Interface de Création d'Annonce : Tableau de bord du Vendeur}
-\end{figure}
+\screenshot{13_produit_creation.png}{Interface de Création d'Annonce : Tableau de bord du Vendeur}
+
 Workflow de dépôt d'article mis à disposition des artisans. Ce module gère l'upload asynchrone de multiples fichiers médias, la vérification des types MIME et la création d'enregistrements complexes dans le schéma relationnel.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{11_messagerie_liste.png}
-    \caption{Interface de Messagerie Unifiée (Vue Bureau)}
-\end{figure}
+\screenshot{11_messagerie_liste.png}{Interface de Messagerie Unifiée (Vue Bureau)}
+
 Console de communication interne. Elle agrège les flux de discussions (\textit{threads}) en liant contextuellement chaque conversation à un produit spécifique et à l'identifiant des interlocuteurs, facilitant le suivi des transactions.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{12_messagerie_mobile.png}
-    \caption{Messagerie Réactive (Vue Mobile)}
-\end{figure}
-Démonstration de la stratégie "Mobile-First" grâce aux classes utilitaires de Tailwind CSS, permettant à la messagerie de s'adapter dynamiquement aux petites résolutions sans perte de fonctionnalité.
+\screenshot{12_messagerie_mobile.png}{Messagerie Réactive (Vue Mobile)}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{09_mes_annonces.png}
-    \caption{Gestion des Annonces (Panel Artisan)}
-\end{figure}
+Démonstration de la stratégie «\,Mobile-First\,» grâce aux classes utilitaires de Tailwind CSS, permettant à la messagerie de s'adapter dynamiquement aux petites résolutions sans perte de fonctionnalité.
+
+\screenshot{09_mes_annonces.png}{Gestion des Annonces (Panel Artisan)}
+
 Interface de type CRUD (Create, Read, Update, Delete) simplifiée, offrant aux créateurs un contrôle total sur leur inventaire actif, inactif ou en cours de validation.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{10_mes_favoris.png}
-    \caption{Module des Favoris : Rétention et engagement utilisateur}
-\end{figure}
-Implémentation d'une relation *Many-to-Many* (Plusieurs-à-Plusieurs) entre la table des utilisateurs et celle des produits, matérialisée par cette interface de liste de souhaits (Wishlist) personnelle.
+\screenshot{10_mes_favoris.png}{Module des Favoris : Rétention et engagement utilisateur}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{15_mon_profil.png}
-    \caption{Espace de Paramétrage du Profil Utilisateur}
-\end{figure}
+Implémentation d'une relation \textit{Many-to-Many} (Plusieurs-à-Plusieurs) entre la table des utilisateurs et celle des produits, matérialisée par cette interface de liste de souhaits (Wishlist) personnelle.
+
+\screenshot{15_mon_profil.png}{Espace de Paramétrage du Profil Utilisateur}
+
 Zone de configuration permettant la mise à jour des informations personnelles (avatar, coordonnées de facturation, sécurité du compte).
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{19_centre d'aide.png}
-    \caption{Centre d'Aide et de Documentation}
-\end{figure}
+\screenshot{19_centre d'aide.png}{Centre d'Aide et de Documentation}
+
 Espace dédié à l'assistance des utilisateurs pour fournir un support contextuel et des réponses rapides aux questions fréquentes concernant l'utilisation de la plateforme.
 
+% ============================================================
+%  BACK-OFFICE
+% ============================================================
 \subsection{Espace Back-Office : Administration globale via Filament}
 Le back-office constitue le centre de contrôle de la plateforme, généré dynamiquement et sécurisé par Filament PHP pour l'administrateur système.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{02_admin_dashboard.png}
-    \caption{Tableau de Bord Exécutif (Dashboard)}
-\end{figure}
+\screenshot{02_admin_dashboard.png}{Tableau de Bord Exécutif (Dashboard)}
+
 Vue synthétique agrégeant les indicateurs de performance clés (KPI) en temps réel (inscriptions récentes, volumes d'annonces, métriques d'activité globale).
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{04_admin_produits.png}
-    \caption{Outil de Modération des Produits}
-\end{figure}
+\screenshot{04_admin_produits.png}{Outil de Modération des Produits}
+
 Interface de gouvernance permettant le contrôle qualité des publications. Les administrateurs peuvent approuver, rejeter ou sponsoriser manuellement les annonces soumises par les artisans.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{06_admin_signalements.png}
-    \caption{Traitement des Alertes et Signalements}
-\end{figure}
+\screenshot{06_admin_signalements.png}{Traitement des Alertes et Signalements}
+
 Dispositif de sécurité communautaire : liste et historique des signalements générés par les utilisateurs concernant des comportements ou des annonces non conformes aux conditions d'utilisation.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{07_admin_utilisateurs.png}
-    \caption{Gestion Centralisée des Comptes Utilisateurs}
-\end{figure}
+\screenshot{07_admin_utilisateurs.png}{Gestion Centralisée des Comptes Utilisateurs}
+
 Console d'administration globale offrant un pouvoir d'action complet sur l'ensemble des membres (suspension d'activité, réinitialisation de droits, vérification d'identité).
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{03_admin_categories.png}
-    \caption{Maintenance de l'Arborescence des Catégories}
-\end{figure}
+\screenshot{03_admin_categories.png}{Maintenance de l'Arborescence des Catégories}
+
 Gestion dynamique de l'ontologie des produits, permettant de structurer le catalogue en temps réel sans intervention sur le code source.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{08_admin_villes.png}
-    \caption{Administration du Référentiel Géographique}
-\end{figure}
+\screenshot{08_admin_villes.png}{Administration du Référentiel Géographique}
+
 Supervision de la base de données des localités, essentielle au bon fonctionnement du moteur de recherche spatial et aux filtres régionaux.

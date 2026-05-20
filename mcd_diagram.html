@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>L'Artisan — UML Database Diagram</title>
+<title>L'Artisan — Modèle Conceptuel de Données (MCD)</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -39,9 +39,9 @@
   #legend{position:fixed;bottom:36px;left:16px;z-index:10;background:rgba(255,255,255,0.92);
     backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
     border:1px solid #d1d5db;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);
-    padding:12px 14px;width:240px;font-family:'Inter',sans-serif;cursor:grab;user-select:none;}
+    padding:12px 14px;width:250px;font-family:'Inter',sans-serif;}
   #legend h4{font-size:11px;font-weight:700;color:#111;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
-  .legend-grid{display:grid;grid-template-columns:55px 1fr;gap:6px 12px;align-items:center;}
+  .legend-grid{display:grid;grid-template-columns:60px 1fr;gap:6px 12px;align-items:center;}
   .legend-key{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;padding:2px 4px;
     border-radius:4px;text-align:center;width:100%;text-transform:none;}
   .legend-val{font-size:11px;color:#4b5563;}
@@ -62,50 +62,46 @@
 </style>
 </head>
 <body>
+<div id="title">L'Artisan — Modèle Conceptuel de Données (MCD)</div>
 <div id="toolbar"><button onclick="toggleSettings()">⚙ Tailles</button><button onclick="exportSVG()">📄 SVG</button><button onclick="exportPNG()">📥 PNG</button></div>
 <div id="settings">
-  <h4>Relations</h4>
-  <div class="ctrl"><label>Nom relation <span id="v-rel">9.5</span></label><input type="range" id="s-rel" min="4" max="40" step="0.5" value="9.5"></div>
+  <h4>Associations</h4>
+  <div class="ctrl"><label>Nom association <span id="v-rel">9.5</span></label><input type="range" id="s-rel" min="4" max="40" step="0.5" value="9.5"></div>
   <div class="ctrl"><label>Cardinalité <span id="v-card">10</span></label><input type="range" id="s-card" min="4" max="40" step="0.5" value="10"></div>
   <hr class="sep">
-  <h4>Tables</h4>
-  <div class="ctrl"><label>En-tête table <span id="v-hdr">13</span></label><input type="range" id="s-hdr" min="4" max="40" step="0.5" value="13"></div>
-  <div class="ctrl"><label>Contenu table <span id="v-col">11</span></label><input type="range" id="s-col" min="4" max="40" step="0.5" value="11"></div>
-  <div class="ctrl"><label>Type colonne <span id="v-typ">10</span></label><input type="range" id="s-typ" min="4" max="40" step="0.5" value="10"></div>
+  <h4>Entités</h4>
+  <div class="ctrl"><label>En-tête entité <span id="v-hdr">13</span></label><input type="range" id="s-hdr" min="4" max="40" step="0.5" value="13"></div>
+  <div class="ctrl"><label>Contenu entité <span id="v-col">11</span></label><input type="range" id="s-col" min="4" max="40" step="0.5" value="11"></div>
+  <div class="ctrl"><label>Type attribut <span id="v-typ">10</span></label><input type="range" id="s-typ" min="4" max="40" step="0.5" value="10"></div>
   <hr class="sep">
   <h4>Dimensions</h4>
-  <div class="ctrl"><label>Largeur table <span id="v-w">250</span>px</label><input type="range" id="s-w" min="100" max="800" step="5" value="250"></div>
+  <div class="ctrl"><label>Largeur entité <span id="v-w">250</span>px</label><input type="range" id="s-w" min="100" max="800" step="5" value="250"></div>
   <div class="ctrl"><label>Hauteur ligne <span id="v-rh">20</span>px</label><input type="range" id="s-rh" min="10" max="100" step="1" value="20"></div>
   <div class="ctrl"><label>Hauteur en-tête <span id="v-hh">28</span>px</label><input type="range" id="s-hh" min="10" max="100" step="1" value="28"></div>
 </div>
 <div id="legend">
-  <h4>Légende des éléments</h4>
+  <h4>Légende MCD (Merise)</h4>
   <div class="legend-grid">
-    <div class="legend-key" style="color:#b45309; background:#fef3c7; border:1px solid #fde68a;">PK</div>
-    <div class="legend-val">Clé Primaire</div>
-    <div class="legend-key" style="color:#2563eb; background:#dbeafe; border:1px solid #bfdbfe;">FK</div>
-    <div class="legend-val">Clé Étrangère</div>
-    <div class="legend-key" style="color:#7c3aed; background:#ede9fe; border:1px solid #ddd6fe;">PK FK</div>
-    <div class="legend-val">Clé Primaire & Étrangère</div>
-    <div class="legend-key" style="color:#374151; background:#f3f4f6; border:1px solid #e5e7eb;">UQ</div>
-    <div class="legend-val">Contrainte Unique</div>
-    <div class="legend-key" style="color:#6b7280; background:#f9fafb; border:1px solid #f3f4f6;">NULL</div>
-    <div class="legend-val">Valeur Nullable</div>
-    <div class="legend-key" style="color:#059669; background:#ecfdf5; border:1px solid #a7f3d0;">()</div>
-    <div class="legend-val">Méthode</div>
-    <div class="legend-key" style="color:#111; background:#f3f4f6; border:1px solid #d1d5db;">1 / *</div>
-    <div class="legend-val">Cardinalité (1, 0..1, *)</div>
+    <div class="legend-key" style="color:#b45309; background:#fef3c7; border:1.5px solid #fde68a; text-decoration:underline;">id</div>
+    <div class="legend-val">Identifiant Unique</div>
+    <div class="legend-key" style="color:#374151; background:#f3f4f6; border:1px solid #e5e7eb;">attribut</div>
+    <div class="legend-val">Propriété Simple</div>
+    <div class="legend-key" style="color:#7c3aed; background:#f5f3ff; border:1.5px solid #7c3aed; border-radius:10px;">ovale</div>
+    <div class="legend-val">Association Simple</div>
+    <div class="legend-key" style="color:#7c3aed; background:#f5f3ff; border:1.5px solid #7c3aed; border-radius:4px;">split</div>
+    <div class="legend-val">Relation Porteuse</div>
+    <div class="legend-key" style="color:#111; background:#f3f4f6; border:1px solid #d1d5db;">(0,N)</div>
+    <div class="legend-val">Cardinalité MCD</div>
   </div>
 </div>
-<div id="hint">Scroll = zoom · Drag = pan · Drag table = move · Right-click = menu · Double-click = edit name/content</div>
+<div id="hint">Scroll = zoom · Drag = pan · Drag entité = move · Right-click = menu · Double-click = edit name/content</div>
 <div id="ctxmenu"></div>
 <div id="tblmenu">
-  <div id="tbl-rename">✎ Renommer la table</div>
+  <div id="tbl-rename">✎ Renommer l'entité</div>
   <hr class="sep">
-  <div id="tbl-add-col">✚ Ajouter une colonne</div>
-  <div id="tbl-add-method">✚ Ajouter une méthode</div>
+  <div id="tbl-add-col">✚ Ajouter un attribut</div>
   <hr class="sep">
-  <div class="danger" id="tbl-delete">✕ Supprimer cette table</div>
+  <div class="danger" id="tbl-delete">✕ Supprimer cette entité</div>
 </div>
 <div id="modal-overlay"><div id="modal"><h3>Modifier la relation</h3><label>Cardinalité côté source</label><input id="m-from" /><label>Cardinalité côté cible</label><input id="m-to" /><label>Nom de la relation</label><input id="m-label" /><div class="btns"><button onclick="closeModal()">Annuler</button><button class="primary" onclick="saveModal()">Enregistrer</button></div></div></div>
 <svg id="canvas"></svg>
@@ -123,95 +119,54 @@ function toggleSettings(){document.getElementById('settings').classList.toggle('
 /* ── layout constants ── */
 const PAD_X=10,R=5;
 let COL_W=250, ROW_H=20, HDR_H=28;
-(()=>{
+((()=>{
   const sw=document.getElementById('s-w'),vw=document.getElementById('v-w');
   sw.addEventListener('input',()=>{COL_W=parseInt(sw.value);vw.textContent=sw.value;render();});
   const srh=document.getElementById('s-rh'),vrh=document.getElementById('v-rh');
   srh.addEventListener('input',()=>{ROW_H=parseInt(srh.value);vrh.textContent=srh.value;render();});
   const shh=document.getElementById('s-hh'),vhh=document.getElementById('v-hh');
   shh.addEventListener('input',()=>{HDR_H=parseInt(shh.value);vhh.textContent=shh.value;render();});
-})();
+})());
 
 const tables=[
-  {name:'utilisateurs',x:50,y:280,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'name',t:'VARCHAR'},{n:'email',t:'VARCHAR UQ'},
+  {name:'utilisateurs',x:80,y:250,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'name',t:'VARCHAR'},{n:'email',t:'VARCHAR UQ'},
     {n:'password',t:'VARCHAR'},{n:'pfp',t:'VARCHAR NULL'},{n:'telephone',t:'VARCHAR(20) NULL'},
     {n:'display_phone',t:'BOOL'},{n:'ville_utilisateur',t:'VARCHAR(100)'},
     {n:'statut_compte',t:'VARCHAR'},{n:'role',t:'VARCHAR'},
     {n:'last_seen_at',t:'TIMESTAMP NULL'},{n:'email_verified_at',t:'TIMESTAMP NULL'},
-    {n:'timestamps',t:''}],
-   methods:[
-    {n:'modifierProfil()',t:''},
-    {n:'bloquer()',t:''},
-    {n:'debloquer()',t:''}]},
-  {name:'categories',x:500,y:20,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'nom',t:'VARCHAR(100) UQ'},{n:'timestamps',t:''}],
-   methods:[]},
-  {name:'produits',x:500,y:200,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'vendeur_id',t:'FK → utilisateurs',fk:1},
-    {n:'categorie_id',t:'FK → categories NULL',fk:1},{n:'titre',t:'VARCHAR'},
+    {n:'timestamps',t:''}]},
+  {name:'categories',x:550,y:30,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'nom',t:'VARCHAR(100) UQ'},{n:'timestamps',t:''}]},
+  {name:'produits',x:550,y:220,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'titre',t:'VARCHAR'},
     {n:'slug',t:'VARCHAR UQ'},{n:'description',t:'TEXT NULL'},{n:'telephone_visible',t:'BOOL'},
     {n:'prix',t:'DECIMAL(12,2)'},{n:'ville_produit',t:'VARCHAR(100)'},
     {n:'images',t:'JSON NULL'},{n:'etat_produit',t:'VARCHAR'},{n:'etat_moderation',t:'VARCHAR'},
     {n:'sponsor_status',t:'VARCHAR'},{n:'sponsored_until',t:'DATETIME NULL'},
-    {n:'timestamps',t:''}],
-   methods:[
-    {n:'creer()',t:''},
-    {n:'modifier()',t:''},
-    {n:'supprimer()',t:''}]},
-  {name:'favoris',x:120,y:640,cols:[
-    {n:'utilisateur_id',t:'PK FK → utilisateurs',pk:1,fk:1},
-    {n:'produit_id',t:'PK FK → produits',pk:1,fk:1},{n:'timestamps',t:''}],
-   methods:[
-    {n:'basculer()',t:''}]},
-  {name:'signalements',x:500,y:600,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'produit_id',t:'FK → produits NULL',fk:1},
-    {n:'produit_nom',t:'VARCHAR NULL'},{n:'utilisateur_id',t:'FK → utilisateurs',fk:1},
-    {n:'type_signalement',t:'VARCHAR'},{n:'details',t:'TEXT NULL'},
-    {n:'est_traite',t:'BOOL'},{n:'timestamps',t:''}],
-   methods:[
-    {n:'creer()',t:''}]},
-  {name:'conversations',x:950,y:20,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'produit_id',t:'FK → produits',fk:1},
-    {n:'acheteur_id',t:'FK → utilisateurs',fk:1},{n:'last_message_at',t:'TIMESTAMP NULL'},
-    {n:'timestamps',t:''}],
-   methods:[
-    {n:'demarrer()',t:''},
-    {n:'supprimer()',t:''}]},
-  {name:'messages',x:950,y:280,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'conversation_id',t:'FK → conversations',fk:1},
-    {n:'expediteur_id',t:'FK → utilisateurs',fk:1},{n:'contenu',t:'TEXT'},
-    {n:'est_lu',t:'BOOL'},{n:'timestamps',t:''}],
-   methods:[
-    {n:'envoyer()',t:''}]},
-  {name:'utilisateurs_bloques',x:50,y:60,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'blocker_id',t:'FK → utilisateurs',fk:1},
-    {n:'blocked_id',t:'FK → utilisateurs',fk:1},{n:'timestamps',t:''}],
-   methods:[
-    {n:'bloquer()',t:''},
-    {n:'debloquer()',t:''}]},
-  {name:'villes',x:950,y:530,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'nom',t:'VARCHAR UQ'},{n:'timestamps',t:''}],
-   methods:[]},
-  {name:'parametres_site',x:950,y:680,cols:[
-    {n:'id',t:'BIGINT',pk:1},{n:'timestamps',t:''}],
-   methods:[
-    {n:'definir()',t:''}]}
+    {n:'timestamps',t:''}]},
+  {name:'conversations',x:1050,y:50,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'last_message_at',t:'TIMESTAMP NULL'},
+    {n:'timestamps',t:''}]},
+  {name:'messages',x:1050,y:270,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'contenu',t:'TEXT'},
+    {n:'est_lu',t:'BOOL'},{n:'timestamps',t:''}]},
+  {name:'villes',x:1050,y:530,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'nom',t:'VARCHAR UQ'},{n:'timestamps',t:''}]},
+  {name:'parametres_site',x:1050,y:680,cols:[
+    {n:'id',t:'BIGINT',id:1},{n:'timestamps',t:''}]}
 ];
 
 const rels=[
-  {from:'produits',to:'utilisateurs',label:'est vendu par',fromCard:'*',toCard:'1'},
-  {from:'produits',to:'categories',label:'appartient à',fromCard:'*',toCard:'0..1'},
-  {from:'favoris',to:'utilisateurs',label:'ajouté par',fromCard:'*',toCard:'1'},
-  {from:'favoris',to:'produits',label:'référence',fromCard:'*',toCard:'1'},
-  {from:'signalements',to:'produits',label:'signale',fromCard:'*',toCard:'0..1'},
-  {from:'signalements',to:'utilisateurs',label:'créé par',fromCard:'*',toCard:'1'},
-  {from:'conversations',to:'produits',label:'concerne',fromCard:'*',toCard:'1'},
-  {from:'conversations',to:'utilisateurs',label:'initiée par',fromCard:'*',toCard:'1'},
-  {from:'messages',to:'conversations',label:'appartient à',fromCard:'*',toCard:'1'},
-  {from:'messages',to:'utilisateurs',label:'envoyé par',fromCard:'*',toCard:'1'},
-  {from:'utilisateurs_bloques',to:'utilisateurs',label:'bloqueur',fromCard:'*',toCard:'1'},
-  {from:'utilisateurs_bloques',to:'utilisateurs',label:'bloqué',fromCard:'*',toCard:'1'},
+  {from:'utilisateurs',to:'produits',label:'vendre',fromCard:'(0,N)',toCard:'(1,1)'},
+  {from:'categories',to:'produits',label:'appartenir',fromCard:'(0,N)',toCard:'(1,1)'},
+  {from:'utilisateurs',to:'produits',label:'favoriser',fromCard:'(0,N)',toCard:'(0,N)'},
+  {from:'utilisateurs',to:'produits',label:'signale',fromCard:'(0,N)',toCard:'(0,N)',
+   props:[{n:'type_signalement',t:'VARCHAR'},{n:'details',t:'TEXT NULL'},{n:'est_traite',t:'BOOL'},{n:'timestamps',t:''}]},
+  {from:'conversations',to:'produits',label:'concerne',fromCard:'(1,1)',toCard:'(0,N)'},
+  {from:'conversations',to:'utilisateurs',label:'participer',fromCard:'(1,1)',toCard:'(0,N)'},
+  {from:'conversations',to:'messages',label:'contenir',fromCard:'(0,N)',toCard:'(1,1)'},
+  {from:'messages',to:'utilisateurs',label:'envoyer',fromCard:'(1,1)',toCard:'(0,N)'}
 ];
 
 let panX=0,panY=0,scale=1,dragging=null,dragOX,dragOY,panning=false,panSX,panSY;
@@ -224,11 +179,7 @@ function el(tag,attrs,par){
   return e;
 }
 function tblH(t){
-  let h=t.cols.length*ROW_H+HDR_H+6;
-  if(t.methods&&t.methods.length>0){
-    h+=16+t.methods.length*ROW_H;
-  }
-  return h;
+  return t.cols.length*ROW_H+HDR_H+6;
 }
 
 function activeTables(){return tables.filter(t=>!t.hidden);}
@@ -237,6 +188,7 @@ function tableHidden(name){const t=tables.find(t=>t.name===name);return t&&t.hid
 
 /* ── Determine which side of table faces the other table ── */
 function bestSide(fromT,toT){
+  if(fromT.name === toT.name) return 'l'; // Self loop on left side
   const fx=fromT.x+COL_W/2, fy=fromT.y+fromT.h/2;
   const tx=toT.x+COL_W/2,  ty=toT.y+toT.h/2;
   const dx=tx-fx, dy=ty-fy;
@@ -247,7 +199,6 @@ function bestSide(fromT,toT){
 /* ── Compute distributed port positions per table per side ── */
 function computePorts(){
   const active=activeRels();
-  // Gather all connections per table per side
   const sideConns={}; // tableName -> {l:[],r:[],t:[],b:[]}
   activeTables().forEach(t=>{sideConns[t.name]={l:[],r:[],t:[],b:[]};});
 
@@ -260,7 +211,6 @@ function computePorts(){
     sideConns[r.to][sideTo].push({ri:r.ri,end:'to',other:r.from});
   });
 
-  // Sort connections on each side by the position of the other table (to avoid crossings)
   for(const tname in sideConns){
     const t=tm[tname];
     for(const side of ['l','r','t','b']){
@@ -276,7 +226,6 @@ function computePorts(){
     }
   }
 
-  // Assign port positions
   const ports={}; // ri -> {from:{x,y,side}, to:{x,y,side}}
   rels.forEach((_,ri)=>{ports[ri]={};});
 
@@ -309,23 +258,33 @@ function drawTable(t,par){
   if(t.hidden)return;
   const g=el('g',{'data-name':t.name,transform:`translate(${t.x},${t.y})`},par);
   const h=t.h;
+  
+  // Entity rectangle
   el('rect',{x:0,y:0,width:COL_W,height:h,rx:R,fill:'#fff',stroke:'#222','stroke-width':1.4},g);
-  el('rect',{x:0,y:0,width:COL_W,height:HDR_H,rx:R,fill:'#222'},g);
-  el('rect',{x:0,y:HDR_H-R,width:COL_W,height:R,fill:'#222'},g);
+  el('rect',{x:0,y:0,width:COL_W,height:HDR_H,rx:R,fill:'#1e293b'},g);
+  el('rect',{x:0,y:HDR_H-R,width:COL_W,height:R,fill:'#1e293b'},g);
+  
   const hdrText=el('text',{x:COL_W/2,y:HDR_H/2,fill:'#fff','font-size':SZ.hdr,'font-weight':'700',
     'text-anchor':'middle','dominant-baseline':'central','font-family':'JetBrains Mono',style:'cursor:pointer'},g);
-  hdrText.textContent=t.name;
+  hdrText.textContent=t.name.toUpperCase();
   hdrText.addEventListener('dblclick',e=>{e.stopPropagation();editTableName(t);});
+  
   el('line',{x1:0,y1:HDR_H,x2:COL_W,y2:HDR_H,stroke:'#222','stroke-width':1},g);
   t.cols.forEach((c,i)=>{
     const y=HDR_H+i*ROW_H+ROW_H/2;
-    const prefix=c.pk?(c.fk?'PK FK ':'PK '):(c.fk?'FK ':'');
-    const color=c.pk?'#b45309':c.fk?'#2563eb':'#111';
+    const isId = i === 0 || c.id; // Underline the identifier key
+    const color=isId?'#b45309':'#374151';
+    
     const colText=el('text',{x:PAD_X,y,fill:color,'font-size':SZ.col,'font-family':'JetBrains Mono','dominant-baseline':'central',style:'cursor:pointer'},g);
-    colText.textContent=prefix+c.n;
+    colText.textContent=c.n;
+    if(isId){
+      colText.setAttribute('text-decoration','underline');
+      colText.setAttribute('font-weight','700');
+    }
     colText.addEventListener('dblclick',e=>{e.stopPropagation();editColumn(t,i);});
+    
     if(c.t){
-      const typeText=el('text',{x:COL_W-PAD_X,y,fill:'#6b7280','font-size':SZ.typ,'text-anchor':'end',
+      const typeText=el('text',{x:COL_W-PAD_X,y,fill:'#9ca3af','font-size':SZ.typ,'text-anchor':'end',
         'dominant-baseline':'central','font-family':'JetBrains Mono',style:'cursor:pointer'},g);
       typeText.textContent=c.t;
       typeText.addEventListener('dblclick',e=>{e.stopPropagation();editColumnType(t,i);});
@@ -334,26 +293,7 @@ function drawTable(t,par){
       el('line',{x1:0,y1:HDR_H+(i+1)*ROW_H,x2:COL_W,y2:HDR_H+(i+1)*ROW_H,
         stroke:'#e5e7eb','stroke-width':.5},g);
   });
-  if(t.methods&&t.methods.length>0){
-    const sepY=HDR_H+t.cols.length*ROW_H+8;
-    el('line',{x1:0,y1:sepY,x2:COL_W,y2:sepY,stroke:'#9ca3af','stroke-width':1.2,'stroke-dasharray':'4,4'},g);
-    t.methods.forEach((m,i)=>{
-      const y=HDR_H+t.cols.length*ROW_H+16+i*ROW_H+ROW_H/2;
-      const methodText=el('text',{x:PAD_X,y,fill:'#059669','font-size':SZ.col,'font-family':'JetBrains Mono','dominant-baseline':'central',style:'cursor:pointer'},g);
-      methodText.textContent=m.n;
-      methodText.addEventListener('dblclick',e=>{e.stopPropagation();editMethodName(t,i);});
-      if(m.t){
-        const typeText=el('text',{x:COL_W-PAD_X,y,fill:'#10b981','font-size':SZ.typ,'text-anchor':'end',
-          'dominant-baseline':'central','font-family':'JetBrains Mono',style:'cursor:pointer'},g);
-        typeText.textContent=m.t;
-        typeText.addEventListener('dblclick',e=>{e.stopPropagation();editMethodType(t,i);});
-      }
-      if(i<t.methods.length-1){
-        const gridY=HDR_H+t.cols.length*ROW_H+16+(i+1)*ROW_H;
-        el('line',{x1:0,y1:gridY,x2:COL_W,y2:gridY,stroke:'#e5e7eb','stroke-width':.5},g);
-      }
-    });
-  }
+
   g.style.cursor='grab';
   g.addEventListener('mousedown',e=>{
     e.stopPropagation();
@@ -375,83 +315,113 @@ function drawRels(par,ports){
     const x1=pf.x,y1=pf.y,x2=pt.x,y2=pt.y;
     const g=el('g',{'data-ri':ri},par);
 
-    /* Orthogonal path */
-    let path;
-    if((pf.side==='l'||pf.side==='r')&&(pt.side==='l'||pt.side==='r')){
+    /* Orthogonal path & Midpoint */
+    let path, lx, ly;
+    if(r.from === r.to){
+      // Self loop loop logic
+      const loopWidth = 60;
+      const loopHeight = 40;
+      const my1 = y1 - loopHeight/2;
+      const my2 = y2 + loopHeight/2;
+      const mx = x1 - loopWidth;
+      path=`M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
+      lx = mx;
+      ly = (y1+y2)/2;
+    } else if((pf.side=='l'||pf.side=='r')&&(pt.side=='l'||pt.side=='r')){
       const mx=(x1+x2)/2;
       path=`M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
-    } else if((pf.side==='t'||pf.side==='b')&&(pt.side==='t'||pt.side==='b')){
+      lx=mx; ly=(y1+y2)/2;
+    } else if((pf.side=='t'||pf.side=='b')&&(pt.side=='t'||pt.side=='b')){
       const my=(y1+y2)/2;
       path=`M${x1},${y1} L${x1},${my} L${x2},${my} L${x2},${y2}`;
+      lx=(x1+x2)/2; ly=my;
     } else {
-      if(pf.side==='l'||pf.side==='r'){
+      if(pf.side=='l'||pf.side=='r'){
         path=`M${x1},${y1} L${x2},${y1} L${x2},${y2}`;
+        lx=(x1+x2)/2; ly=y1;
       } else {
         path=`M${x1},${y1} L${x1},${y2} L${x2},${y2}`;
+        lx=x1; ly=(y1+y2)/2;
       }
     }
-    /* invisible fat hit-area */
+
+    /* Hit-box and visible line */
     el('path',{d:path,fill:'none',stroke:'transparent','stroke-width':12,style:'cursor:pointer'},g);
-    /* visible line */
-    const visLine=el('path',{d:path,fill:'none',stroke:'#555','stroke-width':1.2,style:'pointer-events:none'},g);
+    const visLine=el('path',{d:path,fill:'none',stroke:'#94a3b8','stroke-width':1.3,style:'pointer-events:none'},g);
 
-    /* hover highlight */
-    g.addEventListener('mouseenter',()=>visLine.setAttribute('stroke','#6d28d9'));
-    g.addEventListener('mouseleave',()=>visLine.setAttribute('stroke','#555'));
-
-    /* right-click → context menu */
+    g.addEventListener('mouseenter',()=>visLine.setAttribute('stroke','#7c3aed'));
+    g.addEventListener('mouseleave',()=>visLine.setAttribute('stroke','#94a3b8'));
     g.addEventListener('contextmenu',e=>{
       e.preventDefault();e.stopPropagation();
       showCtxMenu(e.clientX,e.clientY,ri);
     });
 
-    /* Diamond at "to" end */
-    const ds=4;
-    if(pt.side==='l') el('polygon',{points:`${x2},${y2} ${x2-ds},${y2-ds} ${x2-2*ds},${y2} ${x2-ds},${y2+ds}`,fill:'#555',style:'pointer-events:none'},g);
-    else if(pt.side==='r') el('polygon',{points:`${x2},${y2} ${x2+ds},${y2-ds} ${x2+2*ds},${y2} ${x2+ds},${y2+ds}`,fill:'#555',style:'pointer-events:none'},g);
-    else if(pt.side==='t') el('polygon',{points:`${x2},${y2} ${x2-ds},${y2-ds} ${x2},${y2-2*ds} ${x2+ds},${y2-ds}`,fill:'#555',style:'pointer-events:none'},g);
-    else el('polygon',{points:`${x2},${y2} ${x2-ds},${y2+ds} ${x2},${y2+2*ds} ${x2+ds},${y2+ds}`,fill:'#555',style:'pointer-events:none'},g);
-
-    /* Label */
-    let lx,ly,angle=0;
-    if((pf.side==='l'||pf.side==='r')&&(pt.side==='l'||pt.side==='r')){
-      const mx=(x1+x2)/2;
-      lx=mx; ly=(y1+y2)/2; angle=90;
-    } else if((pf.side==='t'||pf.side==='b')&&(pt.side==='t'||pt.side==='b')){
-      const my=(y1+y2)/2;
-      lx=(x1+x2)/2; ly=my; angle=0;
+    /* Render Association Oval or Split-Oval with Properties */
+    if(r.props && r.props.length > 0){
+      // Relation Porteuse de Propriétés
+      const pw = 150;
+      const ph = 30 + r.props.length * ROW_H;
+      const rx = lx - pw/2;
+      const ry = ly - ph/2;
+      
+      const box = el('g',{style:'cursor:pointer'},g);
+      box.addEventListener('dblclick',e=>{e.stopPropagation(); editRelationProps(r);});
+      
+      // Main rounded rect
+      el('rect',{x:rx,y:ry,width:pw,height:ph,rx:8,fill:'#f5f3ff',stroke:'#7c3aed','stroke-width':1.5},box);
+      
+      // Top header
+      const lbl = el('text',{x:lx,y:ry+16,fill:'#6d28d9','font-size':SZ.rel,'font-weight':'700',
+        'font-style':'italic','text-anchor':'middle','font-family':'Inter'},box);
+      lbl.textContent = r.label;
+      
+      // Separator line
+      el('line',{x1:rx,y1:ry+24,x2:rx+pw,y2:ry+24,stroke:'#ddd6fe','stroke-width':1},box);
+      
+      // Property rows
+      r.props.forEach((prop,i)=>{
+        const py = ry+34+i*ROW_H;
+        const pText = el('text',{x:rx+PAD_X,y:py,fill:'#4c1d95','font-size':SZ.col-1,'font-family':'JetBrains Mono'},box);
+        pText.textContent = prop.n;
+        
+        if(prop.t){
+          el('text',{x:rx+pw-PAD_X,y:py,fill:'#a78bfa','font-size':SZ.typ-1,'text-anchor':'end','font-family':'JetBrains Mono'},box).textContent = prop.t;
+        }
+        if(i < r.props.length - 1){
+          el('line',{x1:rx,y1:ry+24+(i+1)*ROW_H+8,x2:rx+pw,y2:ry+24+(i+1)*ROW_H+8,stroke:'#ede9fe','stroke-width':.5},box);
+        }
+      });
     } else {
-      if(pf.side==='l'||pf.side==='r'){
-        lx=(x1+x2)/2; ly=y1; angle=0;
-      } else {
-        lx=x1; ly=(y1+y2)/2; angle=90;
-      }
+      // Standard Association Oval
+      const rx = 45;
+      const ry = 20;
+      const ellipse = el('g',{style:'cursor:pointer'},g);
+      ellipse.addEventListener('dblclick',e=>{e.stopPropagation(); editRelationLabel(r);});
+      
+      el('ellipse',{cx:lx,cy:ly,rx,ry,fill:'#f5f3ff',stroke:'#7c3aed','stroke-width':1.5},ellipse);
+      const lbl = el('text',{x:lx,y:ly,fill:'#6d28d9','font-size':SZ.rel,'font-weight':'600',
+        'font-style':'italic','text-anchor':'middle','dominant-baseline':'central','font-family':'Inter'},ellipse);
+      lbl.textContent = r.label;
     }
-    const labelOffset=10;
-    const lxOff=angle===90?lx-labelOffset:lx;
-    const lyOff=angle===0?ly-8:ly;
-    el('text',{x:lxOff,y:lyOff,fill:'#6d28d9','font-size':SZ.rel,'font-weight':'600',
-      'text-anchor':'middle','font-family':'Inter',style:'pointer-events:none',
-      transform:`rotate(${-angle},${lxOff},${lyOff})`},g).textContent=r.label;
 
-    /* Cardinalities (clickable) */
-    const cardOff=14;
+    /* Cardinalities (Parentheses MCD style) */
+    const cardOff=16;
     let cfx,cfy,ctx2,cty2,cAnchF,cAnchT;
-    if(pf.side==='r'){cfx=x1+cardOff;cfy=y1-7;cAnchF='start';}
-    else if(pf.side==='l'){cfx=x1-cardOff;cfy=y1-7;cAnchF='end';}
-    else if(pf.side==='b'){cfx=x1+8;cfy=y1+cardOff+4;cAnchF='start';}
+    if(pf.side=='r'){cfx=x1+cardOff;cfy=y1-7;cAnchF='start';}
+    else if(pf.side=='l'){cfx=x1-cardOff;cfy=y1-7;cAnchF='end';}
+    else if(pf.side=='b'){cfx=x1+8;cfy=y1+cardOff+4;cAnchF='start';}
     else{cfx=x1+8;cfy=y1-cardOff+2;cAnchF='start';}
-    if(pt.side==='r'){ctx2=x2+cardOff;cty2=y2-7;cAnchT='start';}
-    else if(pt.side==='l'){ctx2=x2-cardOff;cty2=y2-7;cAnchT='end';}
-    else if(pt.side==='b'){ctx2=x2+8;cty2=y2+cardOff+4;cAnchT='start';}
+    if(pt.side=='r'){ctx2=x2+cardOff;cty2=y2-7;cAnchT='start';}
+    else if(pt.side=='l'){ctx2=x2-cardOff;cty2=y2-7;cAnchT='end';}
+    else if(pt.side=='b'){ctx2=x2+8;cty2=y2+cardOff+4;cAnchT='start';}
     else{ctx2=x2+8;cty2=y2-cardOff+2;cAnchT='start';}
 
-    const fcEl=el('text',{x:cfx,y:cfy,fill:'#111','font-size':SZ.card,'font-weight':'700',
+    const fcEl=el('text',{x:cfx,y:cfy,fill:'#334155','font-size':SZ.card,'font-weight':'500',
       'text-anchor':cAnchF,'font-family':'JetBrains Mono',style:'cursor:pointer'},g);
     fcEl.textContent=r.fromCard;
     fcEl.addEventListener('click',e=>{e.stopPropagation();openModal(ri);});
 
-    const tcEl=el('text',{x:ctx2,y:cty2,fill:'#111','font-size':SZ.card,'font-weight':'700',
+    const tcEl=el('text',{x:ctx2,y:cty2,fill:'#334155','font-size':SZ.card,'font-weight':'500',
       'text-anchor':cAnchT,'font-family':'JetBrains Mono',style:'cursor:pointer'},g);
     tcEl.textContent=r.toCard;
     tcEl.addEventListener('click',e=>{e.stopPropagation();openModal(ri);});
@@ -463,7 +433,7 @@ function render(){
   svg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);
   el('rect',{width:'100%',height:'100%',fill:'#fff'},svg);
   const root=el('g',{transform:`translate(${panX},${panY}) scale(${scale})`},svg);
-  tables.forEach(t=>{t.h=tblH(t);tm[t.name]={x:t.x,y:t.y,h:t.h};});
+  tables.forEach(t=>{t.h=tblH(t);tm[t.name]={x:t.x,y:t.y,h:t.h,name:t.name};});
   const ports=computePorts();
   const lineLayer=el('g',{},root);
   drawRels(lineLayer,ports);
@@ -498,7 +468,7 @@ const ctxMenu=document.getElementById('ctxmenu');
 let ctxRi=null;
 function showCtxMenu(x,y,ri){
   ctxRi=ri;
-  ctxMenu.innerHTML='<div class="danger" id="ctx-delete">✕ Supprimer cette relation</div><div id="ctx-edit">✎ Modifier cardinalités</div>';
+  ctxMenu.innerHTML='<div class="danger" id="ctx-delete">✕ Supprimer cette relation</div><div id="ctx-edit">✎ Modifier relation/cardinalités</div>';
   ctxMenu.style.display='block';ctxMenu.style.left=x+'px';ctxMenu.style.top=y+'px';
   document.getElementById('ctx-delete').addEventListener('click',()=>{
     if(ctxRi!==null){rels[ctxRi].hidden=true;hideCtxMenu();render();}
@@ -536,24 +506,10 @@ document.getElementById('tbl-add-col').addEventListener('click',()=>{
   if(tblTarget){
     const t=tables.find(t=>t.name===tblTarget);
     if(t){
-      const name=prompt('Nom de la nouvelle colonne :');
+      const name=prompt('Nom du nouvel attribut :');
       if(name && name.trim()){
-        const type=prompt('Type de la colonne (ex: VARCHAR, BIGINT) :','VARCHAR');
+        const type=prompt('Type de l\'attribut (ex: VARCHAR, BIGINT) :','VARCHAR');
         t.cols.push({n:name.trim(),t:(type||'').trim()});
-        hideTblMenu();render();
-      }
-    }
-  }
-});
-document.getElementById('tbl-add-method').addEventListener('click',()=>{
-  if(tblTarget){
-    const t=tables.find(t=>t.name===tblTarget);
-    if(t){
-      const name=prompt('Nom de la nouvelle méthode (ex: posts()) :');
-      if(name && name.trim()){
-        const type=prompt('Type de retour (ex: HasMany, string) :','HasMany');
-        if(!t.methods) t.methods=[];
-        t.methods.push({n:name.trim(),t:(type||'').trim()});
         hideTblMenu();render();
       }
     }
@@ -562,10 +518,10 @@ document.getElementById('tbl-add-method').addEventListener('click',()=>{
 
 /* ── Inline editing ── */
 function editTableName(t){
-  const v=prompt('Nom de la table :',t.name);
+  const v=prompt('Nom de l\'entité :',t.name);
   if(v!==null&&v.trim()){
     const old=t.name;
-    const n=v.trim();
+    const n=v.trim().toLowerCase();
     t.name=n;
     rels.forEach(r=>{
       if(r.from===old)r.from=n;
@@ -576,11 +532,11 @@ function editTableName(t){
 }
 function editColumn(t,i){
   const c=t.cols[i];
-  const v=prompt('Nom de la colonne (laissez vide pour supprimer) :',c.n);
+  const v=prompt('Nom de l\'attribut (laissez vide pour supprimer) :',c.n);
   if(v!==null){
     const trimmed=v.trim();
     if(trimmed===''){
-      if(confirm('Supprimer cette colonne ?')){
+      if(confirm('Supprimer cet attribut ?')){
         t.cols.splice(i,1);
         render();
       }
@@ -592,30 +548,24 @@ function editColumn(t,i){
 }
 function editColumnType(t,i){
   const c=t.cols[i];
-  const v=prompt('Type de la colonne :',c.t);
+  const v=prompt('Type de l\'attribut :',c.t);
   if(v!==null){c.t=v.trim();render();}
 }
-function editMethodName(t,i){
-  const m=t.methods[i];
-  const v=prompt('Nom de la méthode (laissez vide pour supprimer) :',m.n);
-  if(v!==null){
-    const trimmed=v.trim();
-    if(trimmed===''){
-      if(confirm('Supprimer cette méthode ?')){
-        t.methods.splice(i,1);
-        render();
-      }
-    } else {
-      m.n=trimmed;
-      render();
-    }
+function editRelationLabel(r){
+  const v=prompt('Nom de l\'association :',r.label);
+  if(v!==null && v.trim()){
+    r.label=v.trim();
+    render();
   }
 }
-function editMethodType(t,i){
-  const m=t.methods[i];
-  const v=prompt('Type de retour / Paramètres :',m.t);
+function editRelationProps(r){
+  const propList = r.props.map(p=>`${p.n}:${p.t}`).join(', ');
+  const v=prompt('Propriétés de l\'association (ex: type:VARCHAR, details:TEXT) :', propList);
   if(v!==null){
-    m.t=v.trim();
+    r.props = v.split(',').map(s=>{
+      const parts = s.split(':');
+      return {n: parts[0].trim(), t: (parts[1]||'').trim()};
+    }).filter(p=>p.n!=='');
     render();
   }
 }
@@ -646,8 +596,8 @@ modalOverlay.addEventListener('click',e=>{if(e.target===modalOverlay)closeModal(
 function exportBBox(){
   let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
   activeTables().forEach(t=>{
-    minX=Math.min(minX,t.x-40);minY=Math.min(minY,t.y-40);
-    maxX=Math.max(maxX,t.x+COL_W+40);maxY=Math.max(maxY,t.y+t.h+40);
+    minX=Math.min(minX,t.x-100);minY=Math.min(minY,t.y-100);
+    maxX=Math.max(maxX,t.x+COL_W+100);maxY=Math.max(maxY,t.y+t.h+100);
   });
   return {minX,minY,w:maxX-minX,h:maxY-minY};
 }
@@ -661,7 +611,7 @@ function buildExportSVG(){
   if(rg)rg.setAttribute('transform','scale(1)');
   const bg=clone.querySelector('rect');
   if(bg){bg.setAttribute('x',minX);bg.setAttribute('y',minY);bg.setAttribute('width',w);bg.setAttribute('height',h);}
-  /* embed fonts via CSS @import */
+  
   const style=document.createElementNS(NS,'style');
   style.textContent=`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');`;
   clone.insertBefore(style,clone.firstChild);
@@ -674,16 +624,14 @@ function exportSVG(){
   const data=new XMLSerializer().serializeToString(clone);
   const blob=new Blob([data],{type:'image/svg+xml;charset=utf-8'});
   const a=document.createElement('a');
-  a.download='lartisan_uml.svg';a.href=URL.createObjectURL(blob);a.click();
+  a.download='lartisan_mcd.svg';a.href=URL.createObjectURL(blob);a.click();
 }
 
-/* ── Export PNG (with fonts) ── */
+/* ── Export PNG ── */
 function exportPNG(){
   const {clone,w,h}=buildExportSVG();
-  /* fetch Google Fonts CSS and inline it for proper PNG rendering */
   fetch('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap')
     .then(r=>r.text()).then(css=>{
-      /* replace @import with fetched CSS */
       const style=clone.querySelector('style');
       if(style)style.textContent=css;
       const data=new XMLSerializer().serializeToString(clone);
@@ -694,11 +642,10 @@ function exportPNG(){
         const c=document.createElement('canvas');c.width=w*2;c.height=h*2;
         const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
         ctx.drawImage(img,0,0);URL.revokeObjectURL(url);
-        const a=document.createElement('a');a.download='lartisan_uml.png';a.href=c.toDataURL('image/png');a.click();
+        const a=document.createElement('a');a.download='lartisan_mcd.png';a.href=c.toDataURL('image/png');a.click();
       };
       img.src=url;
     }).catch(()=>{
-      /* fallback without font embedding */
       const data=new XMLSerializer().serializeToString(clone);
       const blob=new Blob([data],{type:'image/svg+xml;charset=utf-8'});
       const url=URL.createObjectURL(blob);
@@ -707,33 +654,11 @@ function exportPNG(){
         const c=document.createElement('canvas');c.width=w*2;c.height=h*2;
         const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
         ctx.drawImage(img,0,0);URL.revokeObjectURL(url);
-        const a=document.createElement('a');a.download='lartisan_uml.png';a.href=c.toDataURL('image/png');a.click();
+        const a=document.createElement('a');a.download='lartisan_mcd.png';a.href=c.toDataURL('image/png');a.click();
       };
       img.src=url;
     });
 }
-
-/* ── Draggable Legend ── */
-(()=>{
-  const legend=document.getElementById('legend');
-  let ldrag=false,lox,loy;
-  legend.addEventListener('mousedown',e=>{
-    ldrag=true;
-    lox=e.clientX-legend.offsetLeft;
-    loy=e.clientY-legend.offsetTop;
-    legend.style.cursor='grabbing';
-    e.stopPropagation();
-  });
-  window.addEventListener('mousemove',e=>{
-    if(!ldrag)return;
-    legend.style.left=(e.clientX-lox)+'px';
-    legend.style.top=(e.clientY-loy)+'px';
-    legend.style.bottom='auto';
-  });
-  window.addEventListener('mouseup',()=>{
-    if(ldrag){ldrag=false;legend.style.cursor='grab';}
-  });
-})();
 </script>
 </body>
 </html>

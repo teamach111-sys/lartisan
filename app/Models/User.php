@@ -41,7 +41,9 @@ class User extends Authenticatable implements FilamentUser
     'telephone', 
     'telephone_visible', 
     'ville_utilisateur',
-    'last_seen_at'
+    'last_seen_at',
+    'role',
+    'statut_compte'
 ];
 
     public function getPfpUrlAttribute()

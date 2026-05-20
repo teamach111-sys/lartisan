@@ -50,7 +50,6 @@ class UsersTable
                     ->badge()
                     ->colors([
                         'success' => 'actif',
-                        'warning' => 'suspendu',
                         'danger' => 'banni',
                     ])
                     ->searchable(),
@@ -68,7 +67,6 @@ class UsersTable
                 SelectFilter::make('statut_compte')
                     ->options([
                         'actif' => 'Actif',
-                        'suspendu' => 'Suspendu',
                         'banni' => 'Banni',
                     ]),
             ])

@@ -32,8 +32,10 @@ class UserForm
                             ->label('Téléphone')
                             ->tel()
                             ->maxLength(20),
-                        TextInput::make('ville_utilisateur')
+                        Select::make('ville_utilisateur')
                             ->label('Ville')
+                            ->options(\App\Models\Ville::pluck('nom', 'nom')->toArray())
+                            ->searchable()
                             ->required()
                             ->default('Marrakech'),
                         TextInput::make('password')
@@ -54,7 +56,6 @@ class UserForm
                             ->label('Statut du compte')
                             ->options([
                                 'actif' => 'Actif',
-                                'suspendu' => 'Suspendu',
                                 'banni' => 'Banni',
                             ])
                             ->required()
