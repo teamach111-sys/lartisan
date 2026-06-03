@@ -46,10 +46,11 @@
 
 <body class="bg-[#f4f4f0]">
 
-    <nav x-data="{ open: false }" class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-3 md:px-7">
+    <nav x-data="{ open: false }"
+        class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-3 md:px-7">
 
         <a href="{{ route('home') }}">
-            <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+            <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="Lartisan Logo">
         </a>
 
         <p class="text-white text-lg">Dashboard</p>
@@ -177,7 +178,8 @@
         <aside class="hidden lg:block h-screen w-60 bg-black text-white flex flex-col gap-5 fixed ">
 
             <a href="{{ route('home') }}">
-                <img class="filter invert p-7 border-black  mr-3" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+                <img class="filter invert p-7 border-black  mr-3" src="{{ asset('imgs/logo.svg') }}"
+                    alt="Lartisan Logo">
             </a>
 
             <div class="gap-5 flex flex-col mr-3">
@@ -218,7 +220,8 @@
 
                     </svg>
 
-                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('favoris') }}">Mes Favoris</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}"
+                        href="{{ route('favoris') }}">Mes Favoris</a>
 
 
 
@@ -265,7 +268,8 @@
 
 
 
-                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('profil') }}">Mon Profil</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}"
+                        href="{{ route('profil') }}">Mon Profil</a>
 
 
 
@@ -385,14 +389,14 @@
                 <div class="flex md:flex-row md:justify-between md:items-center flex-col pb-1">
 
                     <div class="h-15 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-smooth ">
-                        @if(isset($customFilters))
+                        @if (isset($customFilters))
                             {{ $customFilters }}
                         @else
-                            @if(isset($firstc) && trim($firstc) !== '')
+                            @if (isset($firstc) && trim($firstc) !== '')
                                 <a href=""
                                     class="flex-shrink-0 snap-center border cursor-pointer text-[15px] rounded-[50px] p-2 transition-all duration-200">{{ $firstc }}</a>
                             @endif
-                            @if(isset($secondc) && trim($secondc) !== '')
+                            @if (isset($secondc) && trim($secondc) !== '')
                                 <a href=""
                                     class="flex-shrink-0 snap-center border cursor-pointer text-[15px] hover:border-black border-transparent rounded-[50px] p-2 transition-all duration-200 ">{{ $secondc }}</a>
                             @endif
@@ -444,4 +448,5 @@
 
     <x-image-compressor />
 </body>
+
 </html>

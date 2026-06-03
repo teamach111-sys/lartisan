@@ -24,9 +24,10 @@
 </head>
 
 <body class="bg-[#f4f4f0]">
-    <nav x-data="{ open: false }" class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-3 md:px-7">
+    <nav x-data="{ open: false }"
+        class="relative w-full lg:hidden h-16 bg-black flex justify-between items-center px-3 md:px-7">
         <a href="{{ route('home') }}">
-            <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+            <img class="filter invert h-10" src="{{ asset('imgs/logo.svg') }}" alt="Lartisan Logo">
         </a>
         <p class="text-white text-lg">Dashboard</p>
         <button @click="open = !open" class="focus:outline-none">
@@ -108,7 +109,8 @@
 
         <aside class="hidden lg:block h-screen w-60 bg-black text-white flex flex-col gap-5 fixed ">
             <a href="{{ route('home') }}">
-                <img class="filter invert p-7 border-black  mr-3" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+                <img class="filter invert p-7 border-black  mr-3" src="{{ asset('imgs/logo.svg') }}"
+                    alt="Lartisan Logo">
             </a>
             <div class="gap-5 flex flex-col mr-3">
                 <div class="bg-white h-[0.5px]"></div>
@@ -131,7 +133,8 @@
                         <path
                             d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                     </svg>
-                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('favoris') }}">Mes Favoris</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('favoris') ? 'text-[#FF8E72]' : 'text-white' }}"
+                        href="{{ route('favoris') }}">Mes Favoris</a>
 
                 </div>
 
@@ -157,7 +160,8 @@
                             clip-rule="evenodd" />
                     </svg>
 
-                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}" href="{{ route('profil') }}">Mon Profil</a>
+                    <a class="hover:text-[#FF8E72] {{ request()->routeIs('profil') ? 'text-[#FF8E72]' : 'text-white' }}"
+                        href="{{ route('profil') }}">Mon Profil</a>
 
                 </div>
                 <div class="bg-white h-[0.5px]"></div>

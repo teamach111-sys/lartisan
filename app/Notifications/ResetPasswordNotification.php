@@ -30,12 +30,12 @@ class ResetPasswordNotification extends Notification
         ], false));
 
         return (new MailMessage)
-            ->subject("Réinitialisation de votre mot de passe — L'Artisan")
+            ->subject("Réinitialisation de votre mot de passe — Lartisan")
             ->greeting('Bonjour !')
-            ->line("Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation du mot de passe de votre compte L'Artisan.")
+            ->line("Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation du mot de passe de votre compte Lartisan.")
             ->action('Réinitialiser le mot de passe', $url)
             ->line('Ce lien de réinitialisation expirera dans 60 minutes.')
             ->line("Si vous n'avez pas demandé de réinitialisation, aucune action n'est requise.")
-            ->salutation("Cordialement,\nL'équipe L'Artisan");
+            ->salutation("Cordialement,\nL'équipe Lartisan");
     }
 }

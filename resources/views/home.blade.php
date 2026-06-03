@@ -27,7 +27,8 @@
         <nav class="lg:flex gap-5 lg:h-29 h-auto items-center justify-between py-1  mt-1  ">
             <div class="flex justify-between items-center ">
                 <a href="{{ route('home') }}">
-                    <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan Logo">
+                    <img class="lg:h-full h-auto max-h-20  shrink-0 " src="{{ asset('imgs/logo.svg') }}"
+                        alt="Lartisan Logo">
                 </a>
                 @auth
                     <div class="lg:hidden relative">
@@ -135,7 +136,8 @@
                             </button>
                         @endauth
 
-                        <button onclick="window.location.href='{{ auth()->check() ? route('annonces') : route('login') }}'"
+                        <button
+                            onclick="window.location.href='{{ auth()->check() ? route('annonces') : route('login') }}'"
                             class="rounded-sm bg-black text-white p-1  w-40 text-[15px] border border-black h-12 my-auto cursor-pointer 
     transition-all duration-200 
     hover:-translate-x-1 hover:-translate-y-1 
@@ -241,54 +243,61 @@
             <section id="sponsored-slider" style="scrollbar-width: none; -ms-overflow-style: none;"
                 class="relative py-6 px-1 lg:flex grid grid-flow-col auto-cols-[85vw] sm:auto-cols-[60vw] md:auto-cols-[45vw] lg:auto-cols-auto gap-4 overflow-x-auto snap-x snap-proximity lg:snap-none scroll-smooth scrollbar-hide">
                 @forelse($sponsoredProducts as $produit)
-                <div onclick="window.location.href='{{ route('produit.show', $produit->slug) }}'"
-                    class="cursor-pointer flex-shrink-0 snap-center lg:snap-start bg-white lg:min-w-[600px] lg:h-93 rounded-sm border transition-all duration-200 
+                    <div onclick="window.location.href='{{ route('produit.show', $produit->slug) }}'"
+                        class="cursor-pointer flex-shrink-0 snap-center lg:snap-start bg-white lg:min-w-[600px] lg:h-93 rounded-sm border transition-all duration-200 
           hover:shadow-[4px_4px_0px_0px_#000000] flex flex-col lg:flex-row">
-                    <div class="relative h-56 sm:h-64 lg:h-full lg:w-93 flex-shrink-0">
-                        @php 
-                            $firstImage = (is_array($produit->images) && count($produit->images) > 0) ? $produit->images[0] : null;
-                        @endphp
-                        <img src="{{ $firstImage ? \App\Helpers\ImageHelper::getUrl($firstImage) : 'https://placehold.co/1200x900?text=No+Image' }}"
-                            class="overflow-hidden object-cover w-full h-full lg:h-full lg:w-full border-b lg:border-b-0 lg:border-r"
-                            alt="{{ $produit->titre }}">
-                            
-                        <div class="absolute top-2 left-2 bg-[#FF8E72] border border-black shadow-[2px_2px_0px_0px_#000000] text-black text-xs font-black px-2.5 py-1 uppercase rounded-sm z-10 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-3">
-                              <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
-                            </svg>
-                            Sponsorisé
-                        </div>
-                    </div>
+                        <div class="relative h-56 sm:h-64 lg:h-full lg:w-93 flex-shrink-0">
+                            @php
+                                $firstImage =
+                                    is_array($produit->images) && count($produit->images) > 0
+                                        ? $produit->images[0]
+                                        : null;
+                            @endphp
+                            <img src="{{ $firstImage ? \App\Helpers\ImageHelper::getUrl($firstImage) : 'https://placehold.co/1200x900?text=No+Image' }}"
+                                class="overflow-hidden object-cover w-full h-full lg:h-full lg:w-full border-b lg:border-b-0 lg:border-r"
+                                alt="{{ $produit->titre }}">
 
-                    <div class=" flex flex-col gap-2 justify-between">
-                        <div class="p-4 border-b lg:border-none flex flex-col gap-3 lg:w-55">
-                            <p class="font-bold break-words line-clamp-2 h-12">{{ $produit->titre }}</p>
-                            <p class="text-gray-700 truncate">{{ $produit->description }}</p>
-                            <div class="mt-3 flex gap-2 items-center">
-                                <img class="h-7 w-7 object-cover rounded-[50px] border border-black"
-                                    src="{{ $produit->vendeur->pfp_url }}"
-                                    alt="">
-                                <p class="underline">{{ $produit->vendeur->name }}</p>
+                            <div
+                                class="absolute top-2 left-2 bg-[#FF8E72] border border-black shadow-[2px_2px_0px_0px_#000000] text-black text-xs font-black px-2.5 py-1 uppercase rounded-sm z-10 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="size-3">
+                                    <path fill-rule="evenodd"
+                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Sponsorisé
                             </div>
                         </div>
 
-                        <div>
-                            <div
-                                class="mb-2 ml-2 inline-block bg-black p-[1px] 
-            [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
+                        <div class=" flex flex-col gap-2 justify-between">
+                            <div class="p-4 border-b lg:border-none flex flex-col gap-3 lg:w-55">
+                                <p class="font-bold break-words line-clamp-2 h-12">{{ $produit->titre }}</p>
+                                <p class="text-gray-700 truncate">{{ $produit->description }}</p>
+                                <div class="mt-3 flex gap-2 items-center">
+                                    <img class="h-7 w-7 object-cover rounded-[50px] border border-black"
+                                        src="{{ $produit->vendeur->pfp_url }}" alt="">
+                                    <p class="underline">{{ $produit->vendeur->name }}</p>
+                                </div>
+                            </div>
+
+                            <div>
                                 <div
-                                    class="bg-[#FF8E72] text-black font-bold text-sm py-1 pl-4 pr-12 
+                                    class="mb-2 ml-2 inline-block bg-black p-[1px] 
+            [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
+                                    <div
+                                        class="bg-[#FF8E72] text-black font-bold text-sm py-1 pl-4 pr-12 
               [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
-                                    {{ $produit->prix }} DH
+                                        {{ $produit->prix }} DH
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 @empty
-                <div class="w-full text-center text-gray-500 py-10 font-bold border-2 border-dashed border-gray-300 rounded-sm">
-                    Aucune annonce sponsorisée pour le moment.
-                </div>
+                    <div
+                        class="w-full text-center text-gray-500 py-10 font-bold border-2 border-dashed border-gray-300 rounded-sm">
+                        Aucune annonce sponsorisée pour le moment.
+                    </div>
                 @endforelse
 
 
@@ -426,8 +435,7 @@
                     </div>
 
 
-                    <button id="load-more" 
-                        data-next-page="{{ $produits->nextPageUrl() }}"
+                    <button id="load-more" data-next-page="{{ $produits->nextPageUrl() }}"
                         style="{{ $produits->hasMorePages() ? '' : 'display: none;' }}"
                         class="mx-auto p-4 bg-white border rounded-md transition-all duration-200 cursor-pointer hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000]">
                         Plus de produits
@@ -472,11 +480,16 @@
                 <div>
                     <h3 class="text-lg font-bold mb-6">Sécurité</h3>
                     <ul class="space-y-4 text-gray-400 transition-colors">
-                        <li><a href="{{ route('centre-aide') }}#eviter-arnaques" class="hover:text-[#FF8E72]">Éviter les arnaques</a></li>
-                        <li><a href="{{ route('centre-aide') }}#paiement-securise" class="hover:text-[#FF8E72]">Paiement sécurisé</a></li>
-                        <li><a href="{{ route('centre-aide') }}#signaler-probleme" class="hover:text-[#FF8E72]">Signaler un problème</a></li>
-                        <li><a href="{{ route('centre-aide') }}#acheter-confiance" class="hover:text-[#FF8E72]">Acheter en confiance</a></li>
-                        <li><a href="{{ route('centre-aide') }}" class="hover:text-[#FF8E72] font-semibold">Centre d'aide →</a></li>
+                        <li><a href="{{ route('centre-aide') }}#eviter-arnaques" class="hover:text-[#FF8E72]">Éviter
+                                les arnaques</a></li>
+                        <li><a href="{{ route('centre-aide') }}#paiement-securise"
+                                class="hover:text-[#FF8E72]">Paiement sécurisé</a></li>
+                        <li><a href="{{ route('centre-aide') }}#signaler-probleme"
+                                class="hover:text-[#FF8E72]">Signaler un problème</a></li>
+                        <li><a href="{{ route('centre-aide') }}#acheter-confiance"
+                                class="hover:text-[#FF8E72]">Acheter en confiance</a></li>
+                        <li><a href="{{ route('centre-aide') }}" class="hover:text-[#FF8E72] font-semibold">Centre
+                                d'aide →</a></li>
                     </ul>
                 </div>
 
@@ -522,18 +535,21 @@
             function scrollSlider(direction) {
                 const slider = document.getElementById('sponsored-slider');
                 if (!slider) return;
-                
+
                 const cards = Array.from(slider.querySelectorAll('div.flex-shrink-0'));
                 if (cards.length === 0) return;
-                
+
                 let targetCard = null;
                 const currentScrollLeft = slider.scrollLeft;
                 const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
-                
+
                 if (direction === 'right') {
                     // Si on est déjà à la fin (ou très proche), on retourne au début
                     if (currentScrollLeft >= maxScrollLeft - 10) {
-                        slider.scrollTo({ left: 0, behavior: 'smooth' });
+                        slider.scrollTo({
+                            left: 0,
+                            behavior: 'smooth'
+                        });
                         return;
                     }
 
@@ -544,7 +560,10 @@
                 } else {
                     // Si on est au tout début, on va à la fin
                     if (currentScrollLeft <= 10) {
-                        slider.scrollTo({ left: maxScrollLeft, behavior: 'smooth' });
+                        slider.scrollTo({
+                            left: maxScrollLeft,
+                            behavior: 'smooth'
+                        });
                         return;
                     }
 
@@ -553,7 +572,7 @@
                         return cardScrollPos < currentScrollLeft - 10;
                     });
                 }
-                
+
                 if (targetCard) {
                     slider.scrollTo({
                         left: targetCard.offsetLeft - slider.offsetLeft,
@@ -565,7 +584,7 @@
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 const loadMoreBtn = document.getElementById("load-more");
-                
+
                 if (loadMoreBtn) {
                     loadMoreBtn.addEventListener("click", () => {
                         const nextUrl = loadMoreBtn.getAttribute('data-next-page');
@@ -578,28 +597,28 @@
                         ajaxUrl.searchParams.set('_ajax', '1');
 
                         fetch(ajaxUrl.toString(), {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            const grid = document.getElementById('product-grid');
-                            grid.insertAdjacentHTML('beforeend', data.html);
-                            
-                            if (data.hasNextPage) {
-                                loadMoreBtn.setAttribute('data-next-page', data.nextPageUrl);
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                const grid = document.getElementById('product-grid');
+                                grid.insertAdjacentHTML('beforeend', data.html);
+
+                                if (data.hasNextPage) {
+                                    loadMoreBtn.setAttribute('data-next-page', data.nextPageUrl);
+                                    loadMoreBtn.innerHTML = 'Plus de produits';
+                                    loadMoreBtn.disabled = false;
+                                } else {
+                                    loadMoreBtn.style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
                                 loadMoreBtn.innerHTML = 'Plus de produits';
                                 loadMoreBtn.disabled = false;
-                            } else {
-                                loadMoreBtn.style.display = 'none';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            loadMoreBtn.innerHTML = 'Plus de produits';
-                            loadMoreBtn.disabled = false;
-                        });
+                            });
                     });
                 }
             });

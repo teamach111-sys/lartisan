@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Centre d'aide L'Artisan — trouvez des réponses à vos questions sur la sécurité, les arnaques, et l'utilisation de la plateforme.">
+    <meta name="description" content="Centre d'aide Lartisan — trouvez des réponses à vos questions sur la sécurité, les arnaques, et l'utilisation de la plateforme.">
     <link rel="icon" type="image/x-icon" href="favicon_io (3)/android-chrome-512x512.png">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -29,7 +29,7 @@
         <nav class="lg:flex gap-5 lg:h-29 h-auto items-center justify-between py-1 mt-1">
             <div class="flex justify-between items-center">
                 <a href="{{ route('home') }}">
-                    <img class="lg:h-full h-auto max-h-20 shrink-0" src="{{ asset('imgs/logo.svg') }}" alt="L'Artisan">
+                    <img class="lg:h-full h-auto max-h-20 shrink-0" src="{{ asset('imgs/logo.svg') }}" alt="Lartisan">
                 </a>
             </div>
             <a href="{{ route('home') }}"
@@ -54,7 +54,7 @@
             </div>
             <h1 class="text-3xl lg:text-5xl font-bold mb-4">Comment pouvons-nous vous aider ?</h1>
             <p class="text-gray-600 max-w-xl mx-auto mb-8">
-                Trouvez des réponses à vos questions sur la sécurité, les bonnes pratiques et l'utilisation de la plateforme L'Artisan.
+                Trouvez des réponses à vos questions sur la sécurité, les bonnes pratiques et l'utilisation de la plateforme Lartisan.
             </p>
 
             {{-- Static Search Bar --}}
@@ -154,7 +154,7 @@
                         </summary>
                         <div class="px-4 pb-4 text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
                             <ul class="list-disc pl-5 space-y-2">
-                                <li>Communiquez uniquement via la messagerie L'Artisan pour garder une trace de vos échanges.</li>
+                                <li>Communiquez uniquement via la messagerie Lartisan pour garder une trace de vos échanges.</li>
                                 <li>Ne partagez jamais vos informations personnelles (adresse, numéro de carte) par message.</li>
                                 <li>Privilégiez les rencontres en main propre dans un lieu public pour les échanges locaux.</li>
                                 <li>Vérifiez toujours le produit avant de finaliser la transaction.</li>
@@ -218,7 +218,7 @@
                             <ul class="list-disc pl-5 space-y-2">
                                 <li>Demandez des photos et vidéos supplémentaires du produit avant d'envoyer de l'argent.</li>
                                 <li>Ne payez jamais la totalité à l'avance — négociez un paiement partiel si possible.</li>
-                                <li>Gardez toutes les conversations dans la messagerie L'Artisan comme preuve.</li>
+                                <li>Gardez toutes les conversations dans la messagerie Lartisan comme preuve.</li>
                             </ul>
                         </div>
                     </details>
@@ -311,7 +311,7 @@
 
                     <details class="help-item bg-white border border-black rounded-sm group" data-keywords="messagerie contacter discussion communiquer">
                         <summary class="flex items-center justify-between p-4 cursor-pointer list-none font-semibold hover:bg-gray-50 transition-colors">
-                            Comment utiliser la messagerie L'Artisan ?
+                            Comment utiliser la messagerie Lartisan ?
                             <svg class="w-5 h-5 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
@@ -319,7 +319,7 @@
                         <div class="px-4 pb-4 text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
                             <ol class="list-decimal pl-5 space-y-2">
                                 <li>Sur la page d'un produit, cliquez sur <strong>« Contacter le vendeur »</strong>.</li>
-                                <li>Une conversation privée sera créée entre vous et l'artisan.</li>
+                                <li>Une conversation privée sera créée entre vous et Lartisan.</li>
                                 <li>Posez vos questions, négociez le prix et convenez d'un lieu de rencontre.</li>
                                 <li>Toutes vos conversations sont accessibles depuis votre espace personnel.</li>
                             </ol>
