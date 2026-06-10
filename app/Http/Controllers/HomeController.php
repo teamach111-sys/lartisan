@@ -14,9 +14,10 @@ class HomeController extends Controller
 
         // Recherche par texte
         if ($request->filled('q')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('titre', 'like', '%' . $request->q . '%')
-                  ->orWhere('description', 'like', '%' . $request->q . '%');
+            $searchTerm = strtolower($request->q);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(titre) LIKE ?', ['%' . $searchTerm . '%'])
+                  ->orWhereRaw('LOWER(description) LIKE ?', ['%' . $searchTerm . '%']);
             });
         }
 

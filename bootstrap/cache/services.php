@@ -60,8 +60,9 @@
     56 => 'Termwind\\Laravel\\TermwindServiceProvider',
     57 => 'Pest\\Laravel\\PestServiceProvider',
     58 => 'Resend\\Laravel\\ResendServiceProvider',
-    59 => 'App\\Providers\\AppServiceProvider',
-    60 => 'App\\Providers\\Filament\\AdminPanelProvider',
+    59 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
+    60 => 'App\\Providers\\AppServiceProvider',
+    61 => 'App\\Providers\\Filament\\AdminPanelProvider',
   ),
   'eager' => 
   array (
@@ -108,8 +109,9 @@
     40 => 'Termwind\\Laravel\\TermwindServiceProvider',
     41 => 'Pest\\Laravel\\PestServiceProvider',
     42 => 'Resend\\Laravel\\ResendServiceProvider',
-    43 => 'App\\Providers\\AppServiceProvider',
-    44 => 'App\\Providers\\Filament\\AdminPanelProvider',
+    43 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
+    44 => 'App\\Providers\\AppServiceProvider',
+    45 => 'App\\Providers\\Filament\\AdminPanelProvider',
   ),
   'deferred' => 
   array (

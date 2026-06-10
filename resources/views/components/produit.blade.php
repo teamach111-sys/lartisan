@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div class="p-4 flex   border-t">
+    <div class="p-4 flex border-t">
         <div class="inline-block bg-black [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
             <div class="line-clamp-1 bg-[#FF8E72] text-black font-bold text-sm py-1 pl-4 pr-12 [clip-path:polygon(0%_0%,_100%_0%,_calc(100%-15px)_50%,_100%_100%,_0%_100%)]">
                 {{ $produit->prix }} DH

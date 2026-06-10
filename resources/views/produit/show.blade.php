@@ -222,7 +222,7 @@
                                         placeholder="Précisez si nécessaire..."></textarea>
 
                                     <button type="submit"
-                                        class="w-full bg-red-500 text-white border border-black font-bold text-sm py-2.5 rounded-sm transition-all duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_#000000] cursor-pointer">
+                                        class="w-full text-red-500 font-bold text-sm py-2 transition-colors hover:text-red-700 hover:underline cursor-pointer">
                                         Envoyer le signalement
                                     </button>
                                 </form>
